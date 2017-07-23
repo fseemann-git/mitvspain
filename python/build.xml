@@ -26,11 +26,11 @@
 <project name="MiTvSpain" default="package">
     <description>MiTvSpain</description>
 
-    <property name="version" value="1.0.1"/>
+    <property name="version" value="1.0.2"/>
     <property name="versionboxee" value="10.30"/>
-    <property name="versiondate" value="22/Julio/2017"/>
-    <property name="channels_version" value="20170722"/>
-    <property name="servers_version" value="20170722"/>
+    <property name="versiondate" value="23/Julio/2017"/>
+    <property name="channels_version" value="20170723"/>
+    <property name="servers_version" value="20170723"/>
 
     <property name="target_base_folder" value="../../target/python"/>
 
@@ -379,9 +379,9 @@
     <!-- copy-boxee ============================================================ -->
     <target name="copy-boxee" description="Copy Boxee files for packaging">
 
-        <mkdir dir="${target_base_folder}/boxee/info.mimediacenter.mitvspain"/>
+        <mkdir dir="${target_base_folder}/boxee/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain"/>
 
-        <copy todir="${target_base_folder}/boxee/info.mimediacenter.mitvspain">
+        <copy todir="${target_base_folder}/boxee/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain">
             <fileset dir="main-classic">
                 <exclude name="**/.*"/>
                 <exclude name="**/.*/**"/>
@@ -399,7 +399,7 @@
             </fileset>
         </copy>
 
-        <copy overwrite="true" todir="${target_base_folder}/boxee/info.mimediacenter.mitvspain">
+        <copy overwrite="true" todir="${target_base_folder}/boxee/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain">
             <fileset dir="version-boxee">
                 <exclude name="**/.*"/>
                 <exclude name="**/.*/**"/>
@@ -407,7 +407,7 @@
         </copy>
 
         <zip destfile="${target_base_folder}/mitvspain-boxee-${version}.zip" basedir="${target_base_folder}/boxee"/>
-        <copy file="${target_base_folder}/mitvspain-boxee-${version}.zip" tofile="${target_base_folder}/info.mimediacenter.mitvspain-${versionboxee}.zip" overwrite="true"/>
+        <copy file="${target_base_folder}/mitvspain-boxee-${version}.zip" tofile="${target_base_folder}/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain-${versionboxee}.zip" overwrite="true"/>
 
     </target>
 
@@ -713,14 +713,14 @@
     </target>
 
     <target name="test-boxee" depends="clean">
-        <mkdir dir="${target_base_folder}/boxee/info.mimediacenter.mitvspain"/>
+        <mkdir dir="${target_base_folder}/boxee/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain"/>
         <antcall target="copy-boxee"/>
 
-        <delete dir="/Users/jesus/Library/Application Support/BOXEE/UserData/plugins/video/info.mimediacenter.mitvspain"/>
-        <delete dir="/Users/jesus/Library/Application Support/BOXEE/UserData/apps/info.mimediacenter.mitvspain"/>
+        <delete dir="/Users/jesus/Library/Application Support/BOXEE/UserData/plugins/video/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain"/>
+        <delete dir="/Users/jesus/Library/Application Support/BOXEE/UserData/apps/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain"/>
 
-        <copy todir="/Users/jesus/Library/Application Support/BOXEE/UserData/apps/info.mimediacenter.mitvspain">
-            <fileset dir="${target_base_folder}/boxee/info.mimediacenter.mitvspain"/>
+        <copy todir="/Users/jesus/Library/Application Support/BOXEE/UserData/apps/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain">
+            <fileset dir="${target_base_folder}/boxee/info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain"/>
         </copy>
     </target>
 
@@ -854,10 +854,10 @@
         <!--echo message="Actualizando el repositorio de Boxee"/>
         <ftp server="${mitvspain.ftp}" remotedir="${boxee.path}/download" userid="${mitvspain.login}" password="${mitvspain.password}">
             <fileset dir="${target_base_folder}/boxee">
-                <include name="info.mimediacenter.mitvspain-${versionboxee}.zip"/>
+                <include name="info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain-${versionboxee}.zip"/>
             </fileset>
             <fileset dir="platformcode/boxee">
-                <include name="info.mimediacenter.mitvspain-${versionboxee}.zip.xml"/>
+                <include name="info.https://raw.githubusercontent.com/MiTvSpain/mitvspain/master.mitvspain-${versionboxee}.zip.xml"/>
             </fileset>
         </ftp>
         <ftp server="${mitvspain.ftp}" remotedir="${boxee.path}" userid="${mitvspain.login}" password="${mitvspain.password}">

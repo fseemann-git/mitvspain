@@ -852,7 +852,7 @@
     <!-- publish =============================================== -->
     <target name="publish" description="Notify the repositories that a new version is available">
         <!--echo message="Actualizando el repositorio de Boxee"/>
-        <ftp server="${tvalacarta.ftp}" remotedir="${boxee.path}/download" userid="${tvalacarta.login}" password="${tvalacarta.password}">
+        <ftp server="${mitvspain.ftp}" remotedir="${boxee.path}/download" userid="${mitvspain.login}" password="${mitvspain.password}">
             <fileset dir="${target_base_folder}/boxee">
                 <include name="info.mimediacenter.mitvspain-${versionboxee}.zip"/>
             </fileset>
@@ -860,7 +860,7 @@
                 <include name="info.mimediacenter.mitvspain-${versionboxee}.zip.xml"/>
             </fileset>
         </ftp>
-        <ftp server="${tvalacarta.ftp}" remotedir="${boxee.path}" userid="${tvalacarta.login}" password="${tvalacarta.password}">
+        <ftp server="${mitvspain.ftp}" remotedir="${boxee.path}" userid="${mitvspain.login}" password="${mitvspain.password}">
             <fileset dir="platformcode/boxee">
                 <include name="index.xml"/>
             </fileset>

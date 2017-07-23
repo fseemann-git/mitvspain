@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para vidgot
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -17,7 +17,7 @@ def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
 
     data = httptools.downloadpage(page_url).data
-
+    
     if "File was deleted" in data:
         return False, "[Vidgot] El fichero ha sido borrado de novamov"
 
@@ -27,7 +27,7 @@ def test_video_exists(page_url):
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("(page_url='%s')" % page_url)
 
-    data = httptools.downloadpage(page_url).data
+    data = httptools.downloadpage(page_url).data    
     data_js = scrapertools.find_single_match(data, "<script type='text/javascript'>(eval\(function.*?)</script>")
     data_js = jsunpack.unpack(data_js)
 

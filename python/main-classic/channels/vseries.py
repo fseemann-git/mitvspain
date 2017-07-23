@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para vseries
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import sys
@@ -16,12 +16,14 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 
+
+DEBUG = config.get_setting("debug")
 DEFAULT_HEADERS = []
 DEFAULT_HEADERS.append( ["User-Agent","Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12"] )
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.vseries mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="menuseries"    , title="Series"            , url="" ))
@@ -31,7 +33,7 @@ def mainlist(item):
     return itemlist
 
 def menuseries(item):
-    logger.info()
+    logger.info("mitvspain.channels.vseries menuseries")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="novedades" , title="Últimos episodios" , url="http://vserie.com/series" , viewmode="movie"))
@@ -40,10 +42,10 @@ def menuseries(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.channels.vseries search")
 
     try:
-        if config.get_setting("zampaseriesaccount")==True:
+        if config.get_setting("zampaseriesaccount")=="true":
             login()
 
         if item.url=="":
@@ -85,13 +87,13 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 def novedades(item):
-    logger.info()
+    logger.info("mitvspain.channels.vseries novedades")
 
-    if config.get_setting("zampaseriesaccount")==True:
+    if config.get_setting("zampaseriesaccount")=="true":
         login()
 
     # Descarga la pagina
@@ -109,16 +111,16 @@ def novedades(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, show=title))
 
     return itemlist
 
 def series(item,data=""):
-    logger.info()
+    logger.info("mitvspain.channels.vseries series")
 
 
-    if config.get_setting("zampaseriesaccount")==True:
+    if config.get_setting("zampaseriesaccount")=="true":
         login()
 
     # Descarga la pagina
@@ -149,7 +151,7 @@ def series(item,data=""):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot, show=title))
 
     if not "/paginador/" in item.url:
@@ -162,10 +164,10 @@ def series(item,data=""):
     return itemlist
 
 def peliculas(item,data=""):
-    logger.info()
+    logger.info("mitvspain.channels.vseries peliculas")
 
 
-    if config.get_setting("zampaseriesaccount")==True:
+    if config.get_setting("zampaseriesaccount")=="true":
         login()
 
     # Descarga la pagina
@@ -197,7 +199,7 @@ def peliculas(item,data=""):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, show=title))
 
     if not "/paginador/" in item.url:
@@ -210,10 +212,10 @@ def peliculas(item,data=""):
     return itemlist
 
 def episodios(item):
-    logger.info()
+    logger.info("mitvspain.channels.vseries episodios")
 
 
-    if config.get_setting("zampaseriesaccount")==True:
+    if config.get_setting("zampaseriesaccount")=="true":
         login()
 
     # Descarga la pagina
@@ -231,16 +233,16 @@ def episodios(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, show=item.show))
 
     return itemlist
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.vseries findvideos")
 
 
-    if config.get_setting("zampaseriesaccount")==True:
+    if config.get_setting("zampaseriesaccount")=="true":
         login()
 
     # Descarga la pagina
@@ -268,15 +270,15 @@ def findvideos(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="play" , title=title , url=url, extra=item.url,folder=False))
 
     return itemlist
 
 def play(item):
-    logger.info("url="+item.url)
+    logger.info("mitvspain.channels.vseries play url="+item.url)
 
-    if config.get_setting("zampaseriesaccount")==True:
+    if config.get_setting("zampaseriesaccount")=="true":
         login()
 
     headers=DEFAULT_HEADERS[:]

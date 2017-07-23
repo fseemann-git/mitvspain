@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para Allpeliculas
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import string
 
 from core import config
@@ -136,7 +136,7 @@ def indices(item):
     itemlist.append(item.clone(title="Alfabético", action="subindice"))
     itemlist.append(item.clone(title="Por idioma", action="subindice"))
     itemlist.append(item.clone(title="Por valoración", action="lista",
-                               url="http://allpeliculas.co/Movies/fullView/1/0/rating:imdb|date:1900-3000|"
+                               url="http://allpeliculas.co/Movies/fullView/1/0/rating:imdb|date:1900-2016|"
                                    "alphabet:all|?ajax=1&withoutFilter=1"))
     itemlist.append(item.clone(title="Por año", action="subindice"))
     itemlist.append(item.clone(title="Por calidad", action="subindice"))
@@ -205,7 +205,7 @@ def subindice(item):
     logger.info()
     itemlist = []
     
-    url_base = "http://allpeliculas.co/Movies/fullView/1/0/date:1900-3000|alphabet:all|?ajax=1&withoutFilter=1"
+    url_base = "http://allpeliculas.co/Movies/fullView/1/0/date:1900-2016|alphabet:all|?ajax=1&withoutFilter=1"
     indice_genero, indice_alfa, indice_idioma, indice_year, indice_calidad = dict_indices()
     if "Géneros" in item.title:
         for key, value in indice_genero.items():
@@ -220,14 +220,14 @@ def subindice(item):
 
     elif "Por idioma" in item.title:
         for key, value in indice_idioma.items():
-            url = url_base.replace("3000|", "3000|language:"+key)
+            url = url_base.replace("2016|", "2016|language:"+key)
             itemlist.append(item.clone(action="lista", title=value, url=url))
             itemlist.sort(key=lambda item: item.title)
 
     elif "Por año" in item.title:
         for i in range(len(indice_year)):
             year = indice_year[i]
-            url = url_base.replace("1900-3000", year+"-"+year)
+            url = url_base.replace("1900-2016", year+"-"+year)
             itemlist.append(item.clone(action="lista", title=year, url=url))
 
     elif "Por calidad" in item.title:
@@ -264,31 +264,47 @@ def findvideos(item):
              '"([^"]+)".*?online-link="([^"]+)"'
     matches = scrapertools.find_multiple_matches(data, patron)
     for calidad, servidor_num, language, url in matches:
+        try:
+            server = SERVERS[servidor_num]
+            if server == "tusfiles" and "stormo.tv" in url:
+                server = "stormo"
+            if server != "tusfiles":
+                servers_module = __import__("servers."+server)
+        except:
+            server = servertools.get_server_from_url(url)
 
-        if servidor_num == '94' and not 'stormo.tv' in url:
-            url = "http://tusfiles.org/?%s" % url
-            
-        if 'vimeo' in url:
-            url += "|" + item.url
-                
-        if "filescdn" in url and url.endswith("htm"):
-            url += "l"
-                
-        idioma = IDIOMAS.get(idiomas_videos.get(language))
-        titulo = "%s  ["+idioma+"] ["+calidad_videos.get(calidad)+"]"
-        itemlist.append(item.clone(action="play", title=titulo, url=url, extra=idioma))
+        if server != "directo":
+            if server == "vimeo":
+                url += "|" + item.url
+            elif server == "tusfiles":
+                url = "http://tusfiles.org/?%s" % url
+                server = "directo"
+            idioma = IDIOMAS.get(idiomas_videos.get(language))
+            titulo = server.capitalize()+"  ["+idioma+"] ["+calidad_videos.get(calidad)+"]"
+            itemlist.append(item.clone(action="play", title=titulo, url=url, extra=idioma, server=server))
 
     #Enlace Descarga
     patron = '<span class="movie-downloadlink-list" id_movies_types="([^"]+)" id_movies_servers="([^"]+)".*?id_lang=' \
              '"([^"]+)".*?online-link="([^"]+)"'
     matches = scrapertools.find_multiple_matches(data, patron)
     for calidad, servidor_num, language, url in matches:
- 
-        idioma = IDIOMAS.get(idiomas_videos.get(language))
-        titulo = "[%s]  ["+idioma+"] ["+calidad_videos.get(calidad)+"]"
-        itemlist.append(item.clone(action="play", title=titulo, url=url, extra=idioma))
+        mostrar_server = True
+        try:
+            server = SERVERS[servidor_num]
+            servers_module = __import__("servers."+server)
+        except:
+            server = servertools.get_server_from_url(url)
 
-    itemlist = servertools.get_servers_itemlist(itemlist, lambda i: i.title % i.server.capitalize())
+        if server != "directo":
+            if server == "vimeo":
+                url += "|" + item.url
+            if config.get_setting("hidepremium") == "true":
+                mostrar_server = servertools.is_server_enabled(server)
+            if mostrar_server:
+                idioma = IDIOMAS.get(idiomas_videos.get(language))
+                titulo = "["+server.capitalize()+"]  ["+idioma+"] ["+calidad_videos.get(calidad)+"]"
+                itemlist.append(item.clone(action="play", title=titulo, url=url, extra=idioma, server=server))
+
     itemlist.sort(key=lambda item: (item.extra, item.server))
     if itemlist:
         if not "trailer" in item.infoLabels:
@@ -391,20 +407,25 @@ def findvideostv(item):
              % (str(item.infoLabels['episode']), str(item.infoLabels['season']))
     matches = scrapertools.find_multiple_matches(data, patron)
     for quality, servidor_num, language, url in matches:
-    
-        if servidor_num == '94' and not 'stormo.tv' in url:
-            url = "http://tusfiles.org/?%s" % url
-            
-        if 'vimeo' in url:
-                url += "|" + item.url
-                
-        if "filescdn" in url and url.endswith("htm"):
-            url += "l"
-                
-        idioma = IDIOMAS.get(idiomas_videos.get(language))
-        titulo = "%s ["+idioma+"] ("+calidad_videos.get(quality)+")"
+        try:
+            server = SERVERS[servidor_num]
+            if server == "tusfiles" and "stormo.tv" in url:
+                server = "stormo"
+            if server != "tusfiles":
+                servers_module = __import__("servers."+server)
+        except:
+            server = servertools.get_server_from_url(url)
 
-        itemlist.append(item.clone(action="play", title=titulo, url=url, contentType="episode", server=server))
+        if server != "directo":
+            if server == "vimeo":
+                url += "|" + item.url
+            elif server == "tusfiles":
+                url = "http://tusfiles.org/?%s" % url
+                server = "directo"
+            idioma = IDIOMAS.get(idiomas_videos.get(language))
+            titulo = server.capitalize()+" ["+idioma+"] ("+calidad_videos.get(quality)+")"
+
+            itemlist.append(item.clone(action="play", title=titulo, url=url, contentType="episode", server=server))
 
     #Enlace Descarga
     patron = '<span class="movie-downloadlink-list" id_movies_types="([^"]+)" id_movies_servers="([^"]+)".*?episode="%s' \
@@ -413,18 +434,51 @@ def findvideostv(item):
     #patron = '<span class="movie-downloadlink-list" id_movies_types="([^"]+)" id_movies_servers="([^"]+)".*?episode="'+str(item.infoLabels['episode']) +'" season="'+str(item.infoLabels['season']) + '" id_lang="([^"]+)".*?online-link="([^"]+)"'
     matches = scrapertools.find_multiple_matches(data, patron)
     for quality, servidor_num, episode, language, url in matches:
+        mostrar_server = True
+        try:
+            server = SERVERS[servidor_num]
+            servers_module = __import__("servers."+server)
+        except:
+            server = servertools.get_server_from_url(url)
 
-        idioma = IDIOMAS.get(idiomas_videos.get(language))
-        titulo = "%s ["+idioma+"] ("+calidad_videos.get(quality)+")"
-        itemlist.append(item.clone(action="play", title=titulo, url=url, contentType="episode", server=server))
-    
-    itemlist = servertools.get_servers_itemlist(itemlist, lambda i: i.title % i.server.capitalize())
+        if server != "directo":
+            if server == "vimeo":
+                url += "|" + item.url
+            if config.get_setting("hidepremium") == "true":
+                mostrar_server = servertools.is_server_enabled(server)
+            if mostrar_server:
+                idioma = IDIOMAS.get(idiomas_videos.get(language))
+                titulo = server.capitalize()+" ["+idioma+"] ("+calidad_videos.get(quality)+")"
+                itemlist.append(item.clone(action="play", title=titulo, url=url, contentType="episode", server=server))
+
     itemlist.sort(key=lambda item: (int(item.infoLabels['episode']), item.title))
     try:
         from core import tmdb
         tmdb.set_infoLabels(itemlist, __modo_grafico__)
     except:
         pass
+
+    return itemlist
+
+
+def play(item):
+    logger.info()
+    itemlist = []
+    if item.server == "directo" and "tusfiles" in item.url:
+        data = httptools.downloadpage(item.url).data.replace("\\", "")
+        matches = scrapertools.find_multiple_matches(data, '"label"\s*:\s*(.*?),"type"\s*:\s*"([^"]+)","file"\s*:\s*"([^"]+)"')
+        for calidad, tipo, video_url in matches:
+            tipo = tipo.replace("video/", "")
+            video_url += "|Referer=%s" % item.url
+            itemlist.append([".%s %sp [directo]" % (tipo, calidad), video_url])
+        try:
+            itemlist.sort(key=lambda it:int(it[0].split("p ", 1)[0].rsplit(" ")[1]))
+        except:
+            pass
+    else:
+        devuelve = servertools.findvideosbyserver(item.url, item.server)
+        if devuelve:
+            itemlist.append(item.clone(url=devuelve[0][1]))
 
     return itemlist
 

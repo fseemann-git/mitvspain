@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (javus)
+# Canal (javus) por Hernan_Ar_c
 # ------------------------------------------------------------
 
-import re
+import urlparse,urllib2,urllib,re
+import os, sys
 
-from core import httptools
+
 from core import logger
+from core import config
 from core import scrapertools
 from core.item import Item
+from core import servertools
+from core import httptools
 
 host='http://javus.net/'
 

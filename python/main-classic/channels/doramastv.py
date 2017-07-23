@@ -1,25 +1,27 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para doramastv
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
 host = "http://doramastv.com/"
 DEFAULT_HEADERS = []
 DEFAULT_HEADERS.append( ["User-Agent","Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12"] )
 
 
 def mainlist(item):
-    logger.info()
-
+    logger.info("mitvspain.channels.doramatv mainlist")
+	
     itemlist = list([])
     itemlist.append(Item(channel=item.channel, action="pagina_", title="En emision", url=urlparse.urljoin(host, "drama/emision")))
     itemlist.append(Item(channel=item.channel, action="letras", title="Listado alfabetico", url=urlparse.urljoin(host, "lista-numeros")))
@@ -30,7 +32,7 @@ def mainlist(item):
     return itemlist
 
 def letras(item):
-    logger.info()
+    logger.info("mitvspain.channels.daramatv letras")
 
     itemlist = []
     headers = DEFAULT_HEADERS[:]
@@ -44,15 +46,15 @@ def letras(item):
         url = urlparse.urljoin(host, scrapedurl)
         thumbnail = ""
         plot = ""
-
-        logger.debug("title=[{0}], url=[{1}], thumbnail=[{2}]".format(title, url, thumbnail))
+        if DEBUG:
+            logger.info("title=[{0}], url=[{1}], thumbnail=[{2}]".format(title, url, thumbnail))
 
         itemlist.append(Item(channel=item.channel, action="pagina_", title=title, url=url, thumbnail=thumbnail, plot=plot))
 
     return itemlist
-
+	
 def pagina_(item):
-    logger.info()
+    logger.info("mitvspain.channels.daramatv letras" + item.url)
     itemlist = []
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -67,7 +69,7 @@ def pagina_(item):
         thumbnail = urlparse.urljoin(host, scrapedthumbnail)
         plot = scrapertools.decodeHtmlentities(scrapedplot)
         itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot, show=title))
-
+	
     patron = 'href="([^"]+)" class="next"'
     matches = re.compile(patron, re.DOTALL).findall(data)
     for match in matches:
@@ -78,9 +80,9 @@ def pagina_(item):
             scrapedplot = ""
             itemlist.append(Item(channel=item.channel, action="pagina_", title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail, plot=scrapedplot, folder=True))
     return itemlist
-
+	
 def episodios(item):
-    logger.info()
+    logger.info("mitvspain.channels.doramatv episodios")
     itemlist = []
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -98,9 +100,9 @@ def episodios(item):
         show = item.show
         itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, fulltitle=title, show=show))		
     return itemlist
-
+	
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.doramatv findvideos")
 
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -129,7 +131,7 @@ def findvideos(item):
     return itemlist
 
 def generos(item):
-    logger.info()
+    logger.info("mitvspain.channels.doramatv generos")
     itemlist = []
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -144,14 +146,15 @@ def generos(item):
         url = urlparse.urljoin(host, scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=[{0}], url=[{1}], thumbnail=[{2}]".format(title, url, thumbnail))
+        if DEBUG:
+            logger.info("title=[{0}], url=[{1}], thumbnail=[{2}]".format(title, url, thumbnail))
 
         itemlist.append(Item(channel=item.channel, action="pagina_", title=title, url=url, thumbnail=thumbnail, plot=plot))
 
     return itemlist
-
+	
 def search(item, texto):
-    logger.info()
+    logger.info("mitvspain.channels.doramatv search")
     item.url = urlparse.urljoin(host, item.url)
     texto = texto.replace(" ", "+")
     headers = DEFAULT_HEADERS[:]
@@ -166,4 +169,4 @@ def search(item, texto):
         url = urlparse.urljoin(item.url, scrapedurl)
         thumbnail = urlparse.urljoin(host, scrapedthumbnail)
         itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot="", show=title))
-    return itemlist
+	return itemlist

@@ -1,20 +1,23 @@
 ﻿# -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para tupornotv
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import sys
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("[tupornotv.py] mainlist")
     
     itemlist = []
     itemlist.append( Item( channel=item.channel , title="Pendientes de Votación" , action="novedades" , url="http://tuporno.tv/pendientes") )
@@ -28,7 +31,7 @@ def mainlist(item):
     return itemlist
 
 def novedades(item):
-    logger.info()
+    logger.info("[tupornotv.py] novedades")
     url = item.url
     # ------------------------------------------------------
     # Descarga la página
@@ -97,7 +100,7 @@ def novedades(item):
     return itemlist
 
 def masVistos(item):
-    logger.info()
+    logger.info("[tupornotv.py] masVistos")
     
     itemlist = []
     itemlist.append( Item( channel=item.channel , title="Hoy" , action="novedades" , url="http://tuporno.tv/hoy" , folder=True ) )
@@ -108,7 +111,7 @@ def masVistos(item):
     return itemlist
 
 def categorias(item):
-    logger.info()
+    logger.info("[tupornotv.py] categorias")
     
     
     url=item.url
@@ -141,14 +144,14 @@ def categorias(item):
         scrapedurl = urlparse.urljoin(url,match[0])
         scrapedthumbnail = ""
         scrapedplot = ""
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
     
         # Añade al listado de XBMC
         itemlist.append( Item(channel=item.channel, action="novedades", title=scrapedtitle.capitalize() , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
     return itemlist
 
 def masVotados(item):
-    logger.info()
+    logger.info("[tupornotv.py] masVotados")
     
     itemlist = []
     itemlist.append( Item( channel=item.channel , title="Hoy" , action="novedades" , url="http://tuporno.tv/topVideos/todas/hoy" , folder=True ) )
@@ -159,7 +162,7 @@ def masVotados(item):
     return itemlist
 
 def search(item, texto):
-    logger.info()
+    logger.info("[tupornotv.py] search")
     if texto != "":
         texto = texto.replace(" ", "+")
     else:
@@ -171,11 +174,11 @@ def search(item, texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
    
 def getsearch(item):
-    logger.info()
+    logger.info("[tupornotv.py] getsearch")
     data = scrapertools.cachePage(item.url)
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;|<Br>|<BR>|<br>|<br/>|<br />|-\s", "", data)
     patronvideos = '<div class="relative"><a href="(.videos[^"]+)"[^>]+><img.+?src="([^"]+)" alt="(.+?)" .*?<div class="duracion">(.+?)</div></div></div>'
@@ -208,7 +211,7 @@ def getsearch(item):
     return itemlist
 
 def play(item):
-    logger.info()
+    logger.info("[tupornotv.py] play")
     itemlist = []
     
     # Lee la pagina del video

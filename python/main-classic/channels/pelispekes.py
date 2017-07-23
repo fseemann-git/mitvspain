@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para pelispekes
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
 
 
+DEBUG = config.get_setting("debug")
+
+
 def mainlist(item):
-    logger.info()
+    logger.info("[pelispekes.py] mainlist")
     itemlist=[]
 
     if item.url=="":
@@ -52,8 +56,8 @@ def mainlist(item):
         title = scrapedtitle
         thumbnail = scrapedthumbnail
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
-        itemlist.append( Item(channel=item.channel , action="findvideos"   , title=title , url=url , thumbnail=thumbnail, fanart=thumbnail, plot=plot , hasContentDetails=True, contentTitle=title, contentThumbnail=thumbnail))
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        itemlist.append( Item(channel=item.channel , action="findvideos"   , title=title , url=url , thumbnail=thumbnail, fanart=thumbnail, plot=plot , hasContentDetails="true", contentTitle=title, contentThumbnail=thumbnail))
 
     # Extrae la pagina siguiente
     next_page_url = scrapertools.find_single_match(data,'<a href="([^"]+)"><i class="glyphicon glyphicon-chevron-right')
@@ -63,7 +67,7 @@ def mainlist(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("item="+item.tostring())
+    logger.info("mitvspain.channels.zpeliculas findvideos item="+item.tostring())
 
     '''
     <h2>Sinopsis</h2>
@@ -78,6 +82,6 @@ def findvideos(item):
     item.plot = scrapertools.find_single_match(data,'<h2>Sinopsis</h2>(.*?)<div')
     item.plot = scrapertools.htmlclean(item.plot).strip()
     item.contentPlot = item.plot
-    logger.info("plot="+item.plot)
+    logger.info("mitvspain.channels.zpeliculas findvideos plot="+item.plot)
 
     return servertools.find_video_items(item=item,data=data)

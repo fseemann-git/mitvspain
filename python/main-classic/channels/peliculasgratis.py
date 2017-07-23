@@ -1,25 +1,28 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para PeliculasGratis
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
+import string
 import os
 import re
 import sys
 import urllib
 import urlparse
-
-import xbmc
-import xbmcgui
 from core import config
-from core import httptools
 from core import logger
 from core import scrapertools
 from core import servertools
-from core import tmdb
+from core import httptools
+from platformcode import platformtools
 from core.item import Item
+import xbmc
+import xbmcgui
+from core import tmdb
 from core.scrapertools import decodeHtmlentities as dhe
+import unicodedata
+
 
 ACTION_SHOW_FULLSCREEN = 36
 ACTION_GESTURE_SWIPE_LEFT = 511
@@ -34,6 +37,7 @@ OPTIONS_OK = 5
 
 host="http://peliculasgratis.biz"
 
+DEBUG = config.get_setting("debug")
 CALIDADES= {"micro1080p":"[COLOR plum]Micro1080p[/COLOR]","dvds":"[COLOR lime]Dvds[/COLOR]",
             "hdrip":"[COLOR dodgerblue]Hdrip[/COLOR]","dvdrip":"[COLOR crimson]Dvdrip[/COLOR]",
             "hdts":"[COLOR aqua]Hdts[/COLOR]","bluray-line":"[COLOR lightslategray]Bluray-line[/COLOR]",
@@ -82,7 +86,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis mainlist")
     itemlist=[]
     itemlist.append( item.clone(title="[COLOR lightskyblue][B]Películas[/B][/COLOR]", action="scraper",url=host,thumbnail="http://imgur.com/fN2p6qH.png", fanart="http://imgur.com/b8OuBR2.jpg",contentType= "movie"))
     itemlist.append( itemlist[-1].clone(title="[COLOR lightskyblue][B]   Más vistas[/B][/COLOR]", action="scraper",url="http://peliculasgratis.biz/catalogue?order=most_viewed",thumbnail="http://imgur.com/fN2p6qH.png", fanart="http://imgur.com/b8OuBR2.jpg",contentType= "movie"))
@@ -96,7 +100,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis search")
     texto = texto.replace(" ","+")
     item.url = "http://peliculasgratis.biz/search/%s" % texto
     
@@ -107,12 +111,12 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 
 def scraper(item):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis scraper")
     itemlist = []
     
     # Descarga la página
@@ -176,7 +180,7 @@ def scraper(item):
 
 
 def fanart(item):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis fanart")
     itemlist = []
     url = item.url
     data = httptools.downloadpage(item.url).data
@@ -468,7 +472,7 @@ def fanart(item):
     return itemlist
 
 def findvideos_series(item):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis findvideos_series")
     itemlist = []
     fanart=""
     check_temp=[]
@@ -538,7 +542,7 @@ def findvideos_series(item):
     return itemlist
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis findvideos")
     itemlist = []
     data = httptools.downloadpage(item.url).data
     
@@ -635,7 +639,7 @@ def play(item):
     
     return itemlist
 def info(item):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis info")
     itemlist = []
     url=item.url
     rating_tmdba_tvdb=item.extra.split("|")[0]
@@ -732,7 +736,7 @@ def info(item):
     infoplus.start(item_info, peliculas)
 
 def info_capitulos(item,images={}):
-    logger.info()
+    logger.info("mitvspain.peliculasgratis info_capitulos")
     url= "https://api.themoviedb.org/3/tv/"+item.extra.split("|")[3]+"/season/"+item.extra.split("|")[9]+"/episode/"+item.extra.split("|")[10]+"?api_key="+api_key+"&language=es"
     if "/0" in url:
         url = url.replace("/0","/")
@@ -893,6 +897,7 @@ def decode(text):
     return data
 def convert_size(size):
    import math
+   from os.path import getsize
    if (size == 0):
        return '0B'
    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")

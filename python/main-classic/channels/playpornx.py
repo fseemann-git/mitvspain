@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (playPornX)
+# Canal (playPornX) por Hernan_Ar_c
 # ------------------------------------------------------------
 
-import re
-import sys
+import urlparse,urllib2,urllib,re
+import os, sys
 
-from core import httptools
 from core import logger
+from core import config
 from core import scrapertools
 from core.item import Item
+from core import servertools
+from core import httptools
 
 host ="http://www.playpornx.net/list-movies/"
 
 def mainlist (item):
     itemlist =[]
-    itemlist.append( Item(channel=item.channel, title="Todas", action="lista", thumbnail='https://s18.postimg.org/fwvaeo6qh/todas.png', fanart='https://s18.postimg.org/fwvaeo6qh/todas.png'))
-    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", url='http://www.playpornx.net/?s=', thumbnail='https://s30.postimg.org/pei7txpa9/buscar.png', fanart='https://s30.postimg.org/pei7txpa9/buscar.png'))
+    itemlist.append( Item(channel=item.channel, title="Todas", action="lista", thumbnail='https://s12.postimg.org/iygbg8ip9/todas.png', fanart='https://s12.postimg.org/iygbg8ip9/todas.png'))
+    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", url='http://www.playpornx.net/?s=', thumbnail='https://s31.postimg.org/qose4p13f/Buscar.png', fanart='https://s31.postimg.org/qose4p13f/Buscar.png'))
 
     return itemlist
 
@@ -42,8 +44,9 @@ def lista (item):
     if itemlist !=[]:
         actual_page_url = item.url
         next_page = scrapertools.find_single_match(data,'rel="next" href="([^"]+)"')
+        import inspect
         if next_page !='':
-           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png',extra=item.extra))
+           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png',extra=item.extra))
     return itemlist
 
 def search (item,texto):

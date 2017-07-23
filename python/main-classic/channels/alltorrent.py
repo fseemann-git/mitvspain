@@ -1,27 +1,46 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para Alltorrent
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
-
+# 
+#------------------------------------------------------------
+import string
 import os
 import re
-import unicodedata
-from threading import Thread
-
+import sys
+import urllib
 from core import config
-from core import httptools
 from core import logger
 from core import scrapertools
 from core import servertools
+from core import httptools
+from platformcode import platformtools
+from core.item import Item, InfoLabels
+import xbmc
+import xbmcgui
 from core import tmdb
-from core.item import Item
+from core.scrapertools import decodeHtmlentities as dhe
+import unicodedata
+from threading import Thread
+
+
+ACTION_SHOW_FULLSCREEN = 36
+ACTION_GESTURE_SWIPE_LEFT = 511
+ACTION_SELECT_ITEM = 7
+ACTION_PREVIOUS_MENU = 10
+ACTION_MOVE_LEFT = 1
+ACTION_MOVE_RIGHT = 2
+ACTION_MOVE_DOWN = 4
+ACTION_MOVE_UP = 3
+OPTION_PANEL = 6
+OPTIONS_OK = 5
+
 
 __modo_grafico__ = config.get_setting('modo_grafico', "ver-pelis")
 
-#Para la busqueda en bing evitando baneos
+DEBUG = config.get_setting("debug")
 
+#Para la busqueda en bing evitando baneos
 
 def browser(url):
     import mechanize
@@ -61,7 +80,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 def mainlist(item):
 
-    logger.info()
+    logger.info("mitvspain.altorrent mainlist")
     itemlist=[]
     i=0
     global i
@@ -75,11 +94,11 @@ def mainlist(item):
     itemlist.append( itemlist[-1].clone(title="[COLOR oldlace]         Por Año[/COLOR]", action="search",thumbnail="http://imgur.com/5EBwccS.png",fanart="http://imgur.com/v3ChkZu.jpg",contentType="movie",extra="año"))
     itemlist.append( itemlist[-1].clone(title="[COLOR oldlace]         Por Rating Imdb[/COLOR]", action="search",thumbnail="http://imgur.com/5EBwccS.png",fanart="http://imgur.com/v3ChkZu.jpg",contentType="movie",extra="rating"))
     
+    
     return itemlist
 
-
-def search(item, texto):
-    logger.info()
+def search(item,texto):
+    logger.info("mitvspain.altorrent search")
     texto = texto.replace(" ","+")
     if item.extra=="titulo":
        item.url = "http://alltorrent.net/?s="+texto
@@ -93,7 +112,7 @@ def search(item, texto):
 
 
 def scraper(item):
-    logger.info()
+    logger.info("mitvspain.alltorrent scraper")
     itemlist=[]
     
     data = httptools.downloadpage(item.url).data
@@ -125,7 +144,7 @@ def scraper(item):
         for item in itemlist:
             if not "Siguiente >>" in item.title:
               if "0." in str(item.infoLabels['rating']):
-                  item.infoLabels['rating']="[COLOR olive]Sin puntuación[/COLOR]"
+                  item.infoLabels['rating']="[COLOR olive]Sin puntuacíon[/COLOR]"  
               else:
                   item.infoLabels['rating']="[COLOR yellow]"+str(item.infoLabels['rating'])+"[/COLOR]"
               item.title= item.title+ "  "+ str(item.infoLabels['rating'])
@@ -135,11 +154,12 @@ def scraper(item):
     for item_tmdb in itemlist:
         logger.info(str(item_tmdb.infoLabels['tmdb_id']))
         
+    
     return itemlist
 
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.altorrent findvideos")
     itemlist = []
     th = Thread(target=get_art(item))
     th.setDaemon(True)
@@ -169,11 +189,9 @@ def findvideos(item):
             thumbnail='http://imgur.com/DNCBjUB.png',extra="library"))
     
     return itemlist
-
-
 def dd_y_o(item):
     itemlist = []
-    logger.info()
+    logger.info("mitvspain.altorrent dd_y_o")
     videolist = servertools.find_video_items(data=item.url)
     for video in videolist:
         icon_server = os.path.join( config.get_runtime_path() , "resources" , "images" , "servers" , "server_"+video.server+".png" )
@@ -182,8 +200,16 @@ def dd_y_o(item):
         itemlist.append(Item(channel=item.channel ,url=video.url, server=video.server,title="[COLOR floralwhite][B]"+video.server+"[/B][/COLOR]",thumbnail=icon_server,fanart=item.extra.split("|")[1], action="play", folder=False) )
     return itemlist
 
+ 
+    
+    '''videolist = servertools.find_video_items(data=url)
+    for video in videolist:
+       itemlist.append(Item(channel=item.channel ,url=video.url, server=video.server,title="[COLOR floralwhite][B]"+video.server+"[/B][/COLOR]",action="play", folder=False) )'''
+    
+    
 
-def fanartv(item, id_tvdb, id, images={}):
+
+def fanartv(item, id_tvdb,id, images={}):
     headers = [['Content-Type', 'application/json']]
     from core import jsontools
     if item.contentType == "movie":
@@ -205,8 +231,9 @@ def fanartv(item, id_tvdb, id, images={}):
     return images
 
 
+
 def get_art(item):
-    logger.info()
+    logger.info("mitvspain.altorrent get_art")
     id =item.infoLabels['tmdb_id']
     check_fanart=item.infoLabels['fanart']
     if item.contentType!="movie":
@@ -350,3 +377,4 @@ def get_art(item):
              item.extra=item.extra+"|"+item.thumbnail
     else:
         item.extra=item.extra+"|"+item.thumbnail
+

@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
+# 
+#------------------------------------------------------------
 import re
 import sys
 import urlparse
-
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.submityourflicks mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos"    , title="Útimos videos" , url="http://www.submityourflicks.com/", viewmode="movie"))
     itemlist.append( Item(channel=item.channel, action="search"    , title="Buscar", url="http://www.submityourflicks.com/index.php?mode=search&q=%s&submit=Search"))
@@ -22,7 +24,7 @@ def mainlist(item):
 
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.channels.submityourflicks search")
     tecleado = texto.replace( " ", "+" )
     item.url = item.url % tecleado
     try:
@@ -31,12 +33,12 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
         
 
 def videos(item):
-    logger.info()
+    logger.info("mitvspain.channels.submityourflicks videos")
     itemlist = [] 
 
     '''
@@ -65,7 +67,7 @@ def videos(item):
         thumbnail = scrapedthumbnail.replace(" ","%20")
         plot = ""
 
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")            
         itemlist.append( Item(channel=item.channel, action="play" , title=title , url=url, thumbnail=thumbnail, plot=plot, folder=False))
 
     next_page_url = scrapertools.find_single_match(data,"<a href='([^']+)' class=\"next\">NEXT</a>")
@@ -76,7 +78,7 @@ def videos(item):
     return itemlist
 
 def play(item):
-    logger.info()
+    logger.info("mitvspain.channels.submityourflicks play")
 
     data = scrapertools.cache_page(item.url)
 

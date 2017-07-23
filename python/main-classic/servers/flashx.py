@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para flashx
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import base64
@@ -62,29 +62,27 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     if "sources:[{file:" not in match:
         page_url = page_url.replace("playvid-", "")
 
-        headers = {'Host': 'www.flashx.tv',
-                   'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36',
-                   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                   'Accept-Language': 'en-US,en;q=0.5',
-                   'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive', 'Upgrade-Insecure-Requests': '1',
-                   'Cookie': ''}
+        headers = {'Host': 'www.flashx.tv', 'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.137 Safari/537.36',
+                  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'Accept-Language': 'en-US,en;q=0.5',
+                  'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive', 'Upgrade-Insecure-Requests': '1',
+                  'Cookie': ''}
         data = httptools.downloadpage(page_url, headers=headers, replace_headers=True).data
         flashx_id = scrapertools.find_single_match(data, 'name="id" value="([^"]+)"')
         fname = scrapertools.find_single_match(data, 'name="fname" value="([^"]+)"')
         hash_f = scrapertools.find_single_match(data, 'name="hash" value="([^"]+)"')
-        post = 'op=download1&usr_login=&id=%s&fname=%s&referer=&hash=%s&imhuman=Proceed+to+video' % (
-        flashx_id, urllib.quote(fname), hash_f)
+        post = 'op=download1&usr_login=&id=%s&fname=%s&referer=&hash=%s&imhuman=Proceed+to+video' % (flashx_id, urllib.quote(fname), hash_f)
         wait_time = scrapertools.find_single_match(data, "<span id='xxc2'>(\d+)")
 
         file_id = scrapertools.find_single_match(data, "'file_id', '([^']+)'")
-        #coding_url = 'https://files.fx.fastcontentdelivery.com/jquery2.js?fx=%s' % base64.encodestring(file_id)
-        #headers['Host'] = "files.fx.fastcontentdelivery.com"
+        coding_url = 'https://files.fx.fastcontentdelivery.com/jquery2.js?fx=%s' % base64.encodestring(file_id)
+        headers['Host'] = "files.fx.fastcontentdelivery.com"
         headers['Referer'] = "https://www.flashx.tv/"
         headers['Accept'] = "*/*"
-        #coding = httptools.downloadpage(coding_url, headers=headers, replace_headers=True).data
+        coding = httptools.downloadpage(coding_url, headers=headers, replace_headers=True).data
+        
         coding_url = 'https://www.flashx.tv/counter.cgi?fx=%s' % base64.encodestring(file_id)
         headers['Host'] = "www.flashx.tv"
-        #coding = httptools.downloadpage(coding_url, headers=headers, replace_headers=True).data
+        coding = httptools.downloadpage(coding_url, headers=headers, replace_headers=True).data
 
         coding_url = 'https://www.flashx.tv/flashx.php?fxfx=3'
         headers['X-Requested-With'] = 'XMLHttpRequest'
@@ -98,6 +96,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         headers.pop('X-Requested-With')
         headers['Content-Type'] = 'application/x-www-form-urlencoded'
         data = httptools.downloadpage('https://www.flashx.tv/dl?playthis', post, headers, replace_headers=True).data
+
         matches = scrapertools.find_multiple_matches(data, "(eval\(function\(p,a,c,k.*?)\s+</script>")
         for match in matches:
             if match.startswith("eval"):
@@ -117,8 +116,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     # Extrae la URL
     # {file:"http://f11-play.flashx.tv/luq4gfc7gxixexzw6v4lhz4xqslgqmqku7gxjf4bk43u4qvwzsadrjsozxoa/video1.mp4"}
     video_urls = []
-    match = match.replace("\\","").replace('\"',"\'")
-    media_urls = scrapertools.find_multiple_matches(match, "{src:'([^']+)'.*?,label:'([^']+)'")
+    media_urls = scrapertools.find_multiple_matches(match, '\{file\:"([^"]+)",label:"([^"]+)"')
     subtitle = ""
     for media_url, label in media_urls:
         if media_url.endswith(".srt") and label == "Spanish":
@@ -129,8 +127,8 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                 filetools.write(subtitle, data)
             except:
                 import traceback
-                logger.info("Error al descargar el subtítulo: " + traceback.format_exc())
-
+                logger.info("mitvspain.servers.flashx Error al descargar el subtítulo: "+traceback.format_exc())
+            
     for media_url, label in media_urls:
         if not media_url.endswith("png") and not media_url.endswith(".srt"):
             video_urls.append(["." + media_url.rsplit('.', 1)[1] + " [flashx]", media_url, 0, subtitle])

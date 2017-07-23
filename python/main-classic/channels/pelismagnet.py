@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para pelismagnet
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 import re
 import urllib
@@ -298,5 +298,5 @@ def search(item, texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []

@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para cineasiaenlinea
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import re
 
 from core import config
-from core import httptools
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
+from core import httptools
 
 host = "http://www.cineasiaenlinea.com/"
 # Configuracion del canal

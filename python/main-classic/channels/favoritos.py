@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
+# mitvspain 4
 # Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain 4.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Lista de vídeos favoritos
 # ------------------------------------------------------------
@@ -28,10 +28,10 @@
 import os
 import time
 
+from core import scrapertools
 from core import config
 from core import filetools
 from core import logger
-from core import scrapertools
 from core.item import Item
 from platformcode import platformtools
 
@@ -61,20 +61,15 @@ def mainlist(item):
             item.thumbnail = thumb
             item.isFavourite = True
 
-            if type(item.context) == str:
-                item.context = item.context.split("|")
-            elif type(item.context) != list:
-                item.context = []
-
-            item.context.extend([{"title": config.get_localized_string(30154),  # "Quitar de favoritos"
-                                  "action": "delFavourite",
-                                  "channel": "favoritos",
-                                  "from_title": item.title},
-                                 {"title": "Renombrar",
-                                  "action": "renameFavourite",
-                                  "channel": "favoritos",
-                                  "from_title": item.title}
-                               ])
+            item.context = [{"title": config.get_localized_string(30154),  # "Quitar de favoritos"
+                             "action": "delFavourite",
+                             "channel": "favoritos",
+                             "from_title": item.title},
+                            {"title": "Renombrar",
+                             "action": "renameFavourite",
+                             "channel": "favoritos",
+                             "from_title": item.title}
+                            ]
             # logger.debug(item.tostring('\n'))
             itemlist.append(item)
 
@@ -247,7 +242,7 @@ def check_bookmark(readpath):
     if itemlist:
         favourites_list = read_favourites()
         for item in itemlist:
-            data = "ActivateWindow(10025,&quot;plugin://plugin.video.pelisalacarta/?" + item.tourl() + "&quot;,return)"
+            data = "ActivateWindow(10025,&quot;plugin://plugin.video.mitvspain/?" + item.tourl() + "&quot;,return)"
             favourites_list.append((item.title, item.thumbnail, data))
         if save_favourites(favourites_list):
             logger.debug("Conversion de txt a xml correcta")

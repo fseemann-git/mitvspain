@@ -8,22 +8,13 @@
         <setting id="channel_language" type="labelenum" values="all|es|en|it" label="30019" default="all"/>
         <setting id="forceview" type="bool" label="30043" default="false"/>
         <setting id="debug" type="bool" label="30003" default="false"/>
-        <setting label="Uso de servidores" type="lsep"/>
-        <setting id="resolve_priority" type="enum" label="Método prioritario" values="Free primero|Premium primero|Debriders primero" default="0"/>
-        <setting id="resolve_stop" type="bool" label="Dejar de buscar cuando encuentre una opción" default="true"/>
-        <setting id="hidepremium" type="bool" label="Ocultar servidores de pago sin cuenta" default="false"/>
-        <setting id="server_stats" type="bool" label="Enviar estadisticas sobre el uso de servidores" default="true"/>
         <setting type="sep"/>
         <setting label="Canales para adultos" type="lsep"/>
-        <setting id="adult_aux_intro_password" type="text" label="Contraseña (por defecto 0000):" option="hidden"  default=""/>
-        <setting id="adult_mode" type="enum" values="Nunca|Siempre|Solo hasta que se reinicie Kodi" label="30002" enable="!eq(-1,)" default="0"/>
-        <setting id="adult_request_password" type="bool" label="Solicitar contraseña para abrir canales de adultos"  enable="!eq(-1,0)+!eq(-2,)" default="true"/>
-        <setting id="adult_aux_new_password1" type="text" label="Nueva contraseña:" option="hidden" enable="!eq(-3,)" default=""/>
-        <setting id="adult_aux_new_password2" type="text" label="Confirmar nueva contraseña:" option="hidden" enable="!eq(-1,)" default=""/>
-
-
+        <setting id="adult_mode" type="bool" label="30002" default="false"/>
+        <setting id="adult_pin" type="text" label="PIN para abrir canal de adultos" option="hidden" default=""/>
         <setting type="sep"/>
         <setting label="Actualizaciones" type="lsep"/>
+
         <setting id="plugin_updates_available" type="number" label="Number of updates available" default="0" visible="false"/>
         <setting id="check_for_plugin_updates" type="bool" label="30001" default="true"/>
         <setting id="check_for_channel_updates" type="bool" label="30004" default="true"/>
@@ -31,7 +22,6 @@
 
     <!-- Login -->
     <category label="30500">
-        <!--
         <setting id="hidepremium" type="bool" label="Ocultar servidores de pago sin cuenta" default="false"/>
 
         <setting type="sep"/>
@@ -67,7 +57,7 @@
         <setting id="crunchyrolluser" type="text" label="30014" enable="eq(-1,true)" default=""/>
         <setting id="crunchyrollpassword" type="text" label="30015" option="hidden" enable="!eq(-1,)+eq(-2,true)" default=""/>
         <setting id="crunchyrollsub" type="enum" label="Idioma de subtítulos preferido en Crunchyroll" values="Español España|Español Latino|Inglés|Italiano|Francés|Portugués|Alemán" default="0"/>
-        -->
+
         <setting type="sep"/>
         <setting id="jdownloader_enabled" type="bool" label="JDownloader" default="false"/>
         <setting id="jdownloader" type="text" label="30022" enable="eq(-1,true)" default="http://127.0.0.1:10025"/>
@@ -75,36 +65,36 @@
         <setting type="sep"/>
         <setting id="personalchannel" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
-        <setting id="personalchannelurl" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
+        <setting id="personalchannellogo" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/sample.png"/>
+        <setting id="personalchannelurl" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
         <setting id="personalchannelpage" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel2" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname2" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo2" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
-        <setting id="personalchannelurl2" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
+        <setting id="personalchannellogo2" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
+        <setting id="personalchannelurl2" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
         <setting id="personalchannelpage2" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel3" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname3" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo3" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
-        <setting id="personalchannelurl3" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
+        <setting id="personalchannellogo3" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
+        <setting id="personalchannelurl3" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
         <setting id="personalchannelpage3" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel4" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname4" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo4" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
-        <setting id="personalchannelurl4" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
+        <setting id="personalchannellogo4" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
+        <setting id="personalchannelurl4" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
         <setting id="personalchannelpage4" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel5" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname5" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo5" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
-        <setting id="personalchannelurl5" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
+        <setting id="personalchannellogo5" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
+        <setting id="personalchannelurl5" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
         <setting id="personalchannelpage5" type="text" label="30047" enable="eq(-4,true)" default="100"/>
     </category>
 
@@ -129,21 +119,20 @@
         <setting label="Biblioteca" type="lsep"/>
         <setting id="folder_tvshows" type="text" label="Nombre de carpeta para 'Series'" default="SERIES"/>
         <setting id="folder_movies" type="text" label="Nombre de carpeta para 'Peliculas'" default="CINE"/>
-        <setting id="library_set_content" type="bool" label="Autoconfigurar biblioteca de XBMC/Kodi para contenido de pelisalacarta" default="false"/>
-        <setting id="library_ask_set_content" type="number" label="" default="1" visible="false"/>
+        <setting id="library_set_content" type="bool" label="Autoconfigurar biblioteca de XBMC/Kodi para contenido de mitvspain" default="false"/>
+        <setting id="library_ask_set_content" type="bool" label="" default="true" visible="false"/>
     </category>
 
     <category label="Otros"><!--30503 -->
-        <!--
         <setting label="Filtros" type="lsep"/>
         <setting id="filter_servers" type="bool" label="30068" default="false"/>
 
         <setting label="30071" type="lsep"/>
         <setting id="whitelist" type="text" label="30069" enable="eq(-2,true)" default=""/>
         <setting id="blacklist" type="text" label="30070" enable="eq(-3,true)" default=""/>
-        -->
+
         <setting label="Info de películas/series en menú contextual" type="lsep"/>
-        <setting id="infoplus" type="bool" label="Mostrar opción Infoplus:" default="true"/>
-        <setting id="extended_info" type="bool" label="Mostrar opción ExtendedInfo (Necesario addon externo):" default="false"/>
+        <setting id="infoplus" type="bool" label="Mostrar opción Infoplus" default="true"/>
+        <setting id="extended_info" type="bool" label="Mostrar opción ExtendedInfo (Necesario addon externo)" default="false"/>
     </category>
 </settings>

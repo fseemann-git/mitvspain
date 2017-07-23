@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para unsoloclic
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
 
+DEBUG = config.get_setting("debug")
+
+
 def mainlist(item):
-    logger.info()
-    item.url="http://unsoloclic.info"
+    logger.info("[unsoloclic.py] mainlist")
+    item.url="http://unsoloclic.info";
     return novedades(item)
 
 def novedades(item):
-    logger.info()
+    logger.info("[unsoloclic.py] novedades")
     itemlist = []
 
     # Descarga la página
@@ -64,10 +68,11 @@ def novedades(item):
     patron += '<p[^<]+<a[^<]+<img.*?src="([^"]+)"'
     
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:
         scrapedplot = ""
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
     
     '''
@@ -75,19 +80,20 @@ def novedades(item):
     '''
     patron  = '<a href="([^"]+)" >\&laquo\; Peliculas anteriores</a>'
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
 
     for match in matches:
         scrapedtitle = ">> Página siguiente"
         scrapedplot = ""
         scrapedurl = urlparse.urljoin(item.url,match)
         scrapedthumbnail = ""
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="novedades", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
 
 def findvideos(item):
-    logger.info()
+    logger.info("[unsoloclic.py] findvideos")
     data = scrapertools.cache_page(item.url)
     itemlist=[]
     
@@ -111,7 +117,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info()
+    logger.info("[unsoloclic.py] play")
     itemlist=[]
 
     if item.server=="linkbucks":

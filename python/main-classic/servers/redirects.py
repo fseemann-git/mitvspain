@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para animeid, animeflv, jkanime
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -32,8 +32,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         headers.append(["Accept-Encoding", "gzip,deflate,sdch"])
         page_url = page_url.replace("https://animeflv.net/embed_izanagi.php?key=",
                                     "https://s2.animeflv.net/izanagi.php?id=")
-        page_url = page_url.replace("http://animeflv.net/embed_yotta.php?key=",
-                                    "https://s1.animeflv.com/gdrive.php?id=")
+        page_url = page_url.replace("http://animeflv.net/embed_yotta.php?key=", "https://s1.animeflv.com/gdrive.php?id=")
         data = scrapertools.cache_page(page_url, headers=headers)
         data = data.replace("\\\\", "")
         data = data.replace("\\/", "/")

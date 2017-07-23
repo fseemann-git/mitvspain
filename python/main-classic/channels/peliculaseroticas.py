@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para peliculaseroticas
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculaseroticas mainlist")
 
     if item.url=="":
         item.url = "http://www.peliculaseroticas.net/"
@@ -28,6 +31,7 @@ def mainlist(item):
     patron += '<a[^<]+<img src="([^"]+)"'
 
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
     itemlist = []
 
     for scrapedurl,scrapedtitle,scrapedthumbnail in matches:

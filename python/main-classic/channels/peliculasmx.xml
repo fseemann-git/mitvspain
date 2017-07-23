@@ -8,24 +8,13 @@
 	<language>es</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/peliculasmx.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/peliculasmx.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/peliculasmx.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/peliculasmx.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>3</version>
-
-	<changes>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>01/11/2016</date>
-			<autor></autor>
-			<description>Adaptado por cambios en la web.</description>
-		</change>
-	</changes>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+	<version>2</version>
+	<date>01/11/2016</date>
+	<changes>Adaptado por cambios en la web</changes>
 
 	<categories>
 		<category>latino</category>

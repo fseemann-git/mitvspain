@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2017  mitvspain@gmail.com
+# 
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # Herramientas de integración con xbmc subtitles
 # Autor: bandavi
@@ -43,8 +43,10 @@ from core import logger
 allchars = string.maketrans('', '')
 deletechars = ',\\/:*"<>|?'
 
+def isGeneric():
+    return True
 
-# Extraemos el nombre de la serie, temporada y numero de capitulo ejemplo: 'fringe 1x01'
+    # Extraemos el nombre de la serie, temporada y numero de capitulo ejemplo: 'fringe 1x01'
 def regex_tvshow(compare, file, sub = ""):
     
   regex_expressions = [ '[Ss]([0-9]+)[][._-]*[Ee]([0-9]+)([^\\\\/]*)$',
@@ -98,7 +100,7 @@ def regex_tvshow(compare, file, sub = ""):
     # Obtiene el nombre de la pelicula o capitulo de la serie guardado previamente en configuraciones del plugin 
     # y luego lo busca en el directorio de subtitulos, si los encuentra los activa.
 def set_Subtitle():
-    logger.info()
+    logger.info("[subtitletools] set_Subtitle")
     
     exts = [".srt", ".sub", ".txt", ".smi", ".ssa", ".ass" ]
     subtitle_folder_path = os.path.join (config.get_data_path(),"subtitles")
@@ -141,7 +143,7 @@ def set_Subtitle():
                     logger.info("Con subtitulo : "+os.path.split(Subname)[1])
                     xbmc.Player().setSubtitles(( Subname ) )
         except:
-             logger.error("error al cargar subtitulos")
+             logger.info("error al cargar subtitulos")
 
     # Limpia los caracteres unicode
 def _normalize(title,charset = 'utf-8'):
@@ -152,7 +154,7 @@ def _normalize(title,charset = 'utf-8'):
             title = title.encode("utf-8")
             title = normalize('NFKD',title ).encode('ASCII','ignore')
         except UnicodeEncodeError:
-            logger.error("Error de encoding")
+            logger.info("Error de encoding")
     else:
         title = string.translate(title,allchars,deletechars)
         try:
@@ -161,19 +163,19 @@ def _normalize(title,charset = 'utf-8'):
             title =  normalize('NFKD', unicode(title,'utf-8'))
             title =  title.encode('ASCII','ignore')
         except UnicodeEncodeError:
-            logger.error("Error de encoding")
+            logger.info("Error de encoding")
     return title
 
     # 
 def searchSubtitle(item):
     
-    if config.get_setting("subtitle_type") == 0:
+    if config.get_setting("subtitle_type") == "0":
         subtitlepath = config.get_setting("subtitlepath_folder")
         if subtitlepath == "":
             subtitlepath = os.path.join (config.get_data_path(),"subtitles")
             config.set_setting("subtitlepath_folder",subtitlepath)
                 
-    elif config.get_setting("subtitle_type") == 1:
+    elif config.get_setting("subtitle_type") == "1":
         subtitlepath = config.get_setting("subtitlepath_keyboard")
         if subtitlepath == "":
             subtitlepath = os.path.join (config.get_data_path(),"subtitles")
@@ -190,7 +192,7 @@ def searchSubtitle(item):
         try:
             os.mkdir(subtitlepath)
         except:
-            logger.error("error no se pudo crear path subtitulos")
+            logger.info("error no se pudo crear path subtitulos")
             return
     
     path_movie_subt = xbmc.translatePath(os.path.join(subtitlepath,"Movies"))
@@ -198,7 +200,7 @@ def searchSubtitle(item):
         try:
             os.mkdir(path_movie_subt)
         except:
-            logger.error( "error no se pudo crear el path Movies")
+            logger.info( "error no se pudo crear el path Movies")
             return
     full_path_tvshow = ""
     path_tvshow_subt = xbmc.translatePath(os.path.join(subtitlepath,"Tvshows"))
@@ -206,7 +208,7 @@ def searchSubtitle(item):
         try:
             os.mkdir(path_tvshow_subt)
         except:
-            logger.error( "error no pudo crear el path Tvshows")
+            logger.info( "error no pudo crear el path Tvshows")
             return
     if item.show in item.title:
         title_new=title = urllib.unquote_plus(item.title)
@@ -214,7 +216,7 @@ def searchSubtitle(item):
         title_new=title = urllib.unquote_plus(item.show + " - " + item.title)
     path_video_temp = xbmc.translatePath(os.path.join( config.get_runtime_path(),"resources","subtitle.mp4" ))
     if not os.path.exists(path_video_temp):
-        logger.error( "error : no existe el video temporal de subtitulos")
+        logger.info( "error : no existe el video temporal de subtitulos")
         return
     #path_video_temp = xbmc.translatePath(os.path.join( ,video_temp + ".mp4" ))
 
@@ -251,7 +253,7 @@ def searchSubtitle(item):
         #xbmctools.launchplayer(full_path_video_new,listitem)
     except:
             copy = False
-            logger.error("Error : no se pudo copiar")
+            logger.info("Error : no se pudo copiar")
             
     
     time.sleep(1)

@@ -1,20 +1,24 @@
 ﻿# -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para Shurweb
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
 
 
+DEBUG = config.get_setting("debug")
+
+
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.gnula mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, title="Estrenos"      , action="peliculas"    , url="http://gnula.nu/peliculas-online/lista-de-peliculas-online-parte-1/", viewmode="movie"))
     itemlist.append( Item(channel=item.channel, title="Generos"       , action="generos"   , url="http://gnula.nu/generos/lista-de-generos/"))
@@ -23,7 +27,7 @@ def mainlist(item):
     return itemlist
 
 def generos(item):
-    logger.info()
+    logger.info("mitvspain.channels.gnula generos")
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
@@ -34,12 +38,13 @@ def generos(item):
     # <strong>Historia antigua</strong> [<a href="http://gnula.nu/generos/lista-de-peliculas-del-genero-historia-antigua/"
     patron = '<strong>([^<]+)</strong> .<a href="([^"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
     for genero,scrapedurl in matches:
         title =  scrapertools.htmlclean(genero)
         plot = ""
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if DEBUG: logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action='peliculas', title=title , url=url , thumbnail=thumbnail , plot=plot , extra=title, viewmode="movie") )
     
     itemlist = sorted(itemlist, key=lambda item: item.title)
@@ -47,7 +52,7 @@ def generos(item):
     return itemlist
 
 def peliculas(item):
-    logger.info()
+    logger.info("mitvspain.channels.gnula peliculas")
 
     '''
     <a class="Ntooltip" href="http://gnula.nu/comedia-romantica/ver-with-this-ring-2015-online/">With This Ring<span><br/>
@@ -63,6 +68,7 @@ def peliculas(item):
     patron += '<img src="([^"]+)"></span></a>(.*?)<br'
 
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
     itemlist = []
     for scrapedurl,scrapedtitle,scrapedthumbnail,resto in matches:
         plot = scrapertools.htmlclean(resto).strip()
@@ -71,14 +77,14 @@ def peliculas(item):
         contentTitle = scrapedtitle
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
-        itemlist.append( Item(channel=item.channel, action='findvideos', title=title , fulltitle=fulltitle , url=url , thumbnail=thumbnail , plot=plot , extra=title, hasContentDetails=True, contentTitle=contentTitle, contentThumbnail=thumbnail,
+        if DEBUG: logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        itemlist.append( Item(channel=item.channel, action='findvideos', title=title , fulltitle=fulltitle , url=url , thumbnail=thumbnail , plot=plot , extra=title, hasContentDetails="true", contentTitle=contentTitle, contentThumbnail=thumbnail,
                               contentType="movie", context=["buscar_trailer"]) )
 
     return itemlist
 
 def findvideos(item):
-    logger.info("item="+item.tostring())
+    logger.info("mitvspain.channels.zpeliculas gnula item="+item.tostring())
 
     # Descarga la página para obtener el argumento
     data = scrapertools.cachePage(item.url)
@@ -91,6 +97,6 @@ def findvideos(item):
         item.thumbnail = newthumbnail
         item.contentThumbnail = newthumbnail
 
-    logger.info("plot="+item.plot)
+    logger.info("[mitvspain.channels.zpeliculas findvideos plot="+item.plot)
 
     return servertools.find_video_items(item=item,data=data)

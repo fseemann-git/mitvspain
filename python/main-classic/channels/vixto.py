@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para vixto
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import re
@@ -18,7 +18,7 @@ from core.item import Item
 
 # Configuracion del canal
 __modo_grafico__ = config.get_setting('modo_grafico', "vixto")
-__perfil__ = config.get_setting('perfil', "vixto")
+__perfil__ = int(config.get_setting('perfil', "vixto"))
 
 # Fijar perfil de color            
 perfil = [['0xFFFFE6CC', '0xFFFFCE9C', '0xFF994D00'],
@@ -345,8 +345,10 @@ def bloque_enlaces(data, filtro_idioma, dict_idiomas, tipo, item):
             server = "streaminto"
         if server == "waaw":
             server = "netutv"
-
-        if servertools.is_server_enabled(server):
+        mostrar_server = True
+        if config.get_setting("hidepremium") == "true":
+            mostrar_server = servertools.is_server_enabled(server)
+        if mostrar_server:
             try:
                 servers_module = __import__("servers." + server)
                 title = "   Mirror en " + server + " (" + language + ") (Calidad " + calidad.strip() + ")"

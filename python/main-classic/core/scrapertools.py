@@ -1,36 +1,36 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2015 mitvspain@gmail.com
+
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Scraper tools for reading and processing web elements
 # --------------------------------------------------------------------------------
 
+import os
 import re
 import time
-
+import urlparse
 import logger
 from core import httptools
-
 
 def cache_page(url,post=None,headers=None,modo_cache=None, timeout=None):
     return cachePage(url,post,headers,modo_cache,timeout=timeout)
@@ -101,7 +101,7 @@ def anti_cloudflare(url, host="", headers=None, post=None, location=False):
 def printMatches(matches):
     i = 0
     for match in matches:
-        logger.info("%d %s" % (i, match))
+        logger.info("mitvspain.core.scrapertools %d %s" % (i , match))
         i = i + 1
 
 def get_match(data,patron,index=0):
@@ -140,7 +140,7 @@ def unescape(text):
                     return unichr(int(text[2:-1])).encode("utf-8")
 
             except ValueError:
-                logger.error("error de valor")
+                logger.info("error de valor")
                 pass
         else:
             # named entity
@@ -159,7 +159,7 @@ def unescape(text):
                 import htmlentitydefs
                 text = unichr(htmlentitydefs.name2codepoint[text[1:-1]]).encode("utf-8")
             except KeyError:
-                logger.error("keyerror")
+                logger.info("keyerror")
                 pass
             except:
                 pass

@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# Canal para wopelis
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# Canal para yaske
+# 
 #------------------------------------------------------------
 import re, urllib, urlparse
 
@@ -256,45 +256,31 @@ def findvideos(item):
     logger.info()
     itemlist = []
     dic_langs = {'esp': 'Español', 'english': 'Ingles', 'japo': 'Japones', 'argentina': 'Latino', 'ntfof':''}
-    dic_servers = {'ntfof': 'Servidor Desconocido', 'stramango': 'streamango', 'flasht': 'flashx'}
 
-    data1 = downloadpage(item.url)
+    data = downloadpage(item.url)
+    data = scrapertools.find_single_match(data,"Online:</h1>(.*?)Descarga:</h1>")
+
     patron = 'onclick="redir\(([^\)]+).*?'
-    patron += '<img style="float:left" src="./[^/]+/([^\.]+).+?'
+    patron += 'src="./hosts/([^\.]+).+?'
     patron += '<span[^>]+>([^<]+).*?'
     patron += '<img(.*?)onerror'
 
-    if "Descarga:</h1>" in data1:
-        list_showlinks = [('Online:', 'Online:</h1>(.*?)Descarga:</h1>'),
-                          ('Download:', 'Descarga:</h1>(.*?)</section>')]
-    else:
-        list_showlinks = [('Online:', 'Online:</h1>(.*?)</section>')]
+    for redir, server, quality, langs in scrapertools.find_multiple_matches(data, patron):
+        redir = redir.split(",")
+        url = redir[0][1:-1]
+        id = redir[1][1:-1]
+        #type = redir[2][1:-1]
 
-    for t in list_showlinks:
-        data = scrapertools.find_single_match(data1, t[1])
-        
-        if data:
-            itemlist.append(Item(title=t[0], text_color = color3, text_blod= True,
-                                 folder=False, thumbnail = thumbnail_host ))
+        url = url.split("','")[0] # [2] = 0 movies, [2] = 1 tvshows
 
-            for redir, server, quality, langs in scrapertools.find_multiple_matches(data, patron): #, server, quality, langs
-                redir = redir.split(",")
-                url = redir[0][1:-1]
-                id = redir[1][1:-1]
-                #type = redir[2][1:-1]
-                #url = url.split("','")[0] # [2] = 0 movies, [2] = 1 tvshows
+        langs = scrapertools.find_multiple_matches(langs, 'src="./images/([^\.]+)')
+        idioma = dic_langs.get(langs[0],langs[0])
+        subtitulos = dic_langs.get(langs[1], langs[1])
+        if subtitulos:
+            idioma = "%s (Sub: %s)" % (idioma, subtitulos)
 
-                langs = scrapertools.find_multiple_matches(langs, 'src="./images/([^\.]+)')
-                idioma = dic_langs.get(langs[0],langs[0])
-                subtitulos = dic_langs.get(langs[1], langs[1])
-                if subtitulos:
-                    idioma = "%s (Sub: %s)" % (idioma, subtitulos)
-
-                if server in dic_servers: server = dic_servers[server]
-
-                itemlist.append(item.clone(url=url, action="play", language=idioma, contentQuality=quality, server=server,
-                                           title="    %s: %s [%s]" % (server.capitalize(), idioma, quality)))
-
+        itemlist.append(item.clone(url=url, action="play", folder=False, server=server,
+                                   title="%s: %s [%s]" % (server.capitalize(), idioma, quality)))
 
     if itemlist and config.get_library_support() and not "library" in item.extra:
         if item.contentType == 'movie':
@@ -306,31 +292,12 @@ def findvideos(item):
             item.url = "http://www.wopelis.com/serie.php?id=" + id
             item.contentSeason = 0
             item.contentEpisodeNumber = 0
-            #logger.error(item)
+            logger.error(item)
             itemlist.append(item.clone(title="Añadir esta serie a la biblioteca",
                              action="add_serie_to_library", extra="episodios###library",
                              text_color=color1, thumbnail=thumbnail_host))
 
     return itemlist
-
-
-def play(item):
-    logger.info()
-    itemlist = []
-
-    # Buscamos video por servidor ...
-    devuelve = servertools.findvideosbyserver(item.url, item.server)
-    if not devuelve:
-        # ...sino lo encontramos buscamos en todos los servidores disponibles
-        devuelve = servertools.findvideos(item.url, skip=True)
-
-    if devuelve:
-        # logger.debug(devuelve)
-        itemlist.append(Item(channel=item.channel, title=item.contentTitle, action="play", server=devuelve[0][2],
-                             url=devuelve[0][1], thumbnail=item.thumbnail, folder=False))
-
-    return itemlist
-
 
 
 def downloadpage(url):

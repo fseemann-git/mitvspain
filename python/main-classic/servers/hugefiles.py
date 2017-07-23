@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para hugefiles
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # Based on the hugefiles resolver from script.modules.urlresolver
 # ------------------------------------------------------------
 

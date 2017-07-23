@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para elitetorrent
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+
+DEBUG = config.get_setting("debug")
 BASE_URL = 'http://www.elitetorrent.net'
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("[elitetorrent.py] mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, title="Docus y TV"     , action="peliculas", url="http://www.elitetorrent.net/categoria/6/docus-y-tv/modo:mini", viewmode="movie_with_plot"))
@@ -30,7 +33,7 @@ def mainlist(item):
     return itemlist
 
 def peliculas(item):
-    logger.info()
+    logger.info("[elitetorrent.py] peliculas")
     itemlist = []
 
     # Descarga la página
@@ -59,7 +62,7 @@ def peliculas(item):
         url = urlparse.urljoin(BASE_URL, scrapedurl)
         thumbnail = urlparse.urljoin(BASE_URL, scrapedthumbnail)
         plot = re.sub('<[^<]+?>', '', scrapedplot)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="play", title=title , url=url , thumbnail=thumbnail , plot=plot , folder=False) )
 
     # Extrae el paginador

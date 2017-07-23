@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
-# infoplus ventana con información del Item
-# ------------------------------------------------------------
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
+# 
+#------------------------------------------------------------
 
 import re
 import xbmc
@@ -196,7 +194,7 @@ class main(xbmcgui.WindowDialog):
                     self.player.play(pl)
             except:
                 import traceback
-                logger.error(traceback.format_exc())
+                logger.info(traceback.format_exc())
 
         if xbmc.Player().isPlaying():
             self.dialog.update(80, '[COLOR teal]Afinado instrumentos en [/COLOR]'+ '[COLOR cyan][B]T[/B][/COLOR]'+'[COLOR paleturquoise][B]V[/B][/COLOR]'+'[COLOR floralwhite]tu[/COLOR]'+'[COLOR darkgray][B]n[/B][/COLOR]'+'[COLOR slategray][B]es[/B][/COLOR]')
@@ -214,7 +212,7 @@ class main(xbmcgui.WindowDialog):
             except:
                 self.infoLabels["fanart"] = 'http://i.imgur.com/XuXGXjN.jpg'
                 import traceback
-                logger.error(traceback.format_exc())
+                logger.info(traceback.format_exc())
         elif self.infoLabels.get("season") and self.images.get("showbackground"):
             for imagen in self.images["showbackground"]:
                 if imagen.get("season") == str(self.infoLabels.get("season", "")):
@@ -243,7 +241,7 @@ class main(xbmcgui.WindowDialog):
             except:
                 self.infoLabels["thumbnail"] = 'http://i.imgur.com/8K5f4Uo.png'
                 import traceback
-                logger.error(traceback.format_exc())
+                logger.info(traceback.format_exc())
         elif not self.item.rating_filma or "image.tmdb.org" in self.infoLabels.get("thumbnail", "") or not self.infoLabels.get("thumbnail"):
             self.infoLabels["thumbnail"] = 'http://i.imgur.com/8K5f4Uo.png'
 
@@ -497,7 +495,7 @@ class main(xbmcgui.WindowDialog):
                         itemlist = channel.search(self.item.clone(), self.infoLabels.get("originaltitle", ""))
                 except:
                     import traceback
-                    logger.error(traceback.format_exc())
+                    logger.info(traceback.format_exc())
             else:
                 check_busqueda = "global"
                 itemlist = busqueda_global(self.item, self.infoLabels)
@@ -641,7 +639,7 @@ class related(xbmcgui.WindowDialog):
                     self.infoLabels["fanart"] = images.get("showbackground", images.get("hdclearart", images.get("clearart")))[0].get("url")
             except:
                 import traceback
-                logger.error(traceback.format_exc())
+                logger.info(traceback.format_exc())
 
         try:
             if self.item.contentType == "movie":
@@ -652,7 +650,7 @@ class related(xbmcgui.WindowDialog):
                 self.infoLabels["thumbnail"] = images.get("hdtvlogo", images.get("tvthumb"))[0].get("url")
         except:
             import traceback
-            logger.error(traceback.format_exc())
+            logger.info(traceback.format_exc())
 
         self.setCoordinateResolution(2)
         self.background = xbmcgui.ControlImage(78, 50, 1053, 634, self.infoLabels.get("fanart", "http://s6.postimg.org/fflvear2p/nofanart.png"))
@@ -912,7 +910,7 @@ class related(xbmcgui.WindowDialog):
                         itemlist = channel.search(self.item.clone(), self.infoLabels.get("originaltitle", ""))
                 except:
                     import traceback
-                    logger.error(traceback.format_exc())
+                    logger.info(traceback.format_exc())
 
             elif control == self.global_search:
                 check_busqueda = "global"
@@ -937,7 +935,7 @@ class related(xbmcgui.WindowDialog):
 
 
 def busqueda_global(item, infoLabels, org_title=False):
-    logger.info()
+    logger.info("mitvspain.channels.buscador search")
     if item.contentType != "movie":
         cat = ["serie"]
     else:
@@ -1886,7 +1884,7 @@ def get_filmaf(item, infoLabels):
                     rating_filma = "[COLOR crimson][B]%s[/B][/COLOR]" % rating
             except:
                 import traceback
-                logger.error(traceback.format_exc())
+                logger.info(traceback.format_exc())
                 rating_filma = "[COLOR crimson][B]%s[/B][/COLOR]" % rating
         plot = scrapertools.find_single_match(data, '<dd itemprop="description">(.*?)</dd>')
         plot = plot.replace("<br><br />", "\n")

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector for openload.co
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -58,7 +58,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
         var_r = scrapertools.find_single_match(text_decode, "window\.[A-z]+\s*=\s*['\"]([^'\"]+)['\"]")
         var_encodes = scrapertools.find_multiple_matches(data, 'id="%s[^"]*">([^<]+)<' % var_r)
-        numeros = scrapertools.find_multiple_matches(data, '_[A-f0-9]+x[A-f0-9]+\s*(?:=|\^)\s*([0-9]{4,}|0x[A-f0-9]{4,})')
+        numeros = scrapertools.find_multiple_matches(data, '_[A-Fa-f0-9]+x[A-Fa-f0-9]+\s*=\s*([0-9]{4,}|0x[A-Fa-f0-9]{4,});')
         op1, op2 = scrapertools.find_single_match(data, '\(0x(\d),0x(\d)\);')
 
         videourl = ""
@@ -97,7 +97,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                     value5 = index1 * 2 + 127 
                     for h in range(4):
                         valorfinal = (value4 >> 8 * h) & (value5)
-                        valorfinal = chr(valorfinal - 1)
+                        valorfinal = chr(valorfinal)
                         if valorfinal != "%":
                             text_decode += valorfinal
                     j += 1

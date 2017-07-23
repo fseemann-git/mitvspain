@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal puyasubs
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import re
 
 from core import config
-from core import httptools
 from core import jsontools
 from core import logger
 from core import scrapertools
@@ -16,7 +15,7 @@ from core.item import Item
 
 
 __modo_grafico__ = config.get_setting('modo_grafico', 'puyasubs')
-__perfil__ = config.get_setting('perfil', "puyasubs")
+__perfil__ = int(config.get_setting('perfil', "puyasubs"))
 
 # Fijar perfil de color            
 perfil = [['0xFFFFE6CC', '0xFFFFCE9C', '0xFF994D00', '0xFFFE2E2E', '0xFFFFD700'],
@@ -29,30 +28,33 @@ else:
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs mainlist")
 
     itemlist = list()
 
     itemlist.append(Item(channel=item.channel, action="listado", title="Novedades Anime", thumbnail=item.thumbnail,
-                         url="http://puya.si/?cat=4", text_color=color1))
+                         url="http://puya.se/?cat=4", text_color=color1))
     itemlist.append(Item(channel=item.channel, action="listado", title="Novedades Doramas", thumbnail=item.thumbnail,
-                         url="http://puya.si/?cat=142", text_color=color1))
+                         url="http://puya.se/?cat=142", text_color=color1))
     itemlist.append(Item(channel=item.channel, action="", title="Descargas", text_color=color2))
     itemlist.append(Item(channel=item.channel, action="descargas", title="   Descargas Animes y Doramas en proceso",
-                         thumbnail=item.thumbnail, url="http://puya.si/?page_id=25501", text_color=color1))
+                         thumbnail=item.thumbnail, url="http://puya.se/?page_id=25501", text_color=color1))
     itemlist.append(Item(channel=item.channel, action="descargas", title="   Descargas Animes Finalizados",
-                         thumbnail=item.thumbnail, url="http://puya.si/?page_id=15388", text_color=color1))
+                         thumbnail=item.thumbnail, url="http://puya.se/?page_id=15388", text_color=color1))
     itemlist.append(Item(channel=item.channel, action="letra", title="   Descargas Animes Finalizados por Letra",
-                         thumbnail=item.thumbnail, url="http://puya.si/?page_id=15388", text_color=color1))
+                         thumbnail=item.thumbnail, url="http://puya.se/?page_id=15388", text_color=color1))
     itemlist.append(Item(channel=item.channel, action="descargas", title="   Descargas Doramas Finalizados",
-                         thumbnail=item.thumbnail, url="http://puya.si/?page_id=25507", text_color=color1))
+                         thumbnail=item.thumbnail, url="http://puya.se/?page_id=25507", text_color=color1))
     itemlist.append(Item(channel=item.channel, action="descargas", title="   Descargas Películas y Ovas",
-                         thumbnail=item.thumbnail, url="http://puya.si/?page_id=25503", text_color=color1))
+                         thumbnail=item.thumbnail, url="http://puya.se/?page_id=25503", text_color=color1))
+                         
     itemlist.append(Item(channel=item.channel, action="torrents", title="Lista de Torrents", thumbnail=item.thumbnail,
-                         url="https://www.frozen-layer.com/buscar/descargas", text_color=color1))
+                         url="https://www.nyaa.se/?page=search&term=puya", text_color=color1))
 
     itemlist.append(Item(channel=item.channel, action="search", title="Buscar anime/dorama/película",
-                         thumbnail=item.thumbnail, url="http://puya.si/?s=", text_color=color3))
+                         thumbnail=item.thumbnail, url="http://puya.se/?s=", text_color=color3))
+    itemlist.append(Item(channel=item.channel, action="search", title="Buscar en torrents", thumbnail=item.thumbnail,
+                         url="https://www.nyaa.se/?page=search&cats=0_0&filter=0&term=puya+", text_color=color3))
 
     itemlist.append(item.clone(title="Configurar canal", action="configuracion", text_color=color5, folder=False))
     return itemlist
@@ -69,27 +71,23 @@ def search(item, texto):
     texto = texto.replace(" ", "+")
     item.url += texto
     item.extra = "busqueda"
-    try:
+    if "torrents" in item.title:
+        return torrents(item)
+    else:
         return listado(item)
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
 
 
 def listado(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs listado")
 
     itemlist = list()
 
-    data = httptools.downloadpage(item.url).data
+    data = scrapertools.downloadpage(item.url)
     bloques = scrapertools.find_multiple_matches(data, '<h2 class="entry-title">(.*?)</article>')
-    patron = 'href="([^"]+)".*?>(.*?)</a>.*?(?:<span class="bl_categ">(.*?)|</span>)</footer>'
+    patron = 'href="([^"]+)".*?>(.*?)<.*?(?:<span class="bl_categ">(.*?)|</span>)src="([^"]+)"'
     for bloque in bloques:
         matches = scrapertools.find_multiple_matches(bloque, patron)
-        for url, title, cat in matches:
-            thumb = scrapertools.find_single_match(bloque, 'src="([^"]+)"')
+        for url, title, cat, thumb in matches:
             tipo = "tvshow"
             if item.extra == "busqueda" and cat:
                 if "Anime" not in cat and "Dorama" not in cat and "Película" not in cat:
@@ -118,14 +116,14 @@ def listado(item):
 
 
 def descargas(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs descargas")
 
     itemlist = list()
     if not item.pagina:
         item.pagina = 0
 
-    data = httptools.downloadpage(item.url).data
-    patron = '<li><a href="(http://puya.si/\?page_id=\d+|http://safelinking.net/[0-9A-z]+)">(.*?)</a>'
+    data = scrapertools.downloadpage(item.url)
+    patron = '<li><a href="(http://puya.se/\?page_id=\d+|http://safelinking.net/[0-9A-z]+)">(.*?)</a>'
     if item.letra:
         bloque = scrapertools.find_single_match(data, '<li>(?:<strong>|)'+item.letra+'(?:</strong>|)</li>(.*?)</ol>')
         matches = scrapertools.find_multiple_matches(bloque, patron)
@@ -160,10 +158,10 @@ def descargas(item):
 
 
 def letra(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs letra")
 
     itemlist = list()
-    data = httptools.downloadpage(item.url).data
+    data = scrapertools.downloadpage(item.url)
     patron = '<li>(?:<strong>|)([A-z#]{1})(?:</strong>|)</li>'
     matches = scrapertools.find_multiple_matches(data, patron)
     for match in matches:
@@ -174,43 +172,40 @@ def letra(item):
     
 
 def torrents(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs torrents")
 
     itemlist = list()
     if not item.pagina:
         item.pagina = 0
 
-    post = "utf8=%E2%9C%93&busqueda=puyasubs&search=Buscar&tab=anime&con_seeds=con_seeds"
-    data = httptools.downloadpage(item.url, post).data
-
-    patron = "<td>.*?href='([^']+)' title='descargar torrent'>.*?title='informacion de (.*?)'.*?<td class='fecha'>.*?<td>(.*?)</td>" \
-             ".*?<span class=\"stats\d+\">(\d+)</span>.*?<span class=\"stats\d+\">(\d+)</span>"
+    data = scrapertools.downloadpage(item.url)
+    patron = '<td class="tlistname">.*?>(.*?)</a>.*?href="([^"]+)".*?<td class="tlistsn">(\d+)</td>' \
+             '<td class="tlistln">(\d+)</td>'
     matches = scrapertools.find_multiple_matches(data, patron)
-    for url, title, size, seeds, leechers in matches[item.pagina:item.pagina+25]:
-        contentTitle = title
-        if "(" in contentTitle:
-            contentTitle = contentTitle.split("(")[0]
-
-        size = size.strip()
+    for title, url, seeds, leechers in matches[item.pagina:item.pagina+21]:
+        contenttitle = title.replace("[TeamDragon] ", "").replace("[PuyaSubs!] ", "") \
+                                   .replace("[Puya+] ", "")
+        contenttitle = scrapertools.find_single_match(contenttitle,
+                                                      "(.*?)(?:\s+\[|\s+–|\s+&#8211;| Episodio| [0-9]{2,3})")
         filtro_tmdb = {"original_language": "ja"}.items()
-        title += "  [COLOR %s][Semillas:%s[/COLOR]|[COLOR %s]Leech:%s[/COLOR]|%s]" % (color4, seeds, color5, leechers, size)
-        url = "https://www.frozen-layer.com" + url
+        title += "  [COLOR %s][Semillas:%s[/COLOR]|[COLOR %s]Leech:%s][/COLOR]" % (color4, seeds, color5, leechers)
+        url = "http:" + url
 
-        itemlist.append(Item(channel=item.channel, action="play", url=url, title=title, contentTitle=contentTitle,
-                             server="torrent", show=contentTitle, contentType="tvshow", text_color=color1,
+        itemlist.append(Item(channel=item.channel, action="play", url=url, title=title, contentTitle=contenttitle,
+                             server="torrent", show=contenttitle, contentType="tvshow", text_color=color1,
                              infoLabels={'filtro': filtro_tmdb}))
     
     from core import tmdb
     tmdb.set_infoLabels_itemlist(itemlist, __modo_grafico__)
 
-    if len(matches) > item.pagina + 25:
-        pagina = item.pagina + 25
+    if len(matches) > item.pagina + 21:
+        pagina = item.pagina + 21
         itemlist.append(Item(channel=item.channel, action="torrents", url=item.url, title=">> Página Siguiente",
                              thumbnail=item.thumbnail, pagina=pagina, text_color=color2))
     else:
-        next_page = scrapertools.find_single_match(data, 'href="([^"]+)" rel="next"')
+        next_page = scrapertools.find_single_match(data, 'href="([^"]+)">&#62;</a>')
         if next_page:
-            next_page = "https://www.frozen-layer.com" + next_page
+            next_page = "http:" + next_page.replace("&#38;", "&")
             itemlist.append(Item(channel=item.channel, action="torrents", url=next_page, title=">> Página Siguiente",
                                  thumbnail=item.thumbnail, pagina=0, text_color=color2))
 
@@ -218,19 +213,21 @@ def torrents(item):
 
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs findvideos")
     if item.infoLabels["tmdb_id"] and not item.infoLabels["plot"]:
         from core import tmdb
         tmdb.set_infoLabels_item(item, True, idioma_busqueda="en")
 
     itemlist = list()
 
-    data = httptools.downloadpage(item.url).data
+    data = scrapertools.downloadpage(item.url)
     idiomas = scrapertools.find_single_match(data, 'Subtitulo:\s*(.*?)<br />')
     calidades = ['720p', '1080p']
-    torrentes = scrapertools.find_multiple_matches(data, '<a href="(https://www.frozen-layer.com/descargas[^"]+)"')
-    if torrentes:
-        for i, enlace in enumerate(torrentes):
+    torrents = scrapertools.find_multiple_matches(data, '<a href="(https://www.frozen-layer.com/descargas[^"]+)"')
+    if not torrents:
+        torrents = scrapertools.find_multiple_matches(data, '<a href="(https://www.nyaa.se/\?page=view[^"]+)"')    
+    if torrents:
+        for i, enlace in enumerate(torrents):
             title = "Ver por Torrent   %s" % idiomas
             if ">720p" in data and ">1080p" in data:
                 try:
@@ -256,7 +253,7 @@ def findvideos(item):
             headers = [['Content-Type', 'application/json;charset=utf-8']]
             hash = safe.rsplit("/", 1)[1]
             post = jsontools.dump_json({"hash": hash})
-            data_sf = httptools.downloadpage("http://safelinking.net/v1/protected", post, headers).data
+            data_sf = scrapertools.downloadpage("http://safelinking.net/v1/protected", post, headers)
             data_sf = jsontools.load_json(data_sf)
 
             for link in data_sf.get("links"):
@@ -286,11 +283,11 @@ def findvideos(item):
 
 
 def carpeta(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs carpeta")
     itemlist = list()
     
     if item.server == "onefichier":
-        data = httptools.downloadpage(item.url).data
+        data = scrapertools.downloadpage(item.url)
 
         patron = '<tr>.*?<a href="([^"]+)".*?>(.*?)</a>.*?<td class="normal">(.*?)</td>'
         matches = scrapertools.find_multiple_matches(data, patron)
@@ -318,7 +315,7 @@ def carpeta(item):
 
 
 def extract_safe(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs extract_safe")
     if item.infoLabels["tmdb_id"] and not item.infoLabels["plot"]:
         from core import tmdb
         tmdb.set_infoLabels_item(item, True, idioma_busqueda="en")
@@ -327,7 +324,7 @@ def extract_safe(item):
     hash = item.url.rsplit("/", 1)[1]
     headers = [['Content-Type', 'application/json;charset=utf-8']]
     post = jsontools.dump_json({"hash": hash})
-    data = httptools.downloadpage("http://safelinking.net/v1/protected", post, headers).data
+    data = scrapertools.downloadpage("http://safelinking.net/v1/protected", post, headers)
     data = jsontools.load_json(data)
 
     for link in data.get("links"):
@@ -351,12 +348,19 @@ def extract_safe(item):
 
 
 def play(item):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs play")
     itemlist = list()
     
-    if item.server == "torrent" and "frozen" in item.url and not item.url.endswith(".torrent"):
-        data = httptools.downloadpage(item.url).data
+    if item.server == "torrent" and "frozen" in item.url:
+        data = scrapertools.downloadpage(item.url)
         enlace = scrapertools.find_single_match(data, "<div id='descargar_torrent'>.*?href='([^']+)'")
+        if enlace:
+            itemlist.append(item.clone(url=enlace))
+    elif item.server == "torrent" and "nyaa.se" in item.url:
+        tid = item.url.rsplit("=", 1)[1]
+        if not tid.isdigit():
+            tid = scrapertools.find_single_match(item.url, 'tid=(\d+)')
+        enlace = "https://www.nyaa.se/?page=download&tid=%s" % tid
         if enlace:
             itemlist.append(item.clone(url=enlace))
     else:
@@ -366,10 +370,10 @@ def play(item):
 
 
 def newest(categoria):
-    logger.info()
+    logger.info("mitvspain.channels.puyasubs newest")
     item = Item()
     try:
-        item.url = "http://puya.si/?cat=4"
+        item.url = "http://puya.se/?cat=4"
         item.extra = "novedades"
         itemlist = listado(item)
 

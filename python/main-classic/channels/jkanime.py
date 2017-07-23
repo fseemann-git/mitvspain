@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para jkanime
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import sys
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="ultimos_capitulos" , title="Últimos Capitulos"           , url="http://jkanime.net/" ))
@@ -23,35 +26,35 @@ def mainlist(item):
     itemlist.append( Item(channel=item.channel, action="letras"  , title="Listado Alfabetico", url="http://jkanime.net/" ))
     itemlist.append( Item(channel=item.channel, action="generos" , title="Listado por Genero", url="http://jkanime.net/" ))
     itemlist.append( Item(channel=item.channel, action="search"  , title="Buscar" ))
-
+  
     return itemlist
 
 def ultimos_capitulos(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime ultimos capitulos")
     itemlist = []
     data = scrapertools.cache_page(item.url)
     data = scrapertools.get_match(data,'<ul class="ratedul">.+?</ul>')
-
+    
     data = data.replace('\t', '')
     data = data.replace('\n','')
     data = data.replace('/thumbnail/','/image/')
-
+    
     patron = '<img src="(http://cdn.jkanime.net/assets/images/animes/.+?)" .+?href="(.+?)">(.+?)<.+?span>(.+?)<'
-    matches = re.compile(patron,re.DOTALL).findall(data)
+    matches = re.compile(patron,re.DOTALL).findall(data)    
 
     for scrapedthumb,scrapedurl,scrapedtitle, scrapedepisode in matches:
         title = scrapedtitle.strip() + scrapedepisode
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = scrapedthumb
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot))
+        itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot))        
 
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime search")
     if item.url=="":
         item.url="http://jkanime.net/buscar/%s/"
     texto = texto.replace(" ","+")
@@ -62,73 +65,73 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 def ultimos(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime ultimos")
     itemlist = []
     data = scrapertools.cache_page(item.url)
     data = scrapertools.get_match(data,'<ul class="latestul">(.*?)</ul>')
-
+    
     patron = '<a href="([^"]+)">([^<]+)<'
-    matches = re.compile(patron,re.DOTALL).findall(data)
+    matches = re.compile(patron,re.DOTALL).findall(data)    
 
     for scrapedurl,scrapedtitle in matches:
         title = scrapedtitle.strip()
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot))
+        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot))        
 
     return itemlist
 
 def generos(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime generos")
     itemlist = []
-
+    
     data = scrapertools.cache_page(item.url)
     data = scrapertools.get_match(data,'<div class="genres">(.*?)</div>')
-
+    
     patron = '<a href="([^"]+)">([^<]+)</a>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
+    matches = re.compile(patron,re.DOTALL).findall(data)    
 
     for scrapedurl,scrapedtitle in matches:
         title = scrapedtitle
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="series" , title=title , url=url, thumbnail=thumbnail, plot=plot, viewmode="movie_with_plot"))
+        itemlist.append( Item(channel=item.channel, action="series" , title=title , url=url, thumbnail=thumbnail, plot=plot, viewmode="movie_with_plot"))        
 
     return itemlist
 
 def letras(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime letras")
     itemlist = []
-
+    
     data = scrapertools.cache_page(item.url)
     data = scrapertools.get_match(data,'<ul class="animelet">(.*?)</ul>')
-
+    
     patron = '<a href="([^"]+)">([^<]+)</a>'
-    matches = re.compile(patron,re.DOTALL).findall(data)
+    matches = re.compile(patron,re.DOTALL).findall(data)    
 
     for scrapedurl,scrapedtitle in matches:
         title = scrapedtitle
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="series" , title=title , url=url, thumbnail=thumbnail, plot=plot, viewmode="movie_with_plot"))
+        itemlist.append( Item(channel=item.channel, action="series" , title=title , url=url, thumbnail=thumbnail, plot=plot, viewmode="movie_with_plot"))        
 
     return itemlist
 
 def series(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime series")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -162,7 +165,7 @@ def series(item):
     patron += '<td>(.*?)</td>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     itemlist = []
-
+    
     for scrapedurl, scrapedthumbnail,scrapedtitle,line1,line2,scrapedplot in matches:
         title = scrapedtitle.strip()+" ("+line1.strip()+") ("+line2.strip()+")"
         extra = line2.strip()
@@ -170,9 +173,9 @@ def series(item):
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         thumbnail = thumbnail.replace("thumbnail","image")
         plot = scrapertools.htmlclean(scrapedplot)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, fanart=thumbnail, plot=plot, extra=extra))
+        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, fanart=thumbnail, plot=plot, extra=extra))        
 
     try:
         siguiente = scrapertools.get_match(data,'<a class="listsiguiente" href="([^"]+)" >Resultados Siguientes')
@@ -193,16 +196,16 @@ def getPagesAndEpisodes(data):
     return 1, 0
 
 def episodios(item):
-    logger.info()
+    logger.info("mitvspain.channels.jkanime episodios")
     itemlist = []
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
-
+    
     scrapedplot = scrapertools.get_match(data,'<meta name="description" content="([^"]+)"/>')
     scrapedthumbnail = scrapertools.find_single_match(data, '<div class="separedescrip">.*?src="([^"]+)"')
 
-
+    
     idserie = scrapertools.get_match(data,"ajax/pagination_episodes/(\d+)/")
     logger.info("idserie="+idserie)
     if " Eps" in item.extra and not "Desc" in item.extra:
@@ -212,7 +215,7 @@ def episodios(item):
         paginas = capitulos/10 + (capitulos%10 > 0)
     else:
         paginas, capitulos = getPagesAndEpisodes(data)
-
+    
     logger.info("idserie="+idserie)
     for numero in range(1,paginas + 1):
 
@@ -222,23 +225,23 @@ def episodios(item):
         headers.append( [ "Referer" , item.url ] )
         data2 = scrapertools.cache_page("http://jkanime.net/ajax/pagination_episodes/"+idserie+"/"+numero_pagina+"/")
         logger.info("data2="+data2)
-
+    
         '''
         [{"number":"1","title":"Rose of Versailles - 1"},{"number":"2","title":"Rose of Versailles - 2"},{"number":"3","title":"Rose of Versailles - 3"},{"number":"4","title":"Rose of Versailles - 4"},{"number":"5","title":"Rose of Versailles - 5"},{"number":"6","title":"Rose of Versailles - 6"},{"number":"7","title":"Rose of Versailles - 7"},{"number":"8","title":"Rose of Versailles - 8"},{"number":"9","title":"Rose of Versailles - 9"},{"number":"10","title":"Rose of Versailles - 10"}]
         [{"id":"14199","title":"GetBackers - 1","number":"1","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14200","title":"GetBackers - 2","number":"2","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14201","title":"GetBackers - 3","number":"3","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14202","title":"GetBackers - 4","number":"4","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14203","title":"GetBackers - 5","number":"5","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14204","title":"GetBackers - 6","number":"6","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14205","title":"GetBackers - 7","number":"7","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14206","title":"GetBackers - 8","number":"8","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14207","title":"GetBackers - 9","number":"9","animes_id":"122","timestamp":"2012-01-04 16:59:30"},{"id":"14208","title":"GetBackers - 10","number":"10","animes_id":"122","timestamp":"2012-01-04 16:59:30"}]
         '''
         patron = '"number"\:"(\d+)","title"\:"([^"]+)"'
         matches = re.compile(patron,re.DOTALL).findall(data2)
-
+    
         #http://jkanime.net/get-backers/1/
         for numero,scrapedtitle in matches:
             title = scrapedtitle.strip()
             url = urlparse.urljoin(item.url,numero)
             thumbnail = scrapedthumbnail
             plot = scrapedplot
-            logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+            if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-            itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, fanart=thumbnail, plot=plot))
+            itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, fanart=thumbnail, plot=plot))        
 
     if len(itemlist)==0:
         try:

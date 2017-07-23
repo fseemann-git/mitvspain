@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para ver un vídeo conociendo su URL
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
 
 
+DEBUG = config.get_setting("debug")
+
+
 def mainlist(item):
-    logger.info()
+    logger.info("[tengourl.py] mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="search", title="Entra aquí y teclea la URL [Enlace a servidor online/descarga]"))
@@ -23,7 +27,7 @@ def mainlist(item):
 
 # Al llamarse "search" la función, el launcher pide un texto a buscar y lo añade como parámetro
 def search(item,texto):
-    logger.info("texto="+texto)
+    logger.info("[tengourl.py] search texto="+texto)
 
     if not texto.startswith("http://"):
         texto = "http://"+texto

@@ -1,32 +1,32 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2015 mitvspain@gmail.com
+
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # tvdb
 # ------------------------------------------------------------
 # Scraper para el site thetvdb.com usando API v2.1
 # Utilizado para obtener datos de series para la biblioteca
-# de pelisalacarta y también Kodi.
+# de mitvspain y también Kodi.
 # ------------------------------------------------------------
 
 import re
@@ -41,12 +41,7 @@ from platformcode import platformtools
 
 HOST = "https://api.thetvdb.com"
 HOST_IMAGE = "http://thetvdb.com/banners/"
-
-# comprobación tras el cambio de tipos en config.get_setting
-if config.get_setting("tvdb_token") is not None:
-    TOKEN = config.get_setting("tvdb_token")
-else:
-    TOKEN = ""
+TOKEN = config.get_setting("tvdb_token")
 
 DEFAULT_LANG = "es"
 DEFAULT_HEADERS = {
@@ -433,7 +428,6 @@ class Tvdb:
 
         else:
             dict_html = jsontools.load_json(html)
-            # logger.debug("dict_html %s" % dict_html)
 
             if "token" in dict_html:
                 token = dict_html["token"]
@@ -456,7 +450,7 @@ class Tvdb:
             response.close()
 
         except urllib2.HTTPError, err:
-            logger.error("err.code es %s" % err.code)
+            logger.info("err.code es %s" % err.code)
             # si hay error 401 es que el token se ha pasado de tiempo y tenemos que volver a llamar a login
             if err.code == 401:
                 cls.__login()

@@ -11,18 +11,13 @@
 	<thumbnail>http://i.imgur.com/x9AdvBx.png</thumbnail>
 	<bannermenu>http://i.imgur.com/dTZwCPq.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>12</version>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+	<version>11</version>
 	
     <changes>
 		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
 			<date>05/01/2017</date>
-			<autor></autor>
+			<autor>GinSakata</autor>
 			<description>
 				Actualizada url de la opción Novedades
 				Arreglado un error que impedia que se mostrara un solo resultado al realizar busquedas
@@ -31,7 +26,7 @@
 		</change>
 		<change>
 			<date>01/07/2016</date>
-			<autor></autor>
+			<autor>SeiTaN</autor>
 			<description>nuevo canal</description>
 		</change>
 	</changes>

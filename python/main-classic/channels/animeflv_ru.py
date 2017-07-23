@@ -1,27 +1,21 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# 
 # ------------------------------------------------------------
 
 import re
 import urlparse
 
+from channels import renumbertools
 from core import httptools
 from core import jsontools
 from core import logger
 from core import scrapertools
 from core.item import Item
-from core import config
-if config.is_xbmc():
-	from channels import renumbertools
-if not config.is_xbmc():
-	from platformcode import platformtools
-	platformtools.dialog_notification("¡ALERTA!",
-                                                "El renumerado no funciona "
-                                                "en la version Plex o Mediaserver")
 
 HOST = "https://animeflv.ru/"
+
 
 def mainlist(item):
     logger.info()
@@ -36,10 +30,12 @@ def mainlist(item):
     itemlist.append(Item(channel=item.channel, action="search", title="    Título"))
     itemlist.append(Item(channel=item.channel, action="search_section", title="    Género", url=HOST + "animes",
                          extra="genre"))
-    if config.is_xbmc():
-     itemlist = renumbertools.show_option(item.channel, itemlist)
+
+    if renumbertools.context:
+        itemlist = renumbertools.show_option(item.channel, itemlist)
 
     return itemlist
+
 
 def clean_title(title):
     year_pattern = r'\([\d -]+?\)'
@@ -55,33 +51,26 @@ def search(item, texto):
     post = "value=%s" % texto
     data = httptools.downloadpage(item.url, post=post).data
 
-    try:
-        dict_data = jsontools.load_json(data)
+    dict_data = jsontools.load_json(data)
 
-        for e in dict_data:
-            title = clean_title(scrapertools.htmlclean(e["name"]))
-            url = e["url"]
-            plot = e["description"]
-            thumbnail = HOST + e["thumb"]
-            new_item = item.clone(action="episodios", title=title, url=url, plot=plot, thumbnail=thumbnail)
+    for e in dict_data:
+        title = clean_title(scrapertools.htmlclean(e["name"]))
+        url = e["url"]
+        plot = e["description"]
+        thumbnail = HOST + e["thumb"]
+        new_item = item.clone(action="episodios", title=title, url=url, plot=plot, thumbnail=thumbnail)
 
-            if "Pelicula" in e["genre"]:
-                new_item.contentType = "movie"
-                new_item.contentTitle = title
-            else:
-                new_item.show = title
-                if config.is_xbmc():
-                  new_item.context = renumbertools.context
+        if "Pelicula" in e["genre"]:
+            new_item.contentType = "movie"
+            new_item.contentTitle = title
+        else:
+            new_item.show = title
+            new_item.context = renumbertools.context
 
-            itemlist.append(new_item)
-
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
+        itemlist.append(new_item)
 
     return itemlist
+
 
 def search_section(item):
     logger.info()
@@ -95,13 +84,11 @@ def search_section(item):
 
     for url, title in matches:
         url = "%s/nombre/lista" % url
-        if config.is_xbmc():
-         itemlist.append(Item(channel=item.channel, action="listado", title=title, url=url,
+        itemlist.append(Item(channel=item.channel, action="listado", title=title, url=url,
                              context=renumbertools.context))
-        if not config.is_xbmc():
-         itemlist.append(Item(channel=item.channel, action="listado", title=title, url=url))
 
     return itemlist
+
 
 def newest(categoria):
     itemlist = []
@@ -131,10 +118,7 @@ def novedades_episodios(item):
             season = 1
             episode = 1
         else:
-         if config.is_xbmc():
-          season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
-         if not config.is_xbmc():
-          season = 1
+            season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
 
         title = "%s: %sx%s" % (show, season, str(episode).zfill(2))
         url = urlparse.urljoin(HOST, url)
@@ -146,6 +130,7 @@ def novedades_episodios(item):
         itemlist.append(new_item)
 
     return itemlist
+
 
 def novedades_anime(item):
     logger.info()
@@ -167,19 +152,19 @@ def novedades_anime(item):
                         fulltitle=title)
 
         new_item.show = title
-        if config.is_xbmc():
-         new_item.context = renumbertools.context
+        new_item.context = renumbertools.context
 
         itemlist.append(new_item)
 
     return itemlist
-	
+
+
 def listado(item):
     logger.info()
 
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|-\s", "", data)
-    # logger.debug("datito %s" % data)
+    logger.debug("datito %s" % data)
 
     url_pagination = scrapertools.find_single_match(data, '<li class="current">.*?</li>[\s]<li><a href="([^"]+)">')
 
@@ -205,8 +190,7 @@ def listado(item):
             new_item.contentTitle = title
         else:
             new_item.show = title
-            if config.is_xbmc():
-             new_item.context = renumbertools.context
+            new_item.context = renumbertools.context
 
         itemlist.append(new_item)
 
@@ -243,10 +227,7 @@ def episodios(item):
             season = 1
             episode = 1
         else:
-         if config.is_xbmc():
-          season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
-         if not config.is_xbmc():
-          season = 1
+            season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
 
         title = "%s: %sx%s" % (item.title, season, str(episode).zfill(2))
 

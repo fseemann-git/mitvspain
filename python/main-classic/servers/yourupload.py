@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# MiTvSpain - XBMC Plugin
 # Conector para yourupload
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+
+#------------------------------------------------------------
 
 import re
 
@@ -14,7 +14,7 @@ from core import scrapertools
 
 def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
-
+    
     data = httptools.downloadpage(page_url).data
     if ("File was deleted" or "File not found") in data:
         return False, "[Yourupload] El archivo no existe o ha sido borrado"
@@ -50,8 +50,8 @@ def find_videos(data):
     encontrados.add("http://www.yourupload.com/embed/embed")
     devuelve = []
 
-    # http://www.yourupload.com/embed/2PU6jqindD1Q
-    # http://embed.yourupload.com/2PU6jqindD1Q
+    #http://www.yourupload.com/embed/2PU6jqindD1Q
+    #http://embed.yourupload.com/2PU6jqindD1Q
     patronvideos = 'yourupload.com/(?:watch/|embed/|)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
@@ -64,5 +64,5 @@ def find_videos(data):
             encontrados.add(url)
         else:
             logger.info("  url duplicada=" + url)
-
+            
     return devuelve

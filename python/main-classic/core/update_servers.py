@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2015 mitvspain@gmail.com
+
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # update_servers.py
 # --------------------------------------------------------------------------------
@@ -32,7 +32,9 @@ from core import config
 from core import scrapertools
 from core import servertools
 
-remote_url = "https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/servers/"
+DEBUG = config.get_setting("debug")
+
+remote_url = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/servers/"
 local_folder = os.path.join( config.get_runtime_path(), "servers" )
 
 ### Procedures

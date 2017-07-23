@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para filesmonster.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
-import os
+# 
+#------------------------------------------------------------
 import re
+import os
+
 
 from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+
+DEBUG = config.get_setting("debug")
+
 def strip_tags(value):
     return re.sub(r'<[^>]*?>', '', value)
     
 
 def mainlist(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] mainlist")
     user=config.get_setting("filesmonsteruser")
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="unusualporn" , title="Canal unusualporn.net"         , thumbnail="http://filesmonster.biz/img/logo.png"))    
@@ -29,7 +33,7 @@ def mainlist(item):
 
 
 def filesmonster(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] filesmonster")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos"    , title="Ultimos vídeos" , thumbnail="http://photosex.biz/imager/w_400/h_400/9f869c6cb63e12f61b58ffac2da822c9.jpg", url="http://filesmonster.filesdl.net"))         
@@ -40,7 +44,7 @@ def filesmonster(item):
 
 
 def unusualporn(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] unusualporn")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos_2", title="Últimos vídeos", url="http://unusualporn.net/", thumbnail="http://photosex.biz/imager/w_400/h_500/e48337cd95bbb6c2c372ffa6e71441ac.jpg"))    
@@ -50,7 +54,7 @@ def unusualporn(item):
 
 
 def files_monster(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] unusualporn")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos_3", title="Últimos vídeos", url="http://www.files-monster.org/", thumbnail="http://photosex.biz/imager/w_400/h_500/e48337cd95bbb6c2c372ffa6e71441ac.jpg"))    
@@ -63,7 +67,7 @@ def files_monster(item):
 def favoritos(item):
 	user=config.get_setting("filesmonsteruser")
 	password=config.get_setting("filesmonsterpassword")
-	logger.info()
+	logger.info("[filesmonster_catalogue.py] favoritos")
 	name_file = os.path.splitext(os.path.basename(__file__))[0]
 	fname = os.path.join(config.get_data_path(), "settings_channels", name_file + "_favoritos.txt")
 	fa = open(fname,'a+')
@@ -104,7 +108,7 @@ def favoritos(item):
 
 
 def quitar_favorito(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] categorias")
     itemlist = [] 
 
     data = scrapertools.downloadpage(item.url)
@@ -114,7 +118,7 @@ def quitar_favorito(item):
     
     
 def anadir_favorito(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] anadir_favoritos")
     name_file = os.path.splitext(os.path.basename(__file__))[0]
     fname = os.path.join(config.get_data_path(), "settings_channels", name_file + "_favoritos.txt")
     user=config.get_setting("filesmonsteruser")
@@ -158,7 +162,7 @@ def anadir_favorito(item):
 
 
 def categorias(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] categorias")
     itemlist = [] 
 
     data = scrapertools.downloadpage(item.url)
@@ -176,7 +180,7 @@ def categorias(item):
 
 
 def categorias_2(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] categorias")
     itemlist = [] 
 
     data = scrapertools.downloadpage(item.url)
@@ -192,7 +196,7 @@ def categorias_2(item):
     
     
 def categorias_3(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] categorias")
     itemlist = [] 
 
     data = scrapertools.downloadpage(item.url)
@@ -209,7 +213,7 @@ def categorias_3(item):
     
     
 def search(item,texto):
-    logger.info("texto:" + texto)
+    logger.info("[filesmonster_catalogue.py] search:" + texto)
     original=item.url
     item.url = item.url % texto
     try:
@@ -223,14 +227,14 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 
 
 
 def videos(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] list")
     itemlist = []
     
     url = item.url
@@ -253,7 +257,7 @@ def videos(item):
 
 
 def videos_2(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] list")
     itemlist = []
     url_limpia=item.url.split("?")[0]
     url = item.url
@@ -276,7 +280,7 @@ def videos_2(item):
     
     
 def videos_3(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] list")
     itemlist = []
     
     url = item.url
@@ -302,7 +306,7 @@ def videos_3(item):
 
 
 def detail(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] detail")
     itemlist = []
 
     data=scrapertools.downloadpage(item.url)
@@ -335,7 +339,7 @@ def detail(item):
 
 
 def detail_2(item):
-    logger.info()
+    logger.info("[filesmonster_catalogue.py] detail")
     itemlist = []
 
 	 # descarga la pagina

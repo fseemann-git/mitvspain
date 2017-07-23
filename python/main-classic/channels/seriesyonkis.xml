@@ -8,24 +8,13 @@
 	<language>es</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/seriesyonkis.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/seriesyonkis.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/seriesyonkis.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/seriesyonkis.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>30</version>
-
-	<changes>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>11/07/2016</date>
-			<autor></autor>
-			<description>Reparada búsqueda y soluciona error en findvideos</description>
-		</change>
-	</changes>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+	<version>29</version>
+	<date>11/07/2016</date>
+	<changes>Reparada búsqueda y soluciona error en findvideos</changes>
 
 	<categories>
 		<category>serie</category>

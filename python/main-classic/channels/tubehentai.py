@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para tubehentai
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("[tubehentai.py] mainlist")
     itemlist = []
     itemlist.append(Item(channel=item.channel, title="Novedades" , action="novedades" , url="http://tubehentai.com/" ))
     itemlist.append(Item(channel=item.channel, title="Buscar" , action="search" , url="http://tubehentai.com/search/%s/page1.html" ))
@@ -21,7 +24,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("[tubehentai.py] search")
 
     texto = texto.replace(" ", "%20")
  
@@ -32,17 +35,18 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
         
 def novedades(item):
-    logger.info()
+    logger.info("[tubehentai.py] getnovedades")
 
     # Descarga la página
     data = scrapertools.cachePage(item.url)
     #<a href="http://tubehentai.com/videos/slave_market_¨c_ep1-595.html"><img class="img" width="145" src="http://tubehentai.com/media/thumbs/5/9/5/./f/595/595.flv-3.jpg" alt="Slave_Market_&Acirc;&uml;C_Ep1" id="4f4fbf26f36
     patron = '<a href="(http://tubehentai.com/videos/[^"]+)"><img.*?src="(http://tubehentai.com/media/thumbs/[^"]+)" alt="([^"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
 
     itemlist = []
     for match in matches:
@@ -51,7 +55,7 @@ def novedades(item):
         scrapedurl = match[0]
         scrapedthumbnail = match[1].replace(" ", "%20")
         scrapedplot = scrapertools.htmlclean(match[2].strip())
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
 
         # Añade al listado de XBMC
         itemlist.append( Item(channel=item.channel, action="play", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=False) )
@@ -66,13 +70,13 @@ def novedades(item):
 
     if len(matches)>0:
         scrapedurl = urlparse.urljoin(item.url,"/" + matches[0])
-        logger.info(scrapedurl)
+        logger.info("[tubehentai.py] " + scrapedurl)
         itemlist.append( Item(channel=item.channel, action="novedades", title=">> Página siguiente" , url=scrapedurl) )
 
     return itemlist
 
 def play(item):
-    logger.info()
+    logger.info("[tubehentai.py] detail")
     itemlist=[]
     
     #s1.addParam("flashvars","overlay=http://tubehentai.com/media/thumbs/5/2/3/9/c/5239cf74632cbTHLaBlueGirlep3%20%20Segment2000855.000001355.000.mp4

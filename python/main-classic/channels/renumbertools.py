@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
+# mitvspain 4
 # Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain 4.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # renumeratetools - se encarga de renumerar episodios
 # --------------------------------------------------------------------------------
@@ -29,6 +29,7 @@ import os
 
 import xbmcgui
 from core import config
+from core import filetools
 from core import jsontools
 from core import logger
 from core.item import Item
@@ -57,16 +58,45 @@ context = context()
 
 
 def show_option(channel, itemlist):
-
-    if context:
-        itemlist.append(Item(channel=__channel__, title="[COLOR yellow]Configurar renumeración en series...[/COLOR]",
-                             action="load", from_channel=channel))
+    itemlist.append(Item(channel=__channel__, title="[COLOR yellow]Configurar renumeración en series...[/COLOR]",
+                         action="load", from_channel=channel))
 
     return itemlist
 
 
 def load(item):
     return mainlist(channel=item.from_channel)
+
+
+def get_tvshows(from_channel):
+    """
+    Obtiene las series renumeradas de un canal
+
+    :param from_channel: canal que tiene las series renumeradas
+    :type from_channel: str
+    :return: dict con las series
+    :rtype: dict
+    """
+    logger.info()
+    dict_series = {}
+    name_file = from_channel
+
+    if not os.path.exists(os.path.join(config.get_data_path(), "settings_channels")):
+        os.mkdir(os.path.join(config.get_data_path(), "settings_channels"))
+
+    fname = os.path.join(config.get_data_path(), "settings_channels", name_file + "_data.json")
+
+    data = filetools.read(fname)
+    dict_data = jsontools.load_json(data)
+
+    check_json_file(data, fname, dict_data)
+
+    if TAG_TVSHOW_RENUMERATE in dict_data:
+        dict_series = dict_data[TAG_TVSHOW_RENUMERATE]
+
+    logger.debug("json_series: {0}".format(dict_series))
+
+    return dict_series
 
 
 def mainlist(channel):
@@ -80,7 +110,7 @@ def mainlist(channel):
     """
     logger.info()
     itemlist = []
-    dict_series = jsontools.get_node_from_data_json(channel, TAG_TVSHOW_RENUMERATE)
+    dict_series = get_tvshows(channel)
 
     idx = 0
     for tvshow in sorted(dict_series):
@@ -90,7 +120,7 @@ def mainlist(channel):
 
         idx += 1
         name = tvshow
-        title = "Configurar [COLOR %s][%s][/COLOR]" % (tag_color, name)
+        title = "Configurar [COLOR {0}][{1}][/COLOR]".format(tag_color, name)
 
         itemlist.append(Item(channel=__channel__, action="config_item", title=title, show=name, from_channel=channel))
 
@@ -109,9 +139,9 @@ def config_item(item):
     :param item: item
     :type item: Item
     """
-    logger.info("item %s" % item.tostring("\n"))
+    logger.info("item {0}".format(item.tostring("\n")))
 
-    dict_series = jsontools.get_node_from_data_json(item.from_channel, TAG_TVSHOW_RENUMERATE)
+    dict_series = get_tvshows(item.from_channel)
     data = dict_series.get(item.show, {})
 
     if data:
@@ -134,33 +164,52 @@ def numbered_for_tratk(channel, show, season, episode):
     """
     Devuelve la temporada y episodio convertido para que se marque correctamente en tratk.tv
 
-    @param channel: Nombre del canal
-    @type channel: str
-    @param show: Nombre de la serie a comprobar
-    @type show: str
-    @param season: Temporada que devuelve el scrapper
-    @type season: int
-    @param episode: Episodio que devuelve el scrapper
-    @type episode: int
-    @return: season, episode
-    @rtype: int, int
+    :param show: Nombre de la serie a comprobar
+    :type show: str
+    :param season: Temporada que devuelve el scrapper
+    :type season: int
+    :param episode: Episodio que devuelve el scrapper
+    :type episode: int
+    :return: season, episode
+    :rtype: int, int
     """
     logger.info()
     show = show.lower()
 
     new_season = season
     new_episode = episode
-    dict_series = jsontools.get_node_from_data_json(channel, TAG_TVSHOW_RENUMERATE)
+    dict_series = {}
 
-    # ponemos en minusculas el key, ya que previamente hemos hecho lo mismo con show.
-    for key in dict_series.keys():
-        new_key = key.lower()
-        if new_key != key:
-            dict_series[new_key] = dict_series[key]
-            del dict_series[key]
+    # name_file = os.path.splitext(os.path.basename(__file__))[0]
+    name_file = channel
+    fname = os.path.join(config.get_data_path(), "settings_channels", name_file + "_data.json")
+
+    if os.path.isfile(fname):
+
+        data = ""
+
+        try:
+            f = open(fname, "r")
+            for line in f:
+                data += line
+            f.close()
+        except EnvironmentError:
+            logger.info("ERROR al leer el archivo: {0}".format(fname))
+
+        json_data = jsontools.load_json(data)
+
+        if 'TVSHOW_RENUMBER' in json_data:
+            dict_series = json_data['TVSHOW_RENUMBER']
+
+        # ponemos en minusculas el key, ya que previamente hemos hecho lo mismo con show.
+        for key in dict_series.keys():
+            new_key = key.lower()
+            if new_key != key:
+                dict_series[new_key] = dict_series[key]
+                del dict_series[key]
 
     if show in dict_series:
-        logger.debug("ha encontrado algo: %s" % dict_series[show])
+        logger.info("ha encontrado algo: {0}".format(dict_series[show]))
 
         if len(dict_series[show]['season_episode']) > 1:
             for row in dict_series[show]['season_episode']:
@@ -174,21 +223,22 @@ def numbered_for_tratk(channel, show, season, episode):
             new_season = dict_series[show]['season_episode'][0][0]
             new_episode += dict_series[show]['season_episode'][0][1]
 
-    logger.debug("%s:%s" % (new_season, new_episode))
+    logger.info("{0}:{1}".format(new_season, new_episode))
     return new_season, new_episode
 
 
 def borrar(channel, show):
     logger.info()
     heading = "¿Está seguro que desea eliminar renumeración?"
-    line1 = "Pulse 'Si' para eliminar la renumeración de [COLOR blue]%s[/COLOR], pulse 'No' o cierre la ventana " \
-            "para no hacer nada." % show.strip()
+    line1 = "Pulse 'Si' para eliminar la renumeración de [COLOR blue]{0}[/COLOR], pulse 'No' o cierre la ventana " \
+            "para no hacer nada.".format(show.strip())
 
     if platformtools.dialog_yesno(heading, line1) == 1:
-        dict_series = jsontools.get_node_from_data_json(channel, TAG_TVSHOW_RENUMERATE)
+        dict_series = get_tvshows(channel)
         dict_series.pop(show, None)
 
-        result, json_data = jsontools.update_json_data(dict_series, channel, TAG_TVSHOW_RENUMERATE)
+        fname, json_data = update_json_data(dict_series, channel)
+        result = filetools.write(fname, json_data)
 
         if result:
             message = "FILTRO ELIMINADO"
@@ -201,7 +251,7 @@ def borrar(channel, show):
 
 def add_season(data=None):
 
-    logger.debug("data %s" % data)
+    logger.debug("data {0}".format(data))
     heading = "Introduzca el número de la temporada"
     # default = 2
     # se reordena la lista
@@ -243,10 +293,10 @@ def add_season(data=None):
 
 def write_data(channel, show, data):
     # OBTENEMOS LOS DATOS DEL JSON
-    dict_series = jsontools.get_node_from_data_json(channel, TAG_TVSHOW_RENUMERATE)
+    dict_series = get_tvshows(channel)
     tvshow = show.strip()
     list_season_episode = dict_series.get(tvshow, {}).get(TAG_SEASON_EPISODE, [])
-    logger.debug("data %s" % list_season_episode)
+    logger.debug("data {0}".format(list_season_episode))
 
     if data:
         # cambiamos el orden para que se vea en orden descendente y usarse bien en el _data.json
@@ -258,7 +308,8 @@ def write_data(channel, show, data):
         # hemos borrado todos los elementos, por lo que se borra la serie del fichero
         dict_series.pop(tvshow, None)
 
-    result, json_data = jsontools.update_json_data(dict_series, channel, TAG_TVSHOW_RENUMERATE)
+    fname, json_data = update_json_data(dict_series, channel)
+    result = filetools.write(fname, json_data)
 
     if result:
         if data:
@@ -271,6 +322,67 @@ def write_data(channel, show, data):
     heading = show.strip()
     platformtools.dialog_notification(heading, message)
 
+
+def check_json_file(data, fname, dict_data):
+    """
+    Comprueba que si dict_data(conversion del fichero JSON a dict) no es un diccionario, se genere un fichero con
+    data de nombre fname.bk.
+
+    :param data: contenido del fichero fname
+    :type data: str
+    :param fname: nombre del fichero leido
+    :type fname: str
+    :param dict_data: nombre del diccionario
+    :type dict_data: dict
+    """
+    logger.info()
+    if not dict_data:
+        logger.error("Error al cargar el json del fichero {0}".format(fname))
+
+        if data != "":
+            # se crea un nuevo fichero
+            title = filetools.write("{0}.bk".format(fname), data)
+            if title != "":
+                logger.error("Ha habido un error al guardar el fichero: {0}.bk"
+                             .format(fname))
+            else:
+                logger.debug("Se ha guardado una copia con el nombre: {0}.bk"
+                             .format(fname))
+        else:
+            logger.debug("Está vacío el fichero: {0}".format(fname))
+
+
+def update_json_data(dict_series, filename):
+    """
+    actualiza el json_data de un fichero con el diccionario pasado
+
+    :param dict_series: diccionario con las series
+    :type dict_series: dict
+    :param filename: nombre del fichero para guardar
+    :type filename: str
+    :return: fname, json_data
+    :rtype: str, dict
+    """
+    logger.info()
+    if not os.path.exists(os.path.join(config.get_data_path(), "settings_channels")):
+        os.mkdir(os.path.join(config.get_data_path(), "settings_channels"))
+    fname = os.path.join(config.get_data_path(), "settings_channels", filename + "_data.json")
+    data = filetools.read(fname)
+    dict_data = jsontools.load_json(data)
+    # es un dict
+    if dict_data:
+        if TAG_TVSHOW_RENUMERATE in dict_data:
+            logger.info("   existe el key SERIES")
+            dict_data[TAG_TVSHOW_RENUMERATE] = dict_series
+        else:
+            logger.info("   NO existe el key SERIES")
+            new_dict = {TAG_TVSHOW_RENUMERATE: dict_series}
+            dict_data.update(new_dict)
+    else:
+        logger.info("   NO es un dict")
+        dict_data = {TAG_TVSHOW_RENUMERATE: dict_series}
+    json_data = jsontools.dump_json(dict_data)
+    return fname, json_data
 
 # Align
 ALIGN_LEFT = 0

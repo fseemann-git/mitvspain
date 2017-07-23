@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para Inkapelis
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 
 from core import config
@@ -16,7 +16,7 @@ from core.item import Item
 
 
 __modo_grafico__ = config.get_setting("modo_grafico", "inkapelis")
-__perfil__ = config.get_setting("perfil", "inkapelis")
+__perfil__ = int(config.get_setting("perfil", "inkapelis"))
 
 # Fijar perfil de color
 perfil = [['0xFFFFE6CC', '0xFFFFCE9C', '0xFF994D00', '0xFFFE2E2E'],
@@ -105,7 +105,7 @@ def generos(item):
     matches = scrapertools.find_multiple_matches(data, '<li class="cat-item cat-item-.*?><a href="([^"]+)".*?>(.*?)<b>')
 
     for scrapedurl, scrapedtitle in matches:
-        if scrapedtitle == "Eroticas +18 " and config.get_setting("adult_mode") != "0":
+        if scrapedtitle == "Eroticas +18 " and config.get_setting("enableadultmode"):
             itemlist.append(item.clone(action="eroticas", title=scrapedtitle, url=scrapedurl))
         elif (scrapedtitle != "Estrenos ") and (scrapedtitle != "Próximos Estrenos "):
             itemlist.append(item.clone(action="entradas", title=scrapedtitle, url=scrapedurl))

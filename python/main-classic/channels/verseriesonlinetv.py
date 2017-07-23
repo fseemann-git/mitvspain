@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# 
 #------------------------------------------------------------
 import os
 import re
@@ -32,7 +32,7 @@ OPTIONS_OK = 5
 api_key="2e2160006592024ba87ccdf78c28f49f"
 api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
-
+DEBUG = config.get_setting("debug")
 def browser(url):
     import mechanize
     
@@ -68,7 +68,7 @@ def browser(url):
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.bricocine mainlist")
 
     itemlist = []
     import xbmc
@@ -84,7 +84,7 @@ def mainlist(item):
 
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv search")
     texto = texto.replace(" ","+")
     item.url = "http://www.verseriesonline.tv/series?s=" + texto
    
@@ -99,7 +99,7 @@ def search(item,texto):
 
 
 def scraper(item):
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv scraper")
     itemlist = []
     ###Borra customkeys
     
@@ -148,7 +148,7 @@ def scraper(item):
 
 def fanart(item):
     #Vamos a sacar todos los fanarts y arts posibles
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv fanart")
     itemlist = []
     url = item.url
     data = dhe(httptools.downloadpage(item.url).data)
@@ -235,7 +235,7 @@ def fanart(item):
     url_tmdb="http://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query=" + title +"&language=es&include_adult=false&first_air_date_year="+year
     data_tmdb = httptools.downloadpage(url_tmdb).data
     data_tmdb = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data_tmdb)
-    patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),'
+    patron = '"page":1.*?,"id":(.*?),"backdrop_path":(.*?),"vote_average"'
     matches = re.compile(patron,re.DOTALL).findall(data_tmdb)
 
     ###Busqueda en bing el id de imdb de la serie
@@ -243,7 +243,7 @@ def fanart(item):
          url_tmdb="http://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query=" + title +"&language=es"
          data_tmdb =httptools.downloadpage(url_tmdb).data
          data_tmdb = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data_tmdb)
-         patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),'
+         patron = '"page":1.*?,"id":(.*?),"backdrop_path":(.*?),"vote_average"'
          matches = re.compile(patron,re.DOTALL).findall(data_tmdb)
          if len(matches)==0:
           urlbing_imdb = "http://www.bing.com/search?q=%s+%s+tv+series+site:imdb.com" % (title.replace(' ', '+'),  year)
@@ -263,7 +263,7 @@ def fanart(item):
          
           urlremotetbdb = "https://api.themoviedb.org/3/find/"+imdb_id+"?api_key="+api_key+"&external_source=imdb_id&language=es"
           data_tmdb= httptools.downloadpage(urlremotetbdb).data
-          matches= scrapertools.find_multiple_matches(data_tmdb,'"tv_results":.*?"id":(.*?),.*?"poster_path":(.*?),')
+          matches= scrapertools.find_multiple_matches(data_tmdb,'"tv_results":.*?"id":(.*?),.*?"poster_path":(.*?),"popularity"')
          
           if len(matches)==0:
              id_tmdb=""
@@ -321,7 +321,7 @@ def fanart(item):
                 rating = "Sin puntuación"
          
             id_scraper =id_tmdb+"|"+"serie"+"|"+rating_filma+"|"+critica+"|"+rating+"|"+status #+"|"+emision
-            posterdb = scrapertools.find_single_match(data_tmdb,'"poster_path":(.*?)",')
+            posterdb = scrapertools.find_single_match(data_tmdb,'"poster_path":(.*?)","popularity"')
 
             if "null" in posterdb:
                 posterdb = item.thumbnail
@@ -501,7 +501,7 @@ def fanart(item):
 
     return itemlist
 def temporadas(item):
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv temporadas")
     
     itemlist = []
     
@@ -549,7 +549,7 @@ def temporadas(item):
     return itemlist
 
 def capitulos(item):
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv capitulos")
     
     itemlist = []
     
@@ -573,7 +573,7 @@ def capitulos(item):
 
     return itemlist
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv findvideos")
     itemlist = []
     
     data = httptools.downloadpage(item.url).data
@@ -603,7 +603,7 @@ def findvideos(item):
     
     return itemlist
 def play(item):
-    logger.info()
+    logger.info("mitvspain.verseriesonlinetv play")
     import xbmc
     xbmc.executebuiltin('Action(reloadkeymaps)')
 
@@ -623,7 +623,7 @@ def play(item):
 
 
 def info(item):
-    logger.info()
+    logger.info("mitvspain.pasateatorrent info")
     itemlist = []
     url=item.url
     id = item.extra
@@ -798,7 +798,7 @@ def info(item):
 
 
 def info_capitulos(item):
-    logger.info("pelisalacarta.pasateatorrent trailer")
+    logger.info("mitvspain.pasateatorrent trailer")
     
     url= "https://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+item.extra.split("|")[2]+"/episode/"+item.extra.split("|")[3]+"?api_key="+api_key+"&language=es"
 

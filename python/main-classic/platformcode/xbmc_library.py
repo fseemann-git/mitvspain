@@ -1,41 +1,55 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2017  mitvspain@gmail.com
+# 
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # XBMC Library Tools
 # ------------------------------------------------------------
 
-import os
-import threading
+import sys, os
 import urllib2
-import time
-
 import xbmc
+import threading
 from core import config
 from core import filetools
 from core import jsontools
 from core import logger
 from platformcode import platformtools
+
+
+addon_name = sys.argv[0].strip()
+if not addon_name or addon_name.startswith("default.py"):
+    addon_name = "plugin://plugin.video.mitvspain/"
+
+if config.get_setting("folder_movies") != "":
+    FOLDER_MOVIES = config.get_setting("folder_movies")
+else:
+    FOLDER_MOVIES = "CINE"  # config.get_localized_string(30072)
+
+if config.get_setting("folder_tvshows") != "":
+    FOLDER_TVSHOWS = config.get_setting("folder_tvshows")
+else:
+    FOLDER_TVSHOWS = "SERIES"  # config.get_localized_string(30073)
+
 
 
 def mark_auto_as_watched(item):
@@ -45,10 +59,7 @@ def mark_auto_as_watched(item):
 
         condicion = config.get_setting("watched_setting", "biblioteca")
 
-        time_limit = time.time() + 30
-        while not platformtools.is_playing() and time.time() < time_limit:
-            time.sleep(1)
-
+        xbmc.sleep(5000)
 
         sync_with_trakt = False
 
@@ -65,160 +76,30 @@ def mark_auto_as_watched(item):
                 mark_time = totaltime * 0.5
             elif condicion == 3:  # '80%'
                 mark_time = totaltime * 0.8
-            elif condicion == 4: # '0 seg'
-                mark_time = -1
 
-            #logger.debug(str(tiempo_actual))
-            #logger.debug(str(mark_time))
+            # logger.debug(str(tiempo_actual))
+            # logger.debug(str(mark_time))
 
             if tiempo_actual > mark_time:
-                logger.debug("marcado")
                 item.playcount = 1
                 sync_with_trakt = True
                 from channels import biblioteca
                 biblioteca.mark_content_as_watched(item)
                 break
 
-            time.sleep(30)
+            xbmc.sleep(30000)
 
         # Sincronizacion silenciosa con Trakt
         if sync_with_trakt:
             if config.get_setting("sync_trakt_watched", "biblioteca"):
-                sync_trakt_kodi()
-
-        #logger.debug("Fin del hilo")
+                sync_trakt()
 
     # Si esta configurado para marcar como visto
     if config.get_setting("mark_as_watched", "biblioteca"):
         threading.Thread(target=mark_as_watched_subThread, args=[item]).start()
 
 
-def sync_trakt_pelisalacarta(path_folder):
-    """
-       Actualiza los valores de episodios vistos si
-    """
-    logger.info()
-    # si existe el addon hacemos la busqueda
-    if xbmc.getCondVisibility('System.HasAddon("script.trakt")'):
-        # importamos dependencias
-        paths = ["special://home/addons/script.module.dateutil/lib/", "special://home/addons/script.module.six/lib/",
-                 "special://home/addons/script.module.arrow/lib/", "special://home/addons/script.module.trakt/lib/",
-                 "special://home/addons/script.trakt/"]
-
-        for path in paths:
-            import sys
-            sys.path.append(xbmc.translatePath(path))
-
-        # se obtiene las series vistas
-        try:
-            from resources.lib.traktapi import traktAPI
-            traktapi = traktAPI()
-        except:
-            return
-
-        shows = traktapi.getShowsWatched({})
-        shows = shows.items()
-
-        # obtenemos el id de la serie para comparar
-        import re
-        _id = re.findall("\[(.*?)\]", path_folder, flags=re.DOTALL)[0]
-        logger.debug("el id es %s" % _id)
-
-        if "tt" in _id:
-            type_id = "imdb"
-        elif "tvdb_" in _id:
-            _id = _id.strip("tvdb_")
-            type_id = "tvdb"
-        elif "tmdb_" in _id:
-            type_id = "tmdb"
-            _id = _id.strip("tmdb_")
-        else:
-            logger.error("No hay _id de la serie")
-            return
-
-        # obtenemos los valores de la serie de pelisalacarta
-        from core import library
-        tvshow_file = filetools.join(path_folder, "tvshow.nfo")
-        head_nfo, serie = library.read_nfo(tvshow_file)
-
-        # buscamos en las series de trakt
-        for show in shows:
-            show_aux = show[1].to_dict()
-
-            try:
-                _id_trakt = show_aux['ids'].get(type_id, None)
-                # logger.debug("ID ES %s" % _id_trakt)
-                if _id_trakt:
-                    if _id == _id_trakt:
-                        logger.debug("ENCONTRADO!! %s" % show_aux)
-
-                        # creamos el diccionario de trakt para la serie encontrada con el valor que tiene "visto"
-                        dict_trakt_show = {}
-
-                        for idx_season, season in enumerate(show_aux['seasons']):
-                            for idx_episode, episode in enumerate(show_aux['seasons'][idx_season]['episodes']):
-                                sea_epi = "%sx%s" % (show_aux['seasons'][idx_season]['number'],
-                                                     str(show_aux['seasons'][idx_season]['episodes'][idx_episode]['number']).zfill(2))
-
-                                dict_trakt_show[sea_epi] = show_aux['seasons'][idx_season]['episodes'][idx_episode]['watched']
-                        logger.debug("dict_trakt_show %s " % dict_trakt_show)
-
-                        # obtenemos las keys que son episodios
-                        regex_epi = re.compile('\d+x\d+')
-                        keys_episodes = [key for key in serie.library_playcounts if regex_epi.match(key)]
-                        # obtenemos las keys que son temporadas
-                        keys_seasons = [key for key in serie.library_playcounts if 'season ' in key]
-                        # obtenemos los numeros de las keys temporadas
-                        seasons = [key.strip('season ') for key in keys_seasons]
-
-                        # marcamos los episodios vistos
-                        for k in keys_episodes:
-                            serie.library_playcounts[k] = dict_trakt_show.get(k, 0)
-
-                        for season in seasons:
-                            episodios_temporada = 0
-                            episodios_vistos_temporada = 0
-
-                            # obtenemos las keys de los episodios de una determinada temporada
-                            keys_season_episodes = [key for key in keys_episodes if key.startswith("%sx" % season)]
-
-                            for k in keys_season_episodes:
-                                episodios_temporada += 1
-                                if serie.library_playcounts[k] > 0:
-                                    episodios_vistos_temporada += 1
-
-                            # se comprueba que si todos los episodios están vistos, se marque la temporada como vista
-                            if episodios_temporada == episodios_vistos_temporada:
-                                serie.library_playcounts.update({"season %s" % season: 1})
-
-                        temporada = 0
-                        temporada_vista = 0
-
-                        for k in keys_seasons:
-                            temporada += 1
-                            if serie.library_playcounts[k] > 0:
-                                temporada_vista += 1
-
-                        # se comprueba que si todas las temporadas están vistas, se marque la serie como vista
-                        if temporada == temporada_vista:
-                            serie.library_playcounts.update({serie.title: 1})
-
-                        logger.debug("los valores nuevos %s " % serie.library_playcounts)
-                        filetools.write(tvshow_file, head_nfo + serie.tojson())
-
-                        break
-                    else:
-                        continue
-
-                else:
-                    logger.error("no se ha podido obtener el id, trakt tiene: %s" % show_aux['ids'])
-
-            except:
-                import traceback
-                logger.error(traceback.format_exc())
-
-
-def sync_trakt_kodi(silent=True):
+def sync_trakt(silent=True):
 
     # Para que la sincronizacion no sea silenciosa vale con silent=False
     if xbmc.getCondVisibility('System.HasAddon("script.trakt")'):
@@ -231,7 +112,7 @@ def sync_trakt_kodi(silent=True):
         logger.info("Sincronizacion con Trakt iniciada")
 
         if notificacion:
-            platformtools.dialog_notification("pelisalacarta",
+            platformtools.dialog_notification("mitvspain",
                                               "Sincronizacion con Trakt iniciada",
                                               icon=0,
                                               time=2000)
@@ -327,7 +208,7 @@ def mark_season_as_watched_on_kodi(item, value=1):
     if item.contentSeason > -1:
         request_season = ' and c12= %s' % item.contentSeason
 
-    tvshows_path = filetools.join(config.get_library_path(), config.get_setting("folder_tvshows"))
+    tvshows_path = filetools.join(config.get_library_path(), FOLDER_TVSHOWS)
     item_path1 = "%" + item.path.replace("\\\\", "\\").replace(tvshows_path, "")
     if item_path1[:-1] != "\\":
         item_path1 += "\\"
@@ -354,7 +235,7 @@ def get_data(payload):
     if config.get_setting("library_mode", "biblioteca"):
         try:
             try:
-                xbmc_port = config.get_setting("xbmc_puerto", "biblioteca")
+                xbmc_port = int(config.get_setting("xbmc_puerto", "biblioteca"))
             except:
                 xbmc_port = 0
 
@@ -370,7 +251,7 @@ def get_data(payload):
         except Exception, ex:
             template = "An exception of type {0} occured. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
-            logger.error("get_data: error en xbmc_json_rpc_url: %s" % message)
+            logger.info("get_data: error en xbmc_json_rpc_url: %s" % message)
             data = ["error"]
     else:
         try:
@@ -378,7 +259,7 @@ def get_data(payload):
         except Exception, ex:
             template = "An exception of type {0} occured. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
-            logger.error("get_data:: error en xbmc.executeJSONRPC: {0}".
+            logger.info("get_data:: error en xbmc.executeJSONRPC: {0}".
                         format(message))
             data = ["error"]
 
@@ -387,7 +268,7 @@ def get_data(payload):
     return data
 
 
-def update(folder_content=config.get_setting("folder_tvshows"), folder=""):
+def update(folder_content=FOLDER_TVSHOWS, folder=""):
     """
     Actualiza la libreria dependiendo del tipo de contenido y la ruta que se le pase.
 
@@ -398,19 +279,31 @@ def update(folder_content=config.get_setting("folder_tvshows"), folder=""):
     """
     logger.info(folder)
 
-    payload = {
-        "jsonrpc": "2.0",
-        "method": "VideoLibrary.Scan",
-        "id": 1
-    }
+    if not folder:
+        # Actualizar toda la coleccion
+        while xbmc.getCondVisibility('Library.IsScanningVideo()'):
+            xbmc.sleep(500)
+        xbmc.executebuiltin('UpdateLibrary(video)')
 
-    if folder:
+    else:
+        # Actualizar una sola carpeta en un hilo independiente
+
+        def update_multi_threads(update_path, lock):
+            lock.acquire()
+            #logger.debug("%s\nINICIO" % update_path)
+            payload = {"jsonrpc": "2.0",
+                       "method": "VideoLibrary.Scan",
+                       "params": {"directory": update_path}, "id": 1}
+
+            data = get_data(payload)
+            lock.release()
+            #logger.debug("%s\nFIN data: %s" % (update_path, data))
+
+
         librarypath = config.get_library_config_path()
 
         if folder.endswith('/') or folder.endswith('\\'):
             folder = folder[:-1]
-
-        update_path = None
 
         if librarypath.startswith("special:"):
             if librarypath.endswith('/'):
@@ -419,12 +312,11 @@ def update(folder_content=config.get_setting("folder_tvshows"), folder=""):
         else:
             update_path = filetools.join(librarypath, folder_content, folder) + "/"
 
-        payload["params"] = {"directory": update_path}
 
-    while xbmc.getCondVisibility('Library.IsScanningVideo()'):
-        xbmc.sleep(500)
+        t = threading.Thread(target=update_multi_threads, args=[update_path, threading.Lock()])
+        t.setDaemon(True)
+        t.start()
 
-    data = get_data(payload)
 
 
 def clean(mostrar_dialogo=False):
@@ -445,7 +337,7 @@ def clean(mostrar_dialogo=False):
 
 
 def search_library_path():
-    sql = 'SELECT strPath FROM path WHERE strPath LIKE "special://%/plugin.video.pelisalacarta/library/" AND idParentPath ISNULL'
+    sql = 'SELECT strPath FROM path WHERE strPath LIKE "special://%/plugin.video.mitvspain/library/" AND idParentPath ISNULL'
     nun_records, records = execute_sql_kodi(sql)
     if nun_records >= 1:
         logger.debug(records[0][0])
@@ -563,6 +455,7 @@ def set_content(content_type, silent=False):
 
         idPath = 0
         idParentPath = 0
+        strPath = ""
         if continuar:
             continuar = False
 
@@ -752,6 +645,8 @@ def add_sources(path):
     from xml.dom import minidom
 
     SOURCES_PATH = xbmc.translatePath("special://userdata/sources.xml")
+    xmldoc = None
+
 
     if os.path.exists(SOURCES_PATH):
         xmldoc = minidom.parse(SOURCES_PATH)
@@ -768,17 +663,16 @@ def add_sources(path):
             nodo_sources.appendChild(nodo_type)
         xmldoc.appendChild(nodo_sources)
 
+
     # Buscamos el nodo video
     nodo_video = xmldoc.childNodes[0].getElementsByTagName("video")[0]
 
     # Buscamos el path dentro de los nodos_path incluidos en el nodo_video
     nodos_paths = nodo_video.getElementsByTagName("path")
     list_path = [p.firstChild.data for p in nodos_paths]
-    logger.debug(list_path)
     if path in list_path:
         logger.debug("La ruta %s ya esta en sources.xml" % path)
         return
-    logger.debug("La ruta %s NO esta en sources.xml" % path)
 
     # Si llegamos aqui es por q el path no esta en sources.xml, asi q lo incluimos
     nodo_source = xmldoc.createElement("source")
@@ -809,21 +703,24 @@ def add_sources(path):
     nodo_video.appendChild(nodo_source)
 
     # Guardamos los cambios
-    filetools.write(SOURCES_PATH, '\n'.join([x for x in xmldoc.toprettyxml().encode("utf-8").splitlines() if x.strip()]))
+    '''data = xmldoc.toprettyxml()
+    data = '\n'.join([x for x in data.splitlines() if x.strip()])
+    filetools.write(SOURCES_PATH,data)'''
+    fichero = open(SOURCES_PATH, 'w')
+    xmldoc.writexml(fichero)
 
 
 def ask_set_content():
-    logger.info()
-    logger.debug("library_ask_set_content %s" % config.get_setting("library_ask_set_content"))
-    logger.debug("library_set_content %s" % config.get_setting("library_set_content"))
     # Si es la primera vez que se utiliza la biblioteca preguntar si queremos autoconfigurar
-    if config.get_setting("library_ask_set_content") == 1 and config.get_setting("library_set_content") == False:
-        heading = "Pelisalacarta Auto-configuración"
-        linea1 = "¿Desea que Pelisalacarta auto-configure la biblioteca de Kodi?"
+    if config.get_setting("library_ask_set_content") == "true" and config.get_setting("library_set_content") == "false":
+        heading = "mitvspain Auto-configuración"
+        linea1 = "¿Desea que mitvspain auto-configure la biblioteca de Kodi?"
         linea2 = "Si pulsa 'no' y luego desea dicha integración deberá hacerlo manualmente."
         if platformtools.dialog_yesno(heading, linea1, linea2):
-            config.set_setting("library_set_content", True)
-            config.set_setting("library_ask_set_content", 2)
+            config.set_setting("library_set_content", "true")
+            config.set_setting("library_ask_set_content", "active")
             config.verify_directories_created()
 
-        config.set_setting("library_ask_set_content", 0)
+        config.set_setting("library_ask_set_content", "false")
+
+

@@ -1,22 +1,25 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para peliculasrey
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import sys
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="PorFecha" , title="Año de Lanzamiento", url="http://www.peliculasrey.com" ))
@@ -29,7 +32,7 @@ def mainlist(item):
     return itemlist
     
 def PorFecha(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -46,13 +49,13 @@ def PorFecha(item):
         thumbnail = ""
         plot = ""
         url = urlparse.urljoin(item.url,scrapedurl)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="peliculas" , title=title , url=url, thumbnail=thumbnail, plot=plot, fulltitle=title, viewmode="movie"))
 
     return itemlist
 
 def Idiomas(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -69,13 +72,13 @@ def Idiomas(item):
         thumbnail = ""
         plot = ""
         url = urlparse.urljoin(item.url,scrapedurl)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="peliculas" , title=title , url=url, thumbnail=thumbnail, plot=plot, fulltitle=title, viewmode="movie"))
 
     return itemlist
 
 def calidades(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -92,13 +95,13 @@ def calidades(item):
         thumbnail = ""
         plot = ""
         url = urlparse.urljoin(item.url,scrapedurl)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="peliculas" , title=title , url=url, thumbnail=thumbnail, plot=plot, fulltitle=title, viewmode="movie"))
 
     return itemlist
 
 def generos(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -115,7 +118,7 @@ def generos(item):
         thumbnail = ""
         plot = ""
         url = urlparse.urljoin(item.url,scrapedurl)
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="peliculas" , title=title , url=url, thumbnail=thumbnail, plot=plot, fulltitle=title, viewmode="movie"))
 
     return itemlist
@@ -123,7 +126,7 @@ def generos(item):
 
 def search(item,texto):
     
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey search")
     texto = texto.replace(" ", "+")
     item.url = "http://www.peliculasrey.com/?s=" + texto
     
@@ -134,13 +137,13 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
    
 
     
 def peliculas(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey peliculas")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -154,7 +157,7 @@ def peliculas(item):
     itemlist = []
     
     for scrapedthumbnail,scrapedtitle,scrapedurl in matches:
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos" , title=scrapedtitle , url=scrapedurl, thumbnail=scrapedthumbnail, plot="", fulltitle=scrapedtitle))
 
     next_page = scrapertools.find_single_match(data,'rel="next" href="([^"]+)')
@@ -165,7 +168,7 @@ def peliculas(item):
     return itemlist
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.peliculasrey findvideos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -186,14 +189,14 @@ def findvideos(item):
         url = scrapedurl
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="play" , title=title , url=url, thumbnail=thumbnail, plot=plot, folder=False))
 
     return itemlist
 
 
 def play(item):
-    logger.info("url="+item.url)
+    logger.info("mitvspain.channels.peliculasrey play url="+item.url)
 
     itemlist = servertools.find_video_items(data=item.url)
 

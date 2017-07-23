@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para serviporno
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import sys
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("[serviporno.py] mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos"      , title="Útimos videos" , url="http://www.serviporno.com/"))
     itemlist.append( Item(channel=item.channel, action="videos"      , title="Más vistos"    , url="http://www.serviporno.com/mas-vistos/"))
@@ -25,7 +28,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("[serviporno.py] search")
     texto = texto.replace(" ", "+")
     item.url = item.url + texto
     try:
@@ -34,11 +37,11 @@ def search(item,texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
         
 def videos(item):
-    logger.info()
+    logger.info("[serviporno.py] videos")
     itemlist = []
     data = scrapertools.downloadpage(item.url)
 
@@ -64,7 +67,7 @@ def videos(item):
     return itemlist
 
 def chicas(item):
-    logger.info()
+    logger.info("[serviporno.py] chicas")
     itemlist = []
     data = scrapertools.downloadpage(item.url)
     
@@ -83,7 +86,7 @@ def chicas(item):
 
     
 def categorias(item):
-    logger.info()
+    logger.info("[serviporno.py] categorias")
     itemlist = []
     data = scrapertools.downloadpage(item.url)
 
@@ -99,7 +102,7 @@ def categorias(item):
     return itemlist
 
 def play(item):
-    logger.info()
+    logger.info("[serviporno.py] play")
     itemlist=[]
     data = scrapertools.downloadpage(item.url)
     url= scrapertools.get_match(data,"url: '([^']+)',\s*framesURL:" )

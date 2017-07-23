@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para pelis24
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
-
+# 
+#------------------------------------------------------------
 import re
 import sys
+import urlparse
 
-from core import httptools
+from core import config
 from core import logger
+from core import httptools
 from core import scrapertools
 from core.item import Item
 
 thumbnail_host = 'https://github.com/master-1970/resources/raw/master/images/squares/pelis24.PNG'
-
 
 def mainlist(item):
     logger.info()
@@ -37,6 +37,7 @@ def mainlist(item):
 
 def newest(categoria):
     logger.info()
+    itemlist = []
     item = Item()
     try:
         if categoria == 'peliculas':
@@ -53,13 +54,13 @@ def newest(categoria):
     # Se captura la excepción, para no interrumpir al canal novedades si un canal falla
     except:
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error("{0}".format(line))
         return []
 
     return itemlist
 
 
-def search(item, texto):
+def search(item,texto):
     logger.info()
     try:
         item.extra = texto
@@ -67,7 +68,7 @@ def search(item, texto):
     # Se captura la excepci?n, para no interrumpir al buscador global si un canal falla
     except:
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 
@@ -127,7 +128,7 @@ def peliculas(item):
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;", "", data)
     data = scrapertools.find_single_match(data,"dle-content(.*?)not-main clearfix")
 
-    patron = '<div class="movie-img img-box">.*?'
+    patron  = '<div class="movie-img img-box">.*?'
     patron += '<img src="([^"]+).*?'
     patron += 'href="([^"]+).*?'
     patron += '<div class="movie-series">([^<]+)</div>'
@@ -148,6 +149,7 @@ def peliculas(item):
         itemlist.append(
             Item(channel=item.channel, action="findvideos", title=title, url=url, thumbnail=thumbnail,
                  contentQuality=quality, contentTitle=contentTitle))
+
 
     # Extrae el paginador
     next_page = scrapertools.find_single_match(data,'<span class="pnext"><a href="([^"]+)')

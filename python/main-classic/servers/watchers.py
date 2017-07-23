@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para watchers
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -37,7 +37,6 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         ext = scrapertools.get_filename_from_url(media_url)[-4:]
         if calidad:
             ext += " " + calidad + "p"
-        media_url += "|Referer=%s" % page_url
         video_urls.append([ext + ' [watchers]', media_url])
 
     return video_urls

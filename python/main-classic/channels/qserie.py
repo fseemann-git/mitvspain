@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (qserie)
+# Canal (qserie) por Hernan_Ar_c
 # ------------------------------------------------------------
 
-import re
-import urlparse
+import urlparse,urllib2,urllib,re
+import os, sys
 
-from core import config
-from core import httptools
+
 from core import logger
-from core import scrapertools
 from core import tmdb
+from core import config
+from core import scrapertools
 from core.item import Item
+from core import servertools
+from core import httptools
 
 host='http://www.qserie.com'
 
@@ -20,17 +22,17 @@ def mainlist(item):
 
     itemlist = []
     
-    itemlist.append( Item(channel=item.channel, title="Series", action="todas", url=host, thumbnail='https://s27.postimg.org/iahczwgrn/series.png', fanart='https://s27.postimg.org/iahczwgrn/series.png'))
+    itemlist.append( Item(channel=item.channel, title="Series", action="todas", url=host, thumbnail='https://s32.postimg.org/544rx8n51/series.png', fanart='https://s32.postimg.org/544rx8n51/series.png'))
     
-    itemlist.append( Item(channel=item.channel, title="Generos", action="generos", url=host,thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png'))
+    itemlist.append( Item(channel=item.channel, title="Generos", action="generos", url=host,thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png'))
     
-    itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lasmas", url=host, thumbnail='https://s17.postimg.org/fwi1y99en/a-z.png', fanart='https://s17.postimg.org/fwi1y99en/a-z.png', extra='letras'))
+    itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lasmas", url=host, thumbnail='https://s31.postimg.org/c3bm9cnl7/a_z.png', fanart='https://s31.postimg.org/c3bm9cnl7/a_z.png', extra='letras'))
     
-    itemlist.append( Item(channel=item.channel, title="Ultimas Agregadas", action="ultimas", url=host, thumbnail='https://s22.postimg.org/cb7nmhwv5/ultimas.png', fanart='https://s22.postimg.org/cb7nmhwv5/ultimas.png'))
+    itemlist.append( Item(channel=item.channel, title="Ultimas Agregadas", action="ultimas", url=host, thumbnail='https://s31.postimg.org/3ua9kwg23/ultimas.png', fanart='https://s31.postimg.org/3ua9kwg23/ultimas.png'))
     
-    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lasmas", url=host, thumbnail='https://s9.postimg.org/wmhzu9d7z/vistas.png', fanart='https://s9.postimg.org/wmhzu9d7z/vistas.png', extra='Vista'))
+    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lasmas", url=host, thumbnail='https://s32.postimg.org/466gt3ipx/vistas.png', fanart='https://s32.postimg.org/466gt3ipx/vistas.png', extra='Vista'))
     
-    itemlist.append( Item(channel=item.channel, title="Mas Votadas", action="lasmas", url=host, thumbnail='https://s7.postimg.org/9kg1nthzf/votadas.png', fanart='https://s7.postimg.org/9kg1nthzf/votadas.png', extra='Votos'))
+    itemlist.append( Item(channel=item.channel, title="Mas Votadas", action="lasmas", url=host, thumbnail='https://s31.postimg.org/9ooh78xej/votadas.png', fanart='https://s31.postimg.org/9ooh78xej/votadas.png', extra='Votos'))
     
     return itemlist
 
@@ -76,7 +78,7 @@ def todas(item):
     if actual and ultima and siguiente <= int(ultima):
        titlen = 'Pagina Siguiente >>> '+str(actual)+'/'+str(ultima)
        fanart = 'https://s32.postimg.org/4q1u1hxnp/qserie.png'
-       thumbnail ='https://s16.postimg.org/9okdu7hhx/siguiente.png'
+       thumbnail ='https://s32.postimg.org/4zppxf5j9/siguiente.png'
        itemlist.append(Item(channel = item.channel, action = "todas", title =titlen, url = siguiente_url, fanart = fanart, thumbnail=thumbnail))
     return itemlist
 
@@ -167,26 +169,26 @@ def episodiosxtemp(item):
 
 def generos(item):
     
-    tgenero = {"comedia":"https://s7.postimg.org/ne9g9zgwb/comedia.png",
-               "suspenso":"https://s13.postimg.org/wmw6vl1cn/suspenso.png",
-               "drama":"https://s16.postimg.org/94sia332d/drama.png",
-               "acción":"https://s3.postimg.org/y6o9puflv/accion.png",
-               "aventura":"https://s10.postimg.org/6su40czih/aventura.png",
-               "aventuras":"https://s10.postimg.org/6su40czih/aventura.png",
-               "romance":"https://s15.postimg.org/fb5j8cl63/romance.png",
-               "infantil":"https://s23.postimg.org/g5rmazozv/infantil.png",
-               "ciencia ficción":"https://s9.postimg.org/diu70s7j3/cienciaficcion.png",
-               "terror":"https://s7.postimg.org/yi0gij3gb/terror.png",
-               "anime":'https://s2.postimg.org/s38borokp/anime.png',
-               "animes":"https://s2.postimg.org/s38borokp/anime.png",
-               "dibujos":"https://s2.postimg.org/aqwqksyop/dibujos.png",
-               "documental":"https://s16.postimg.org/7xjj4bmol/documental.png",
-               "fantástico":"https://s10.postimg.org/pbkbs6j55/fantastico.png",
-               "intriga":"https://s27.postimg.org/v9og43u2b/intriga.png",
-               "musical":"https://s29.postimg.org/bbxmdh9c7/musical.png",
-               "secuela":"https://s7.postimg.org/bti0nauh7/secuela.png",
-               "thriller (suspenso)":"https://s22.postimg.org/5y9g0jsu9/thriller.png",
-               "western":"https://s23.postimg.org/lzyfbjzhn/western.png"}
+    tgenero = {"comedia":"https://s32.postimg.org/q7g2qs90l/comedia.png",
+               "suspenso":"https://s31.postimg.org/kb629gscb/suspenso.png",
+               "drama":"https://s32.postimg.org/e6z83sqzp/drama.png",
+               "acción":"https://s32.postimg.org/4hp7gwh9x/accion.png",
+               "aventura":"https://s32.postimg.org/whwh56is5/aventura.png",
+               "aventuras":"https://s32.postimg.org/whwh56is5/aventura.png",
+               "romance":"https://s31.postimg.org/y7vai8dln/romance.png",
+               "infantil":"https://s32.postimg.org/i53zwwgsl/infantil.png",
+               "ciencia ficción":"https://s32.postimg.org/6hp3tsxsl/ciencia_ficcion.png",
+               "terror":"https://s32.postimg.org/ca25xg0ed/terror.png",
+               "anime":'https://s31.postimg.org/lppob54d7/anime.png',
+               "animes":"https://s31.postimg.org/lppob54d7/anime.png",
+               "dibujos":"https://s32.postimg.org/fskqyu7md/dibujos.png",
+               "documental":"https://s32.postimg.org/7opmvc5ut/documental.png",
+               "fantástico":"https://s32.postimg.org/b6xwbui6d/fantastico.png",
+               "intriga":"https://s32.postimg.org/xc2ovcqfp/intriga.png",
+               "musical":"https://s31.postimg.org/7i32lca7f/musical.png",
+               "secuela":"https://s31.postimg.org/5bho037rv/secuela.png",
+               "thriller (suspenso)":"https://s31.postimg.org/4d7bl25y3/thriller.png",
+               "western":"https://s31.postimg.org/nsksyt3hn/western.png"}
 
     logger.info()
     itemlist = []
@@ -227,7 +229,7 @@ def ultimas(item):
         title = scrapedtitle
         title = scrapertools.decodeHtmlentities(title)
         realtitle = scrapedtitle.replace(inutil[0],'')
-        fanart = 'https://s22.postimg.org/cb7nmhwv5/ultimas.png'
+        fanart = 'https://s31.postimg.org/3ua9kwg23/ultimas.png'
         itemlist.append( Item(channel=item.channel, action="temporadas" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart=fanart, contentSerieName = realtitle))
 
     return itemlist
@@ -293,9 +295,9 @@ def lasmas(item):
         title = scrapedtitle.replace(': ','')
         title = scrapertools.decodeHtmlentities(title)
         if item.extra == 'letras':
-           fanart = 'https://s17.postimg.org/fwi1y99en/a-z.png'
+           fanart = 'https://s31.postimg.org/c3bm9cnl7/a_z.png'
         elif item.extra == 'Vista':
-           fanart = 'https://s9.postimg.org/wmhzu9d7z/vistas.png' 
+           fanart = 'https://s32.postimg.org/466gt3ipx/vistas.png' 
         else:
            fanart = ''  
    
@@ -328,12 +330,12 @@ def findvideos(item):
        data = httptools.downloadpage(anterior).data
        existe = scrapertools.find_single_match(data,'<center>La pel.cula que quieres ver no existe.</center>')
        if not existe:
-           itemlist.append( Item(channel=item.channel, action="findvideos" , title='Capitulo Anterior' , url=anterior, thumbnail='https://s1.postimg.org/dbq8gvldb/anterior.png', folder =True ))
+           itemlist.append( Item(channel=item.channel, action="findvideos" , title='Capitulo Anterior' , url=anterior, thumbnail='https://s31.postimg.org/k5kpwyrgb/anterior.png', folder =True ))
     
        data = httptools.downloadpage(siguiente).data
        existe = scrapertools.find_single_match(data,'<center>La pel.cula que quieres ver no existe.</center>')
        if  not existe:
-           itemlist.append( Item(channel=item.channel, action="findvideos" , title='Capitulo Siguiente' , url=siguiente, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png', folder =True ))
+           itemlist.append( Item(channel=item.channel, action="findvideos" , title='Capitulo Siguiente' , url=siguiente, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png', folder =True ))
         
     return itemlist    
     

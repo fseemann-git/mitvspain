@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# MiTvSpain - XBMC Plugin
 # Conector para copiapop
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+
+#------------------------------------------------------------
 
 import re
 
+from core import config
 from core import httptools
 from core import jsontools
 from core import logger
@@ -43,15 +44,14 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     if url:
         url = host + url
         fileid = url.rsplit("f=", 1)[1]
-        token = scrapertools.find_single_match(data,
-                                               '<div class="download_container">.*?name="__RequestVerificationToken".*?value="([^"]+)"')
+        token = scrapertools.find_single_match(data, '<div class="download_container">.*?name="__RequestVerificationToken".*?value="([^"]+)"')
         post = "fileId=%s&__RequestVerificationToken=%s" % (fileid, token)
         headers = {'X-Requested-With': 'XMLHttpRequest'}
         data = httptools.downloadpage(url, post, headers).data
         data = jsontools.load_json(data)
         mediaurl = data.get("DownloadUrl")
         extension = data.get("Extension")
-
+    
         video_urls.append([".%s [%s]" % (extension, host_string), mediaurl])
 
     for video_url in video_urls:
@@ -65,7 +65,7 @@ def find_videos(data):
     encontrados = set()
     devuelve = []
 
-    patronvideos = '(copiapop.com|diskokosmiko.mx)/(.*?)[\s\'"]*$'
+    patronvideos  = '(copiapop.com|diskokosmiko.mx)/(.*?)[\s\'"]*$'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
@@ -78,5 +78,5 @@ def find_videos(data):
             encontrados.add(url)
         else:
             logger.info("  url duplicada=" + url)
-
+           
     return devuelve

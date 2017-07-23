@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# 
 # ------------------------------------------------------------
 
 import re
@@ -25,7 +25,7 @@ CHANNEL_HOST = "http://www.pelispedia.tv/"
 # Configuracion del canal
 try:
     __modo_grafico__ = config.get_setting('modo_grafico', __channel__)
-    __perfil__ = config.get_setting('perfil', __channel__)
+    __perfil__ = int(config.get_setting('perfil', __channel__))
 except:
     __modo_grafico__ = True
     __perfil__ = 0
@@ -87,7 +87,7 @@ def mainlist(item):
 
     itemlist.append(Item(channel=__channel__, action="settings", title="Configuración", text_color=color1,
                          fanart=fanart_host,text_blod=True,
-                         thumbnail="https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/thumb_configuracion_0.png"))
+                         thumbnail="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/thumb_configuracion_0.png"))
 
     return itemlist
 
@@ -605,17 +605,6 @@ def play(item):
         media_urls = openload.get_video_url(url)
         itemlist.append(media_urls[0])
 
-    # raptu
-    elif item.url.startswith("https://load.pelispedia.co/embed/raptu.com"):
-        url = item.url.replace("/embed/", "/stream/")
-        data = httptools.downloadpage(url).data
-        url = scrapertools.find_single_match(data, '<meta property="og:url" content="([^"]+)"')
-        from servers import raptu
-        media_urls = raptu.get_video_url(url)
-        if len(media_urls) > 0:
-            for desc, url, numero, subtitle in media_urls:
-                itemlist.append([desc, url, numero, subtitle])
-
     else:
         itemlist = servertools.find_video_items(data=item.url)
         for videoitem in itemlist:
@@ -633,7 +622,7 @@ def save_sub(data):
             try:
                 os.remove(ficherosubtitulo)
             except IOError:
-                logger.error("Error al eliminar el archivo "+ficherosubtitulo)
+                logger.info("Error al eliminar el archivo "+ficherosubtitulo)
                 raise
 
         fichero = open(ficherosubtitulo, "wb")
@@ -642,6 +631,6 @@ def save_sub(data):
         subtitle = ficherosubtitulo
     except:
         subtitle = ""
-        logger.error("Error al descargar el subtítulo")
+        logger.info("Error al descargar el subtítulo")
 
     return subtitle

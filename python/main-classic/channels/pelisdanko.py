@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para PelisDanko
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import re
@@ -13,14 +13,16 @@ from core import logger
 from core import scrapertools
 from core.item import Item
 
+
 __modo_grafico__ = config.get_setting('modo_grafico', 'pelisdanko')
 
+DEBUG = config.get_setting("debug")
 host = "http://pelisdanko.com"
 art = "http://pelisdanko.com/img/background.jpg"
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko mainlist")
 
     itemlist = []
     itemlist.append(item.clone(action="novedades", title="Novedades", url=host + "/novedades",
@@ -49,7 +51,7 @@ def configuracion(item):
 
 
 def search(item, texto):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko search")
     texto = texto.replace(" ", "+")
     item.url = "http://pelisdanko.com/busqueda?terms=%s" % texto
     try:
@@ -63,7 +65,7 @@ def search(item, texto):
 
 
 def newest(categoria):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko newest")
     itemlist = []
     item = Item()
     try:
@@ -85,7 +87,7 @@ def newest(categoria):
 
 
 def novedades(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko novedades")
     itemlist = []
 
     # Descarga la pagina
@@ -104,7 +106,8 @@ def novedades(item):
         for scrapedtitle, scrapedurl, scrapedthumbnail in matches:
             contentTitle = scrapedtitle[:]
             scrapedtitle = "[COLOR darkorange][B]" + scrapedtitle + "[/B][/COLOR]" + calidad + "[/COLOR]"
-            logger.debug("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+            if (DEBUG): logger.info(
+                    "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
             itemlist.append(item.clone(action="enlaces", title=bbcode_kodi2html(scrapedtitle),
                                        url=scrapedurl, thumbnail=scrapedthumbnail, fanart=scrapedthumbnail,
                                        fulltitle=contentTitle, filtro=False, contentTitle=contentTitle,
@@ -119,7 +122,7 @@ def novedades(item):
 
 
 def actualizadas(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko actualizadas")
     itemlist = []
 
     # Descarga la pagina
@@ -148,7 +151,8 @@ def actualizadas(item):
             contentTitle = scrapedtitle[:]
             scrapedtitle = "[COLOR darkorange][B]" + scrapedtitle + "[/B][/COLOR]" + calidad + idiomas[
                                                                                                :-1] + ")[/COLOR]"
-            logger.debug("title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
+            if (DEBUG): logger.info(
+                    "title=[" + scrapedtitle + "], url=[" + scrapedurl + "], thumbnail=[" + scrapedthumbnail + "]")
             itemlist.append(item.clone(action="enlaces", title=bbcode_kodi2html(scrapedtitle),
                                        url=scrapedurl, thumbnail=scrapedthumbnail, fanart=scrapedthumbnail,
                                        fulltitle=contentTitle, filtro=False, contentTitle=contentTitle,
@@ -158,7 +162,7 @@ def actualizadas(item):
 
 
 def indices(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko indices")
     itemlist = []
 
     item.text_color = "orchid"
@@ -172,7 +176,7 @@ def indices(item):
 
 
 def indice_list(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko indice_list")
     itemlist = []
     # Descarga la pagina
     data = scrapertools.downloadpage(item.url)
@@ -187,7 +191,7 @@ def indice_list(item):
 
 
 def enlaces(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko enlaces")
     item.extra = ""
     item.text_color = ""
     itemlist = []
@@ -231,7 +235,7 @@ def enlaces(item):
 
 
 def bloque_enlaces(data, filtro_idioma, dict_idiomas, itemlist, type, item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko bloque_enlaces")
     bloque = scrapertools.find_single_match(data, '<div role="tabpanel" class="tab-pane fade" id="tab-' +
                                             type + '">(.*?)</table>')
     patron = '<tr class="rip hover".*?data-slug="([^"]+)".*?src="http://pelisdanko.com/img/flags/(.*?).png"' \
@@ -267,7 +271,7 @@ def bloque_enlaces(data, filtro_idioma, dict_idiomas, itemlist, type, item):
 
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.pelisdanko findvideos")
     itemlist = []
 
     if item.url[-2:] == "ss":

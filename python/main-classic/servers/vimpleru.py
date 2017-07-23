@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# MiTvSpain - XBMC Plugin
 # Conector para vimple.ru
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+
+#------------------------------------------------------------
 
 import re
 
@@ -27,12 +27,12 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
     data = httptools.downloadpage(page_url).data
 
-    media_url = scrapertools.find_single_match(data, '"video"[^,]+,"url":"([^"]+)"').replace('\\', '')
+    media_url = scrapertools.find_single_match(data, '"video"[^,]+,"url":"([^"]+)"').replace('\\','')
     data_cookie = config.get_cookie_data()
     cfduid = scrapertools.find_single_match(data_cookie, '.vimple.ru.*?(__cfduid\t[a-f0-9]+)') \
-        .replace('\t', '=')
+                                           .replace('\t', '=')
     univid = scrapertools.find_single_match(data_cookie, '.vimple.ru.*?(UniversalUserID\t[a-f0-9]+)') \
-        .replace('\t', '=')
+                                           .replace('\t', '=')
 
     media_url += "|User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0" \
                  "&Cookie=%s; %s" % (cfduid, univid)

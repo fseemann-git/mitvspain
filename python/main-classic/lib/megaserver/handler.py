@@ -61,12 +61,12 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
         if not self.server._client.file or urllib.unquote(url)[1:] != self.server._client.file.name:
             for f in self.server._client.files:
-                if f.name == urllib.unquote(url)[1:].decode("utf-8"):
+                if f.name == urllib.unquote(url)[1:]:
                     self.server._client.file = f
                     break
 
 
-        if self.server._client.file and urllib.unquote(url)[1:].decode("utf-8") == self.server._client.file.name:
+        if self.server._client.file and urllib.unquote(url)[1:] == self.server._client.file.name:
             range = False
             self.offset=0
             size, mime = self._file_info()

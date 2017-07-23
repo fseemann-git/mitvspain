@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para Borrachodetorrent
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 import string
 import os
@@ -24,17 +24,6 @@ import unicodedata
 from threading import Thread
 
 
-import ssl
-
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    # Legacy Python that doesn't verify HTTPS certificates by default
-    pass
-else:
-    # Handle target environment that doesn't support HTTPS verification
-    ssl._create_default_https_context = _create_unverified_https_context
-
 ACTION_SHOW_FULLSCREEN = 36
 ACTION_GESTURE_SWIPE_LEFT = 511
 ACTION_SELECT_ITEM = 7
@@ -49,6 +38,7 @@ OPTIONS_OK = 5
 
 __modo_grafico__ = config.get_setting('modo_grafico', "borrachodetorrent")
 
+DEBUG = config.get_setting("debug")
 
 #Para la busqueda en bing evitando baneos
 
@@ -89,7 +79,8 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 
 def mainlist(item):
-    logger.info()
+    
+    logger.info("mitvspain.borrachodetorrent mainlist")
     itemlist=[]
     itemlist.append( item.clone(title="[COLOR floralwhite][B]Películas[/B][/COLOR]", action="scraper",url="https://www.borrachodetorrent.com/peliculas-torrent/",thumbnail="http://imgur.com/tBvoGIk.png", fanart="http://imgur.com/AqUvMW3.jpg",contentType= "movie"))
     itemlist.append( item.clone(title="[COLOR floralwhite][B]      Estrenos[/B][/COLOR]", action="scraper",url="https://www.borrachodetorrent.com/peliculas-estrenos-torrent/",thumbnail="http://imgur.com/tBvoGIk.png", fanart="http://imgur.com/AqUvMW3.jpg",contentType= "movie"))
@@ -101,7 +92,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.borrachodetorrent search")
     texto = texto.replace(" ","+")
     item.url = "https://www.borrachodetorrent.com/?s="+texto
     item.extra="search"
@@ -114,30 +105,21 @@ def search(item,texto):
         return []
 
 def buscador(item):
-    
-    logger.info()
     itemlist=[]
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data) 
-    
-    patron=scrapertools.find_multiple_matches(data,'<a id="busca_a" class="busca_a" href="([^"]+)">.*?<img src="([^"]+)".*?<span class="tt">([^"]+)</span>(.*?)<span class="calidad2">([^"]+)</span>')
-    
-    for url,thumb,title,check_year,calidad in patron :
+    patron=scrapertools.find_multiple_matches(data,'<a id="busca_a" class="busca_a" href="([^"]+)">.*?<img src="([^"]+)".*?</b></b>([^"]+)</span>.*?<span class="tt">([^"]+)</span>.*?<span class="year.*?">([^"]+)</span>.*?<span class="calidad2">([^"]+)</span>')
+    for url,thumb,rating,title,year,calidad in patron :
         
-        if "SERIE" in calidad or "&#" in title:
-            if "&#" in title:
-               item.extra=""
-            
+        if "SERIE" in calidad:
             checkmt="tvshow"
             
         else:
             checkmt="movie"
-        year=scrapertools.find_single_match(check_year,'<span class="year_SKA">([^"]+)</span>')
-        if year=="":
-           year="  "    
+            
         titulo = "[COLOR teal]"+title+"[/COLOR]"+ " " + "[COLOR floralwhite]"+calidad+"[/COLOR]"
         title= re.sub(r"!|¡","",title)
-        title= re.sub(r"&#8217;|PRE-Estreno|\d+&#.*","'",title)
+        title= re.sub(r"&#8217;|PRE-Estreno","'",title)
         
         if checkmt =="movie":
          new_item= item.clone(action="findvideos", title=titulo, url=url, thumbnail=thumb,fulltitle=title,contentTitle=title, contentType="movie",extra=year,library=True)
@@ -147,6 +129,7 @@ def buscador(item):
             else:       
                 new_item= item.clone(action="findvideos", title=titulo, url=url, thumbnail=thumb,fulltitle=title,contentTitle=title, show=title,contentType="tvshow",library=True)
         new_item.infoLabels['year'] = year
+        new_item.infoLabels['rating'] = rating
         itemlist.append(new_item) 
 
     try:
@@ -166,27 +149,22 @@ def buscador(item):
     return itemlist
 
 def scraper(item):
-    logger.info()
+    logger.info("mitvspain.borrachodetorrent scraper")
     itemlist=[]
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
-    
     if item.contentType=="movie":
-       patron =scrapertools.find_multiple_matches(data, '<a id="busca_a" class="busca_a" href="([^"]+)">.*?<img src="([^"]+)".*?<span class="tt">([^"]+)</span>(.*?)<span class="calidad2">([^"]+)</span>')
+       patron =scrapertools.find_multiple_matches(data, '<a id="busca_a" class="busca_a" href="([^"]+)">.*?<img src="([^"]+)".*?</b></b>([^"]+)</span>.*?<span class="tt">([^"]+)</span>.*?<span class="year_SKA">([^"]+)</span>.*?<span class="calidad2">([^"]+)</span>')
 
-       for url,thumb,title,check_year,calidad in patron:
+       for url,thumb,rating,title,year,calidad in patron:
            
-           year=scrapertools.find_single_match(check_year,'<span class="year_SKA">([^"]+)</span>')
-           if year=="":
-               year="  "
-           
-             
-           titulo = "[COLOR teal]"+title+"[/COLOR]"+ "  " + "[COLOR floralwhite]"+calidad+"[/COLOR]" 
+           titulo = "[COLOR teal]"+title+"[/COLOR]"+ " " + "[COLOR floralwhite]"+calidad+"[/COLOR]" + " "+ "[COLOR cyan]"+rating+"[/COLOR]"
            title= re.sub(r"!|¡","",title)
            title= re.sub(r"&#8217;|PRE-Estreno","'",title)
         
            new_item= item.clone(action="findvideos", title=titulo, url=url, thumbnail=thumb,fulltitle=title,contentTitle=title, contentType="movie",extra=year,library=True)
            new_item.infoLabels['year'] = year
+           new_item.infoLabels['rating'] = rating
            itemlist.append(new_item)
            
     else:     
@@ -219,13 +197,6 @@ def scraper(item):
     try:
         from core import tmdb
         tmdb.set_infoLabels_itemlist(itemlist, __modo_grafico__)
-        for item in itemlist:
-            if not "Siguiente >>" in item.title:
-              if "0." in str(item.infoLabels['rating']):
-                  item.infoLabels['rating']="[COLOR indianred]Sin puntuacíon[/COLOR]" 
-              else:
-                  item.infoLabels['rating']="[COLOR springgreen]"+str(item.infoLabels['rating'])+"[/COLOR]"
-              item.title= item.title+ "  "+ str(item.infoLabels['rating'])
     except:
            pass
 
@@ -239,7 +210,7 @@ def scraper(item):
 
 
 def findtemporadas(item):
-    logger.info()
+    logger.info("mitvspain.borrachodetorrent findtempordas")
     itemlist = []
     if item.extra=="search":
       th = Thread(target=get_art(item))
@@ -303,7 +274,7 @@ def findtemporadas(item):
         
     return itemlist
 def epis(item):
-    logger.info() 
+    logger.info("mitvspain.borrachodetorrent epis") 
     itemlist = []
     if item.extra=="serie_add":
        item.url=item.datalibrary
@@ -323,7 +294,7 @@ def epis(item):
             item.title = item.title + "[CR]\""+ title +"\""
     return itemlist
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.torrentlocurat findvideos")
     itemlist = []
     data = httptools.downloadpage(item.url).data
     if not item.infoLabels['episode']:
@@ -401,7 +372,7 @@ def findvideos(item):
            itemlist.append( Item(channel=item.channel, title = "[COLOR steelblue][B] info[/B][/COLOR]", url=url,  action="info_capitulos", fanart=item.extra.split("|")[0],thumbnail= item.thumb_art,thumb_info=item.thumb_info,extra=item.extra, show= item.show,InfoLabels= item.infoLabels,folder=False) )
     return itemlist
 def dd_y_o(item):
-    logger.info()
+    logger.info("mitvspain.borrachodetorrent dd_y_o")
     itemlist = []
     if item.contentType=="movie":
        enlaces = item.extra.split("|")[0]
@@ -425,7 +396,8 @@ def dd_y_o(item):
 
 
 def info_capitulos(item,images={}):
-    logger.info()
+    logger.info("mitvspain.torrentlocura info_capitulos")
+    
     try:
         url="http://thetvdb.com/api/1D62F2F90030C444/series/"+str(item.InfoLabels['tvdb_id'])+"/default/"+str(item.InfoLabels['season'])+"/"+str(item.InfoLabels['episode'])+"/es.xml"
         if "/0" in url:
@@ -726,7 +698,7 @@ def filmaffinity(item,infoLabels):
 
 
 def get_art(item):
-    logger.info()
+    logger.info("mitvspain.borrachodetorrent get_art")
     id =item.infoLabels['tmdb_id']
     check_fanart=item.infoLabels['fanart']
     if item.contentType!="movie":

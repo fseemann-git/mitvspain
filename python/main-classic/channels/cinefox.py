@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para cinefox
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import re
@@ -45,8 +45,7 @@ def mainlist(item):
 
     itemlist.append(item.clone(action="peliculas", title="Documentales", fanart="http://i.imgur.com/Q7fsFI6.png",
                                url="http://www.cinefox.tv/catalogue?type=peliculas&genre=documental"))
-
-    if config.get_setting("adult_mode") != 0:
+    if config.get_setting("adult_mode") == "true":
         itemlist.append(item.clone(action="peliculas", title="Sección Adultos +18",
                                    url="http://www.cinefox.tv/catalogue?type=adultos",
                                    fanart="http://i.imgur.com/kIvE1Zh.png"))
@@ -746,4 +745,3 @@ def select_page(item):
         item.url = re.sub(r'page=(\d+)', "page="+number, item.url)
 
     return peliculas(item)
-

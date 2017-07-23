@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal para pelisalacarta
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# Canal para mitvspain by EpNiebla
+# 
 # ------------------------------------------------------------
 import re
 import urllib
@@ -19,10 +19,10 @@ def mainlist(item):
     itemlist = []
 
     config.set_setting("url_error", False, "cumlouder")
-    itemlist.append(item.clone(title="Últimos videos", action = "videos", url="https://www.cumlouder.com/"))
-    itemlist.append(item.clone(title="Categorias", action = "categorias", url="https://www.cumlouder.com/categories/"))
-    itemlist.append(item.clone(title="Pornstars", action = "pornstars_list", url="https://www.cumlouder.com/girls/"))
-    itemlist.append(item.clone(title="Buscar", action = "search", url="https://www.cumlouder.com/search?q=%s"))
+    itemlist.append(item.clone(title = "Últimos videos", action = "videos"        , url = "http://www.cumlouder.com/"))
+    itemlist.append(item.clone(title = "Categorias"    , action = "categorias"    , url = "http://www.cumlouder.com/categories/"))
+    itemlist.append(item.clone(title = "Pornstars"     , action = "pornstars_list", url = "http://www.cumlouder.com/girls/"))
+    itemlist.append(item.clone(title = "Buscar"        , action = "search"        , url = "http://www.cumlouder.com/search?q=%s"))
 
     return itemlist
 
@@ -44,7 +44,7 @@ def pornstars_list(item):
     logger.info()
     itemlist = []
     for letra in "abcdefghijklmnopqrstuvwxyz":
-        itemlist.append(item.clone(title=letra.upper(), url=urlparse.urljoin(item.url,letra), action="pornstars"))
+        itemlist.append(item.clone(title=letra.upper(), url=urlparse.urljoin(item.url,letra), action ="pornstars"))
 
     return itemlist
 
@@ -67,7 +67,7 @@ def pornstars(item):
             url = urlparse.urljoin(item.url, url)
             if not thumbnail.startswith("https"):
                 thumbnail = "https:%s" % thumbnail
-        itemlist.append(item.clone(title="%s (%s)" % (title, count), url=url, action="videos", thumbnail=thumbnail))
+        itemlist.append(item.clone(title="%s (%s)" % (title, count), url=url, action ="videos", thumbnail = thumbnail))
 
     #Paginador
     matches = re.compile('<li[^<]+<a href="([^"]+)" rel="nofollow">Next[^<]+</a[^<]+</li>', re.DOTALL).findall(data)
@@ -99,7 +99,7 @@ def categorias(item):
             url = urlparse.urljoin(item.url, url)
             if not thumbnail.startswith("https"):
                 thumbnail = "https:%s" % thumbnail
-        itemlist.append(item.clone(title="%s (%s videos)" % (title, count), url=url, action="videos", thumbnail=thumbnail))
+        itemlist.append(item.clone(title="%s (%s videos)" % (title, count), url=url, action ="videos", thumbnail = thumbnail))
 
     #Paginador
     matches = re.compile('<li[^<]+<a href="([^"]+)" rel="nofollow">Next[^<]+</a[^<]+</li>', re.DOTALL).findall(data)
@@ -125,13 +125,9 @@ def videos(item):
         if "go.php?" in url:
             url = urllib.unquote(url.split("/go.php?u=")[1].split("&")[0])
             thumbnail = urllib.unquote(thumbnail.split("/go.php?u=")[1].split("&")[0])
-        else:
-            url = urlparse.urljoin("https://www.cumlouder.com", url)
-            if not thumbnail.startswith("https"):
-                thumbnail = "https:%s" % thumbnail
         itemlist.append(item.clone(title="%s (%s)" % (title, duration), url=urlparse.urljoin(item.url,url), 
-                                   action="play", thumbnail=thumbnail, contentThumbnail=thumbnail, 
-                                   contentType="movie", contentTitle=title))
+                                   action ="play", thumbnail = thumbnail, contentThumbnail = thumbnail, 
+                                   contentType = "movie", contentTitle = title))
 
     #Paginador
     nextpage = scrapertools.find_single_match(data,'<ul class="paginador"(.*?)</ul>')
@@ -159,10 +155,8 @@ def play(item):
     url,type,res = re.compile(patron, re.DOTALL).findall(data)[0]
     if "go.php?" in url:
         url = urllib.unquote(url.split("/go.php?u=")[1].split("&")[0])
-    elif not url.startswith("http"):
-        url = "http:" + url.replace("&amp;", "&")
-    itemlist.append( Item(channel='cumlouder', action="play", title='Video' +res, fulltitle=type.upper()+' '+res, url=url, server="directo", folder=False))
-
+    itemlist.append( Item(channel='cumlouder', action="play" , title='Video' +res, fulltitle=type.upper()+' '+res , url=url, server="directo", folder=False))
+  
     return itemlist
 
 

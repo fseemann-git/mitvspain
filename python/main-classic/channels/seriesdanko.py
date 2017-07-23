@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# 
 # ------------------------------------------------------------
 
 import re
@@ -15,7 +15,7 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 
-HOST = 'http://seriesdanko.to/'
+HOST = 'http://seriesdanko.com/'
 IDIOMAS = {'es': 'Español', 'la': 'Latino', 'vos': 'VOS', 'vo': 'VO'}
 list_idiomas = IDIOMAS.values()
 CALIDADES = ['SD', 'MicroHD', 'HD/MKV']
@@ -32,7 +32,8 @@ def mainlist(item):
     itemlist.append(Item(channel=item.channel, title="Buscar...", action="search",
                          url=urlparse.urljoin(HOST, "all.php")))
 
-    itemlist = filtertools.show_option(itemlist, item.channel, list_idiomas, CALIDADES)
+    if filtertools.context:
+        itemlist = filtertools.show_option(itemlist, item.channel, list_idiomas, CALIDADES)
 
     return itemlist
 
@@ -56,9 +57,9 @@ def novedades(item):
         title = scrapertools.decodeHtmlentities(scrapedtitle)
         show = scrapertools.find_single_match(title, "^(.+?) \d+[x|X]\d+")
 
-        itemlist.append(Item(channel=item.channel, title=title, url=urlparse.urljoin(HOST, scrapedurl), show=show,
-                             action="episodios", thumbnail=scrapedthumb,
-                             context=filtertools.context(item, list_idiomas, CALIDADES)))
+        itemlist.append(Item(channel=item.channel, title=title, url=urlparse.urljoin(HOST, scrapedurl),
+                        action="episodios", thumbnail=scrapedthumb, show=show, context=filtertools.context,
+                             list_idiomas=list_idiomas))
 
     return itemlist
 
@@ -96,8 +97,8 @@ def series_seccion(item, data):
     matches = re.compile(patron, re.DOTALL).findall(data)
     for scrapedurl, scrapedtitle in matches:
         itemlist.append(Item(channel=item.channel, action="episodios", title=scrapedtitle, show=scrapedtitle,
-                             url=urlparse.urljoin(HOST, scrapedurl),
-                             context=filtertools.context(item, list_idiomas, CALIDADES)))
+                             url=urlparse.urljoin(HOST, scrapedurl), context=filtertools.context,
+                             list_idiomas=list_idiomas))
 
     return itemlist
 
@@ -109,7 +110,7 @@ def listado_alfabetico(item):
 
     for letra in '0ABCDEFGHIJKLMNOPQRSTUVWXYZ':
         itemlist.append(Item(channel=item.channel, action="series_por_letra", title=letra,
-                             url=urlparse.urljoin(HOST, "series.php?id=%s" % letra)))
+                             url=urlparse.urljoin(HOST, "series.php?id={letra}".format(letra=letra))))
 
     return itemlist
 
@@ -122,12 +123,12 @@ def series_por_letra(item):
     itemlist = []
     for url, title, img in shows:
         itemlist.append(item.clone(title=title, url=urlparse.urljoin(HOST, url), action="episodios", thumbnail=img,
-                                   show=title, context=filtertools.context(item, list_idiomas, CALIDADES)))
+                                   show=title, context=filtertools.context, list_idiomas=list_idiomas))
     return itemlist
 
 
 def search(item, texto):
-    logger.info("texto=%s" % texto)
+    logger.info("texto={0}".format(texto))
 
     itemlist = []
 
@@ -137,7 +138,7 @@ def search(item, texto):
                            data, re.IGNORECASE)
         for url, title in shows:
             itemlist.append(item.clone(title=title, url=urlparse.urljoin(HOST, url), action="episodios", show=title,
-                                       context=filtertools.context(item, list_idiomas, CALIDADES)))
+                                       context=filtertools.context, list_idiomas=list_idiomas))
 
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
@@ -175,16 +176,16 @@ def episodios(item):
 
     for scrapedurl, scrapedtitle, scrapedidioma in matches:
         idioma = ""
-        filter_langs = []
         for i in scrapedidioma.split("|"):
             idioma += " [" + IDIOMAS.get(i, "OVOS") + "]"
-            filter_langs.append(IDIOMAS.get(i, "OVOS"))
         title = scrapedtitle + idioma
 
         itemlist.append(Item(channel=item.channel, title=title, url=urlparse.urljoin(HOST, scrapedurl),
-                             action="findvideos", show=item.show, thumbnail=thumbnail, plot="", language=filter_langs))
+                             action="findvideos", show=item.show, thumbnail=thumbnail, plot="", language=idioma,
+                             list_idiomas=list_idiomas, list_calidad=CALIDADES, context=filtertools.context))
 
-    itemlist = filtertools.get_links(itemlist, item, list_idiomas, CALIDADES)
+    if len(itemlist) > 0 and filtertools.context:
+            itemlist = filtertools.get_links(itemlist, item.channel)
 
     # Opción "Añadir esta serie a la biblioteca de XBMC"
     if config.get_library_support() and len(itemlist) > 0:
@@ -204,12 +205,7 @@ def findvideos(item):
     online = re.findall('<table class=.+? cellpadding=.+? cellspacing=.+?>(.+?)</table>', data,
                         re.MULTILINE | re.DOTALL)
 
-    itemlist = parse_videos(item, "Ver", online[0])
-    itemlist.extend(parse_videos(item, "Descargar", online[1]))
-
-    itemlist = filtertools.get_links(itemlist, item, list_idiomas, CALIDADES)
-
-    return itemlist
+    return parse_videos(item, "Ver", online[0]) + parse_videos(item, "Descargar", online[1])
 
 
 def parse_videos(item, tipo, data):
@@ -226,17 +222,23 @@ def parse_videos(item, tipo, data):
     for language, date, server, link, quality in links:
         if quality == "":
             quality = "SD"
-        title = "%s en %s [%s] [%s] (%s)" % (tipo, server, IDIOMAS.get(language, "OVOS"), quality, date)
+        title = "{tipo} en {server} [{idioma}] [{quality}] ({fecha})".\
+            format(tipo=tipo, server=server, idioma=IDIOMAS.get(language, "OVOS"), quality=quality, fecha=date)
 
         itemlist.append(Item(channel=item.channel, title=title, url=urlparse.urljoin(HOST, link), action="play",
                              show=item.show, language=IDIOMAS.get(language, "OVOS"), quality=quality,
-                             fulltitle=item.title))
+                             list_idiomas=list_idiomas, list_calidad=CALIDADES, fulltitle=item.title,
+                             context=filtertools.context))
+        # context=CONTEXT+"|guardar_filtro"))
+
+    if len(itemlist) > 0 and filtertools.context:
+        itemlist = filtertools.get_links(itemlist, item.channel)
 
     return itemlist
 
 
 def play(item):
-    logger.info("play url=%s" % item.url)
+    logger.info("play url={0}".format(item.url))
 
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;|<Br>|<BR>|<br>|<br/>|<br />|-\s", "", data)
@@ -247,7 +249,7 @@ def play(item):
     itemlist = servertools.find_video_items(data=url)
     titulo = scrapertools.find_single_match(item.fulltitle, "^(.*?)\s\[.+?$")
     if titulo:
-        titulo += " [%s]" % item.language
+        titulo += " [{language}]".format(language=item.language)
 
     for videoitem in itemlist:
         if titulo:

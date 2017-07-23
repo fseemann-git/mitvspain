@@ -6,43 +6,34 @@
 	<active>false</active>
 	<adult>false</adult>
 	<language>es</language>
+	<include_in_global_search>disabled</include_in_global_search>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/buscador.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/buscador.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/buscador.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/buscador.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>5</version>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+	<version>3</version>
 
 	<changes>
 		<change>
-			<date>25/05/17</date>
-			<autor></autor>
-			<description>añadido control parental</description>
-		</change>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
 			<date>17/02/17</date>
-			<autor></autor>
+			<autor>kerenmac</autor>
 			<description>Cambios de detalles visuales</description>
 		</change>
 		<change>
 			<date>06/12/16</date>
-			<autor></autor>
+			<autor>super_berny</autor>
 			<description>Añadir al menu: 'Recordar última búsqueda'</description>
 		</change>
 		<change>
 			<date>01/07/16</date>
-			<autor></autor>
+			<autor>SeiTaN</autor>
 			<description>Eliminado código innecesario.</description>
 		</change>
 		<change>
 			<date>???</date>
-			<autor></autor>
+			<autor>???</autor>
 			<description>Multihilos y seleccion de canales(gracias a Divadr)</description>
 		</change>
 	</changes>

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para Allpeliculas
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
-
-from core import httptools
-from core import jsontools
+from core import config
 from core import logger
+from core import httptools
+from core import scrapertools
+from core.item import Item
+from core import jsontools
 
 
 def mainlist(item):
@@ -75,13 +77,14 @@ def categorias(item):
   
   data = httptools.downloadpage(item.url).data
   
-  patron  = '<div class="categoriesbox" id="[^"]+"> <div class="ctbinner"> <a href="([^"]+)" title="[^"]+"> <img src="([^"]+)" alt="[^"]+"> <h2>([^"]+)</h2> </a> </div> </div>'
+  patron  = '<div class="categoriesbox" id="[^"]+"><a href="([^"]+)" title="([^"]+) Porn Videos">'
+  patron += '<img src="([^"]+)" alt="[^"]+"><h2>[^<]+</h2></a></div>'
   
   matches = re.compile(patron, re.DOTALL).findall(data)
-  for url, thumbnail, title in matches:
+  for url, title, thumbnail in matches:
     itemlist.append(item.clone(title=title, url=urlparse.urljoin(item.url,url), action ="videos", thumbnail = thumbnail))
   
-  return sorted(itemlist, key = lambda i: i.title)
+  return itemlist
 
 
 def videos(item):

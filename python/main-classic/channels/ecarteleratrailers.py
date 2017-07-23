@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para trailers de ecartelera
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.ecarteleratrailers mainlist")
     itemlist=[]
 
     if item.url=="":
@@ -36,6 +38,7 @@ def mainlist(item):
     patron += '<p class="desc">([^<]+)</p>'
 
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG: scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle,scrapedthumbnail,duration,scrapedplot in matches:
 
@@ -44,7 +47,7 @@ def mainlist(item):
         thumbnail = scrapedthumbnail
         plot = scrapedplot.strip()
 
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="play" , title=title , url=url, thumbnail=thumbnail, fanart=thumbnail, plot=plot, server="directo", folder=False))
 
     # ------------------------------------------------------
@@ -52,6 +55,8 @@ def mainlist(item):
     # ------------------------------------------------------
     patron = '<a href="([^"]+)">Siguiente</a>'
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if DEBUG:
+        scrapertools.printMatches(matches)
 
     for match in matches:
         scrapedtitle = "Pagina siguiente"
@@ -66,7 +71,7 @@ def mainlist(item):
 
 # Reproducir un vídeo
 def play(item):
-    logger.info()
+    logger.info("mitvspain.channels.ecarteleratrailers play")
     itemlist=[]
     # Descarga la página
     data = scrapertools.cachePage(item.url)
@@ -78,7 +83,7 @@ def play(item):
 
     if len(matches)>0:
         url = urlparse.urljoin(item.url,matches[0])
-        logger.info("url="+url)
+        logger.info("mitvspain.channels.ecarteleratrailers url="+url)
         itemlist.append( Item(channel=item.channel, action="play" , title=item.title , url=url, thumbnail=item.thumbnail, plot=item.plot, server="directo", folder=False))
 
     return itemlist

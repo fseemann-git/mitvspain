@@ -1,46 +1,47 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
+# Canal (cinefoxtv) por Hernan_Ar_c
+# ------------------------------------------------------------
 
-import re
-import sys
-import urllib
+import urlparse,urllib2,urllib,re
+import os, sys, time
 
-from core import config
-from core import httptools
-from core import jsontools
 from core import logger
+from core import config
 from core import scrapertools
-from core import servertools
-from core import tmdb
 from core.item import Item
+from core import servertools
+from core import httptools
+from core import tmdb
+from core import jsontools
 
 host = 'http://floow.tv'
 token = ''
 key = '73894672jdjhjdddddfhd'
 
-tgenero = {"Comedia":"https://s7.postimg.org/ne9g9zgwb/comedia.png",
-           "Belica":"https://s23.postimg.org/71itp9hcr/belica.png",
-           "Drama":"https://s16.postimg.org/94sia332d/drama.png",
-           "Accion":"https://s3.postimg.org/y6o9puflv/accion.png",
-           "Aventura":"https://s10.postimg.org/6su40czih/aventura.png",
+tgenero = {"Comedia":"https://s32.postimg.org/q7g2qs90l/comedia.png",
+           "Belica":"https://s32.postimg.org/kjbko3xhx/belica.png",
+           "Drama":"https://s32.postimg.org/e6z83sqzp/drama.png",
+           "Accion":"https://s32.postimg.org/4hp7gwh9x/accion.png",
+           "Aventura":"https://s32.postimg.org/whwh56is5/aventura.png",
            "Latino":"https://s29.postimg.org/wmykp66ev/latino.png",
-           "Animacion":"https://s13.postimg.org/5on877l87/animacion.png",
-           "Ciencia-Fic":"https://s9.postimg.org/diu70s7j3/cienciaficcion.png",
-           "Terror":"https://s7.postimg.org/yi0gij3gb/terror.png",
-           "Docu":"https://s16.postimg.org/7xjj4bmol/documental.png",
-           "Musical":"https://s29.postimg.org/bbxmdh9c7/musical.png",
-           "Western":"https://s23.postimg.org/lzyfbjzhn/western.png",
-           "Fantasia":"https://s13.postimg.org/65ylohgvb/fantasia.png",
-           "Thriller":"https://s22.postimg.org/5y9g0jsu9/thriller.png",
-           "Misterio":"https://s1.postimg.org/w7fdgf2vj/misterio.png",
-           "Crimen":"https://s4.postimg.org/6z27zhirx/crimen.png",
-           "Historia":"https://s15.postimg.org/fmc050h1n/historia.png",
-           "Infantil":"https://s23.postimg.org/g5rmazozv/infantil.png",
-           "Biografia":"https://s15.postimg.org/5lrpbx323/biografia.png",
-           "Noir":"https://s27.postimg.org/absaoxx83/cinenegro.png",
-           "Romantico":"https://s21.postimg.org/xfsj7ua0n/romantica.png",
-           "Deporte":"https://s13.postimg.org/xuxf5h06v/deporte.png",
-           "Anime":"https://s2.postimg.org/s38borokp/anime.png",
+           "Animacion":"https://s32.postimg.org/rbo1kypj9/animacion.png",
+           "Ciencia-Fic":"https://s32.postimg.org/6hp3tsxsl/ciencia_ficcion.png",
+           "Terror":"https://s32.postimg.org/ca25xg0ed/terror.png",
+           "Docu":"https://s32.postimg.org/7opmvc5ut/documental.png",
+           "Musical":"https://s31.postimg.org/7i32lca7f/musical.png",
+           "Western":"https://s31.postimg.org/nsksyt3hn/western.png",
+           "Fantasia":"https://s32.postimg.org/pklrf01id/fantasia.png",
+           "Thriller":"https://s31.postimg.org/4d7bl25y3/thriller.png",
+           "Misterio":"https://s4.postimg.org/kd48bcxe5/misterio.png",
+           "Crimen":"https://s14.postimg.org/5lez1j1gx/crimen.png",
+           "Historia":"https://s13.postimg.org/52evvjrqf/historia.png",
+           "Infantil":"https://s32.postimg.org/i53zwwgsl/infantil.png",
+           "Biografia":"https://s23.postimg.org/u49p87o3f/biografia.png",
+           "Noir":"https://s32.postimg.org/b0882kt7p/cine_negro.png",
+           "Romantico":"https://s30.postimg.org/4i5sbj7n5/romantica.png",
+           "Deporte":"https://s31.postimg.org/pdc8etc0r/deporte.png",
+           "Anime":"https://s31.postimg.org/lppob54d7/anime.png",
            "Concierto":"https://s22.postimg.org/5ew6k8ls1/concierto.png"}
 
 def mainlist(item):
@@ -48,9 +49,9 @@ def mainlist(item):
 
     itemlist = []
     
-    itemlist.append( Item(channel=item.channel, title="Peliculas", action="menupeliculas",thumbnail='https://s8.postimg.org/6wqwy2c2t/peliculas.png', fanart='https://s8.postimg.org/6wqwy2c2t/peliculas.png', tipo='peliculas/'))
+    itemlist.append( Item(channel=item.channel, title="Peliculas", action="menupeliculas",thumbnail='https://s31.postimg.org/4g4lytrqj/peliculas.png', fanart='https://s31.postimg.org/4g4lytrqj/peliculas.png', tipo='peliculas/'))
     
-    itemlist.append( Item(channel=item.channel, title="Series", action="menuseries",thumbnail='https://s27.postimg.org/iahczwgrn/series.png', fanart='https://s27.postimg.org/iahczwgrn/series.png', tipo='peliculas/'))
+    itemlist.append( Item(channel=item.channel, title="Series", action="menuseries",thumbnail='https://s32.postimg.org/544rx8n51/series.png', fanart='https://s32.postimg.org/544rx8n51/series.png', tipo='peliculas/'))
 
     return itemlist
 
@@ -59,17 +60,17 @@ def menupeliculas(item):
 
     itemlist = []
     
-    itemlist.append( item.clone (title="Estrenos", action="lista",thumbnail='https://s21.postimg.org/fy69wzm93/estrenos.png', fanart='https://s21.postimg.org/fy69wzm93/estrenos.png', url = host+'/apimovies/moviepremiere/300', last_item = 0))
+    itemlist.append( item.clone (title="Estrenos", action="lista",thumbnail='https://s12.postimg.org/4zj0rbun1/estrenos.png', fanart='https://s12.postimg.org/4zj0rbun1/estrenos.png', url = host+'/apimovies/moviepremiere/300', last_item = 0))
     
     itemlist.append( item.clone (title="Clasicos", action="lista",thumbnail='https://s8.postimg.org/8lt3x4y3p/clasicos.png', fanart='https://s8.postimg.org/8lt3x4y3p/clasicos.png', url = host+'/apimovies/moviebyscore/300', last_item = 0))
 
     itemlist.append( item.clone (title="Populares", action="lista",thumbnail='https://s22.postimg.org/wrx8dpa4x/popular.png', fanart='https://s22.postimg.org/wrx8dpa4x/popular.png', url = host+'/apimovies/moviebypop/300', last_item = 0))
     
-    itemlist.append( item.clone (title="Por Año", action="by_year",thumbnail='https://s8.postimg.org/7eoedwfg5/pora_o.png', fanart='https://s8.postimg.org/7eoedwfg5/pora_o.png', last_item = 0))
+    itemlist.append( item.clone (title="Por Año", action="by_year",thumbnail='https://s31.postimg.org/iyl5fvzqz/pora_o.png', fanart='https://s31.postimg.org/iyl5fvzqz/pora_o.png', last_item = 0))
 
-    itemlist.append( item.clone (title="Generos", action="generos",thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png', url = host+'/peliculas', last_item = 0))
+    itemlist.append( item.clone (title="Generos", action="generos",thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png', url = host+'/peliculas', last_item = 0))
 
-    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", thumbnail='https://s30.postimg.org/pei7txpa9/buscar.png', url =host+'/apimovies/moviebyword/', fanart='https://s30.postimg.org/pei7txpa9/buscar.png',last_item = 0))
+    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", thumbnail='https://s31.postimg.org/qose4p13f/Buscar.png', url =host+'/apimovies/moviebyword/', fanart='https://s31.postimg.org/qose4p13f/Buscar.png',last_item = 0))
 
     return itemlist
 
@@ -79,17 +80,17 @@ def menuseries(item):
 
     itemlist = []
     
-    itemlist.append( item.clone (title="Estrenos", action="lista",thumbnail='https://s21.postimg.org/fy69wzm93/estrenos.png', fanart='https://s21.postimg.org/fy69wzm93/estrenos.png', url=host+'/apiseries/seriepremiere/300' ,tipo = 'serie', last_item = 0))
+    itemlist.append( item.clone (title="Estrenos", action="lista",thumbnail='https://s12.postimg.org/4zj0rbun1/estrenos.png', fanart='https://s12.postimg.org/4zj0rbun1/estrenos.png', url=host+'/apiseries/seriepremiere/300' ,tipo = 'serie', last_item = 0))
     
     itemlist.append( item.clone (title="Clasicos", action="lista",thumbnail='https://s8.postimg.org/8lt3x4y3p/clasicos.png', fanart='https://s8.postimg.org/8lt3x4y3p/clasicos.png', url = host+'/apiseries/seriebyscore/300',tipo = 'serie', last_item = 0))
 
     itemlist.append( item.clone (title="Populares", action="lista",thumbnail='https://s22.postimg.org/wrx8dpa4x/popular.png', fanart='https://s22.postimg.org/wrx8dpa4x/popular.png', url = host+'/apiseries/seriebypop/300',tipo = 'serie', last_item = 0))
     
-    itemlist.append( item.clone (title="Por Año", action="by_year",thumbnail='https://s8.postimg.org/7eoedwfg5/pora_o.png', fanart='https://s8.postimg.org/7eoedwfg5/pora_o.png', tipo = 'serie', last_item = 0))
+    itemlist.append( item.clone (title="Por Año", action="by_year",thumbnail='https://s31.postimg.org/iyl5fvzqz/pora_o.png', fanart='https://s31.postimg.org/iyl5fvzqz/pora_o.png', tipo = 'serie', last_item = 0))
 
-    itemlist.append( item.clone (title="Generos", action="generos",thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png', url = host+'/series', tipo='serie', last_item =0))
+    itemlist.append( item.clone (title="Generos", action="generos",thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png', url = host+'/series', tipo='serie', last_item =0))
 
-    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", thumbnail='https://s30.postimg.org/pei7txpa9/buscar.png', url =host+'/apiseries/seriebyword/', fanart='https://s30.postimg.org/pei7txpa9/buscar.png', tipo='serie', last_item = 0))
+    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", thumbnail='https://s31.postimg.org/qose4p13f/Buscar.png', url =host+'/apiseries/seriebyword/', fanart='https://s31.postimg.org/qose4p13f/Buscar.png', tipo='serie', last_item = 0))
 
     return itemlist
 
@@ -97,7 +98,7 @@ def menuseries(item):
 
 
 def lista (item):
-    logger.info()
+    logger.info ()
     itemlist =[]
     
     token_url = "http://floow.tv/apibase/token"
@@ -141,7 +142,7 @@ def lista (item):
     
     #Paginacion
     if last_item < len(dict_data['results']):
-        itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = item.url, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png',last_item=last_item-1, tipo = item.tipo))
+        itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = item.url, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png',last_item=last_item-1, tipo = item.tipo))
     return itemlist
        
 def search(item,texto):
@@ -262,7 +263,7 @@ def episodiosxtemp(item):
 
 def findvideos(item):
     servers ={'pixshare':'directo','bitshare HD':'openload'}
-    logger.info()
+    logger.info ()
     itemlist = []
     data = httptools.downloadpage(item.url).data
     data = re.sub(r'"|\n|\r|\t|&nbsp;|<br>|\s{2,}|', "", str(data))

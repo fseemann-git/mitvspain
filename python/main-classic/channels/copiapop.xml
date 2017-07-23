@@ -6,29 +6,26 @@
 	<active>true</active>
 	<adult>false</adult>
 
-	<version>2</version>
+	<version>1</version>
 	<changes>
 		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
 			<date>16/02/2017</date>
-			<autor></autor>
+			<autor>Cmos</autor>
 			<description>Primera versión</description>
 		</change>
 	</changes>
 
 	<fanart></fanart>
 	<thumbnail>http://i.imgur.com/EjbfM7p.png?1</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/copiapop.png</bannermenu>
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/copiapop.png</bannermenu>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
 
 	<categories>
 		<category>movie</category>
 		<category>serie</category>
 	</categories>
+
+	<include_in_global_search>disabled</include_in_global_search>
 
 	<settings>
 		<id>copiapopuser</id>

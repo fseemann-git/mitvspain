@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2017  mitvspain@gmail.com
+# 
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # XBMC Launcher (xbmc / kodi / boxee)
 # ------------------------------------------------------------
@@ -35,7 +35,6 @@ from core import config
 from core import library
 from core import logger
 from core import scrapertools
-from core import servertools
 from core.item import Item
 from platformcode import platformtools
 
@@ -51,17 +50,16 @@ def start():
     config.verify_directories_created()
 
 
-def run(item=None):
+def run():
     logger.info()
 
-    if not item:
-        # Extract item from sys.argv
-        if sys.argv[2]:
-            item = Item().fromurl(sys.argv[2])
+    # Extract item from sys.argv
+    if sys.argv[2]:
+        item = Item().fromurl(sys.argv[2])
 
-        # If no item, this is mainlist
-        else:
-            item = Item(channel="channelselector", action="getmainlist", viewmode="movie")
+    # If no item, this is mainlist
+    else:
+        item = Item(channel="channelselector", action="getmainlist", viewmode="movie")
 
     logger.info(item.tostring())
 
@@ -76,8 +74,40 @@ def run(item=None):
         if item.action == "getmainlist":
             import channelselector
 
-            config.set_setting("plugin_updates_available", 0)
-            itemlist = channelselector.getmainlist()
+            # Check for updates only on first screen
+            if config.get_setting("check_for_plugin_updates") == "true":
+                logger.info("Check for plugin updates enabled")
+                from core import updater
+
+                try:
+                    config.set_setting("plugin_updates_available","0")
+                    new_published_version_tag , number_of_updates = updater.get_available_updates()
+
+                    config.set_setting("plugin_updates_available",str(number_of_updates))
+                    itemlist = channelselector.getmainlist()
+
+                    if new_published_version_tag!="":
+
+                        platformtools.dialog_notification(new_published_version_tag+" disponible",
+                                                "Ya puedes descargar la nueva versión del plugin\n"
+                                                "desde el listado principal")
+
+                        itemlist = channelselector.getmainlist()
+                        itemlist.insert(0, Item(title="Descargar version "+new_published_version_tag, version=new_published_version_tag, channel="updater",
+                                                action="update", thumbnail=channelselector.get_thumb("squares","thumb_actualizar.png")))
+                except:
+                    import traceback
+                    logger.info(traceback.format_exc())
+                    platformtools.dialog_ok("No se puede conectar", "No ha sido posible comprobar",
+                                            "si hay actualizaciones")
+                    logger.info("Fallo al verificar la actualización")
+                    config.set_setting("plugin_updates_available","0")
+                    itemlist = channelselector.getmainlist()
+
+            else:
+                logger.info("Check for plugin updates disabled")
+                config.set_setting("plugin_updates_available","0")
+                itemlist = channelselector.getmainlist()
 
             platformtools.render_items(itemlist, item)
 
@@ -86,7 +116,7 @@ def run(item=None):
 
             from core import updater
             updater.update(item)
-            config.set_setting("plugin_updates_available", 0)
+            config.set_setting("plugin_updates_available","0")
             if config.get_system_platform() != "xbox":
                 import xbmc
                 xbmc.executebuiltin("Container.Refresh")
@@ -117,16 +147,27 @@ def run(item=None):
             if item.action == "mainlist":
 
                 # Parental control
+                can_open_channel = False
+
                 # If it is an adult channel, and user has configured pin, asks for it
                 if channeltools.is_adult(item.channel) and config.get_setting("adult_pin") != "":
-                    tecleado = platformtools.dialog_input("", "Contraseña para canales de adultos", True)
-                    if tecleado is None or tecleado != config.get_setting("adult_pin"):
-                        return
+
+                    tecleado = platformtools.dialog_input("", "PIN para canales de adultos", True)
+                    if tecleado is not None:
+                        if tecleado == config.get_setting("adult_pin"):
+                            can_open_channel = True
+
+                # All the other cases can open the channel
+                else:
+                    can_open_channel = True
+
+                if not can_open_channel:
+                    return
 
             # Actualiza el canal individual
             if (item.action == "mainlist" and
                     item.channel != "channelselector" and
-                    config.get_setting("check_for_channel_updates") == True):
+                    config.get_setting("check_for_channel_updates") == "true"):
                 from core import updater
                 updater.update_channel(item.channel)
 
@@ -173,7 +214,7 @@ def run(item=None):
 
                     # If not, shows user an error message
                     else:
-                        platformtools.dialog_ok("pelisalacarta", "No hay nada para reproducir")
+                        platformtools.dialog_ok("mitvspain", "No hay nada para reproducir")
 
                 # If player don't have a "play" function, not uses the standard play from platformtools
                 else:
@@ -186,13 +227,16 @@ def run(item=None):
                 # First checks if channel has a "findvideos" function
                 if hasattr(channel, 'findvideos'):
                     itemlist = getattr(channel, item.action)(item)
-                    itemlist = servertools.filter_servers(itemlist)
 
                 # If not, uses the generic findvideos function
                 else:
                     logger.info("No channel 'findvideos' method, "
                                 "executing core method")
+                    from core import servertools
                     itemlist = servertools.find_video_items(item)
+
+                if config.get_setting('filter_servers') == 'true':
+                    itemlist = filtered_servers(itemlist)
 
                 if config.get_setting("max_links", "biblioteca") != 0:
                     itemlist = limit_itemlist(itemlist)
@@ -255,15 +299,16 @@ def run(item=None):
 
         # Grab inner and third party errors
         if hasattr(e, 'reason'):
-            logger.error("Razon del error, codigo: %s | Razon: %s" % (str(e.reason[0]), str(e.reason[1])))
+            logger.info("Razon del error, codigo: %s | Razon: %s" %
+                        (str(e.reason[0]), str(e.reason[1])))
             texto = config.get_localized_string(30050)  # "No se puede conectar con el sitio web"
-            platformtools.dialog_ok("pelisalacarta", texto)
+            platformtools.dialog_ok("mitvspain", texto)
 
         # Grab server response errors
         elif hasattr(e, 'code'):
-            logger.error("Codigo de error HTTP : %d" % e.code)
+            logger.info("Codigo de error HTTP : %d" % e.code)
             # "El sitio web no funciona correctamente (error http %d)"
-            platformtools.dialog_ok("pelisalacarta", config.get_localized_string(30051) % e.code)
+            platformtools.dialog_ok("mitvspain", config.get_localized_string(30051) % e.code)
 
     except:
         import traceback
@@ -286,15 +331,110 @@ def run(item=None):
             platformtools.dialog_ok(
                 "Error inesperado en el canal " + canal,
                 "Puede deberse a un fallo de conexión, la web del canal "
-                "ha cambiado su estructura, o un error interno de pelisalacarta.",
+                "ha cambiado su estructura, o un error interno de mitvspain.",
                 "Para saber más detalles, consulta el log.", log_message)
         else:
             platformtools.dialog_ok(
-                "Se ha producido un error en pelisalacarta",
+                "Se ha producido un error en mitvspain",
                 "Comprueba el log para ver mas detalles del error.",
                 log_message)
 
 
+def set_server_list():
+    logger.info()
+
+    server_white_list = []
+    server_black_list = []
+
+    if len(config.get_setting('whitelist')) > 0:
+        server_white_list_key = config.get_setting('whitelist').replace(', ', ',').replace(' ,', ',')
+        server_white_list = re.split(',', server_white_list_key)
+
+    if len(config.get_setting('blacklist')) > 0:
+        server_black_list_key = config.get_setting('blacklist').replace(', ', ',').replace(' ,', ',')
+        server_black_list = re.split(',', server_black_list_key)
+
+    logger.info("WhiteList %s" % server_white_list)
+    logger.info("BlackList %s" % server_black_list)
+
+    return server_white_list, server_black_list
+
+
+def filtered_servers(itemlist):
+    logger.info()
+    # logger.debug("Inlet itemlist size: %i" % len(itemlist))
+
+    new_list = []
+    white_counter = 0
+    black_counter = 0
+
+    server_white_list, server_black_list = set_server_list()
+
+    white_list_order = config.get_setting("white_list_order", "biblioteca")
+
+    if len(server_white_list) > 0:
+        logger.info("WhiteList")
+        if white_list_order:
+            for server in server_white_list:
+                logger.info("Servidor: " + server)
+                for item in itemlist:
+                    if server in unicode(item.title, "utf8").lower().encode("utf8"):
+                        logger.info("Coincidencia: " + item.title)
+                        new_list.append(item)
+                        white_counter += 1
+
+        else:
+            for item in itemlist:
+                logger.info("item.title: " + item.title)
+                if any(server in unicode(item.title, "utf8").lower().encode("utf8")
+                       for server in server_white_list):
+                    # logger.info("found")
+                    new_list.append(item)
+                    white_counter += 1
+                # else:
+                #     logger.info("not found")
+
+    if len(server_black_list) > 0:
+        logger.info("BlackList")
+
+        # Si existe 'new_list' se añade lo restante y se filtra
+        if len(new_list) != 0:
+            # Se añade al final de 'new_list' lo que no tuviera de 'itemlist'
+            if len(new_list) != len(itemlist):
+                for item_1 in itemlist:
+                    coincidencia = False
+                    for item_2 in new_list:
+                        if item_2.title == item_1.title:
+                            coincidencia = True
+                            break
+                    if not coincidencia:
+                        new_list.append(item_1)
+
+            itemlist = new_list
+            new_list = []
+
+        for item in itemlist:
+            logger.info("item.title: " + item.title)
+            if any(server in unicode(item.title, "utf8").lower().encode("utf8")
+                   for server in server_black_list):
+                # logger.info("found")
+                black_counter += 1
+
+            # Se pasa a 'new_list' si el servidor no estaba en la lista negra.
+            else:
+                new_list.append(item)
+
+    logger.info("WhiteList server %s has #%d rows" %
+                (server_white_list, white_counter))
+    logger.info("BlackList server %s has #%d rows" %
+                (server_black_list, black_counter))
+    logger.info("Rest has #%d rows" % (len(new_list) - white_counter))
+
+    if len(new_list) == 0:
+        new_list = itemlist
+
+    # logger.debug("Outlet itemlist size: %i" % len(new_list))
+    return new_list
 
 
 def reorder_itemlist(itemlist):
@@ -331,7 +471,8 @@ def reorder_itemlist(itemlist):
     new_list.extend(mod_list)
     new_list.extend(not_mod_list)
 
-    logger.info("Titulos modificados:%i | No modificados:%i" % (modified, not_modified))
+    logger.info("Titulos modificados:%i | No modificados:%i" %
+                (modified, not_modified))
 
     if len(new_list) == 0:
         new_list = itemlist
@@ -343,6 +484,8 @@ def reorder_itemlist(itemlist):
 def limit_itemlist(itemlist):
     logger.info()
     # logger.debug("Inlet itemlist size: %i" % len(itemlist))
+
+    new_list = []
 
     try:
         opt = config.get_setting("max_links", "biblioteca")
@@ -363,7 +506,7 @@ def play_from_library(item):
         Los .strm al reproducirlos desde kodi, este espera que sea un archivo "reproducible" asi que no puede contener
         más items, como mucho se puede colocar un dialogo de seleccion.
         Esto lo solucionamos "engañando a kodi" y haciendole creer que se ha reproducido algo, asi despues mediante
-        "Container.Update()" cargamos el strm como si un item desde dentro de pelisalacarta se tratara, quitando todas
+        "Container.Update()" cargamos el strm como si un item desde dentro de mitvspain se tratara, quitando todas
         las limitaciones y permitiendo reproducir mediante la funcion general sin tener que crear nuevos métodos para
         la biblioteca.
         @type item: item
@@ -395,16 +538,16 @@ def play_from_library(item):
     else:
         # Ventana emergente
         from channels import biblioteca
-        p_dialog = platformtools.dialog_progress_bg('pelisalacarta', 'Cargando...')
+        p_dialog = platformtools.dialog_progress_bg('mitvspain', 'Cargando...')
         p_dialog.update(0, '')
 
         itemlist = biblioteca.findvideos(item)
 
         p_dialog.update(50, '')
 
-        '''# Se filtran los enlaces segun la lista negra
-        if config.get_setting('filter_servers', "servers"):
-            itemlist = servertools.filter_servers(itemlist)'''
+        # Se filtran los enlaces segun la lista blanca y negra
+        if config.get_setting('filter_servers') == 'true':
+            itemlist = filtered_servers(itemlist)
 
         # Se limita la cantidad de enlaces a mostrar
         if config.get_setting("max_links", "biblioteca") != 0:

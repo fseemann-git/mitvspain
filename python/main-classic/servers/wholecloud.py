@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# MiTvSpain - XBMC Plugin
 # Conector para wholecloud
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+
+#------------------------------------------------------------
 
 import re
 
@@ -20,13 +20,13 @@ def test_video_exists(page_url):
         return False, "[wholecloud] El archivo ha sido eliminado o no existe"
     if "This video is not yet ready" in data:
         return False, "[wholecloud] El archivo no está listo, se está subiendo o convirtiendo"
-
+    
     return True, ""
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("url=" + page_url)
-
+    
     data = httptools.downloadpage(page_url).data
 
     video_urls = []
@@ -62,6 +62,6 @@ def find_videos(data):
             devuelve.append([titulo, url, 'wholecloud'])
             encontrados.add(url)
         else:
-            logger.info("  url duplicada=" + url)
+            logger.info("  url duplicada="+url)
 
     return devuelve

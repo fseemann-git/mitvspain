@@ -11,20 +11,10 @@
 	<thumbnail>https://s15.postimg.org/pzd3h4vy3/javus.png</thumbnail>
 	<bannermenu>https://s21.postimg.org/5pqzedp2f/javus_banner.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>2</version>
-	<changes>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>01/12/2016</date>
-			<autor></autor>
-			<description>Release.</description>
-		</change>
-	</changes>
+	<update_url></update_url>
+	<version>1</version>
+	<date></date>
+	<changes></changes>
 
 	<categories>
 		<category>adult</category>

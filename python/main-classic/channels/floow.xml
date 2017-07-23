@@ -3,7 +3,7 @@
    <id>floow</id>
    <name>Floow</name>
 
-   <active>false</active>
+   <active>true</active>
    <adult>false</adult>
    <language>es</language>
 
@@ -11,16 +11,19 @@
    <thumbnail>https://s1.postimg.org/efka0x4of/floow.png</thumbnail>
    <bannermenu>https://s18.postimg.org/4e5huzynd/floow_banner.png</bannermenu>
 
-   <update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-   <version>2</version>
-   <date>02/05/2017</date>
-   <changes>Deshabilitado por desaparicion de la pagina</changes>
+   <update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+   <version>1</version>
+   <date>10/03/2017</date>
+   <changes>First release</changes>
 
    <categories>
       <category>latino</category>
       <category>movie</category>
    </categories>
 
+   <settings>
+      <include_in_global_search>false</include_in_global_search>
+   </settings>
    <settings>
 		<id>include_in_newest_peliculas</id>
 		<type>bool</type>

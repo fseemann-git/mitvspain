@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para reyanime
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import urlparse
@@ -14,6 +14,7 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
 ANIMEFLV_REQUEST_HEADERS = []
 ANIMEFLV_REQUEST_HEADERS.append(["User-Agent","Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:22.0) Gecko/20100101 Firefox/22.0"])
 ANIMEFLV_REQUEST_HEADERS.append(["Accept-Encoding","gzip, deflate"])
@@ -24,7 +25,7 @@ ANIMEFLV_REQUEST_HEADERS.append(["Accept-Language","es-ES,es;q=0.8,en-US;q=0.5,e
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="series"       , title="En emisión"           , url="http://reyanime.com/ver/emision" , viewmode="movie_with_plot"))
@@ -36,7 +37,7 @@ def mainlist(item):
     return itemlist
 
 def letras(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime letras")
 
     itemlist = []
     data = scrapertools.cache_page(item.url)
@@ -49,13 +50,13 @@ def letras(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
         itemlist.append( Item(channel=item.channel, action="series" , title=title , url=url, thumbnail=thumbnail, plot=plot, viewmode="movie_with_plot"))
     return itemlist
 
 def generos(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime generos")
 
     itemlist = []
     #itemlist.append( Item(channel=item.channel, action="series" , title="acción" , url="http://reyanime.com/ver/genero/accion", viewmode="movie_with_plot"))
@@ -71,13 +72,13 @@ def generos(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
         itemlist.append( Item(channel=item.channel, action="series" , title=title , url=url, thumbnail=thumbnail, plot=plot, viewmode="movie_with_plot"))
     return itemlist
 
 def series(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime series")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -141,7 +142,7 @@ def series(item):
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         plot = scrapertools.htmlclean(scrapedplot).strip()
         show = title
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="episodios", title=title , url=url , thumbnail=thumbnail , plot=plot , show=show, fulltitle=title, fanart=thumbnail, viewmode="movies_with_plot", folder=True) )
 
     next_page = scrapertools.find_single_match(data,'<a href="([^"]+)" class="next">siguiente >>')
@@ -151,7 +152,7 @@ def series(item):
     return itemlist
 
 def episodios(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime episodios")
     itemlist = []
     
     # Descarga la pagina
@@ -176,7 +177,7 @@ def episodios(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = item.thumbnail
         plot = item.plot
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos", title=title , url=url , thumbnail=thumbnail , plot=plot , show=item.show, fulltitle=item.show+" "+title, fanart=thumbnail, folder=True) )
 
     if config.get_library_support():
@@ -186,7 +187,7 @@ def episodios(item):
     return itemlist
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime findvideos")
     itemlist = []
 
     # Descarga la página
@@ -195,6 +196,7 @@ def findvideos(item):
 
     patron = '<iframe src="([^"]+)"'
     matches = re.compile(patron,re.DOTALL).findall(data)
+    if (DEBUG): scrapertools.printMatches(matches)
 
     for page_url in matches:
         logger.info("page_url="+page_url)
@@ -211,7 +213,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info()
+    logger.info("mitvspain.channels.reyanime play")
     itemlist=[]
 
     data = scrapertools.cache_page(item.url)
@@ -222,7 +224,7 @@ def play(item):
         scrapedtitle = item.title+video[0]
         videourl = video[1]
         server = video[2]
-        logger.debug("title=["+scrapedtitle+"], url=["+videourl+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+videourl+"]")
 
         # Añade al listado de XBMC
         itemlist.append( Item(channel=item.channel, action="play", title=scrapedtitle , fulltitle=item.fulltitle, url=videourl , server=server , folder=False) )

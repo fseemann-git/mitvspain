@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para divxatope
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 import re
 import urllib
@@ -188,19 +188,20 @@ def lista(item):
                 capitulo = matches[2].replace('Cap','x').replace('Temp','').replace(' ','')
                 temporada, episodio = capitulo.strip().split('x')
 
-            itemlist.append(Item(channel=item.channel, action="episodios", title=title, fulltitle=title, url=url,
-                                 thumbnail=thumbnail, plot=plot, folder=True, contentTitle=contentTitle,
-                                 language=idioma, contentSeason=int(temporada),
-                                 contentEpisodeNumber=int(episodio), contentQuality=calidad))
+            itemlist.append( Item(channel=item.channel, action="episodios", title=title , fulltitle = title, url=url ,
+                                  thumbnail=thumbnail , plot=plot , folder=True, hasContentDetails="true",
+                                  contentTitle=contentTitle, language=idioma, contentSeason=int(temporada),
+                                  contentEpisodeNumber=int(episodio), contentQuality=calidad))
 
         else:
             if len(matches) == 2:
                 calidad = matches[0].strip()
                 idioma = matches[1].strip()
 
-            itemlist.append(Item(channel=item.channel, action="findvideos", title=title, fulltitle=title, url=url,
-                                 thumbnail=thumbnail, plot=plot, folder=True, contentTitle=contentTitle,
-                                 language=idioma, contentThumbnail=thumbnail, contentQuality=calidad))
+            itemlist.append( Item(channel=item.channel, action="findvideos", title=title , fulltitle = title, url=url ,
+                                  thumbnail=thumbnail , plot=plot , folder=True, hasContentDetails="true",
+                                  contentTitle=contentTitle, language=idioma, contentThumbnail=thumbnail,
+                                  contentQuality=calidad))
 
     next_page_url = scrapertools.find_single_match(data,'<li><a href="([^"]+)">Next</a></li>')
     if next_page_url!="":

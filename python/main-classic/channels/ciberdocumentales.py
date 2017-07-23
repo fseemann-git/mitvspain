@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (ciberducomentales)
+# Canal (ciberducomentales) por Hernan_Ar_c
 # ------------------------------------------------------------
 
 import urlparse,urllib2,urllib,re
@@ -21,13 +21,13 @@ def mainlist(item):
 
     itemlist = []
     
-    itemlist.append( item.clone (title="Todas", action="lista",thumbnail='https://s18.postimg.org/fwvaeo6qh/todas.png', fanart='https://s18.postimg.org/fwvaeo6qh/todas.png', url = host))
+    itemlist.append( item.clone (title="Todas", action="lista",thumbnail='https://s12.postimg.org/iygbg8ip9/todas.png', fanart='https://s12.postimg.org/iygbg8ip9/todas.png', url = host))
 
-    itemlist.append( Item(channel=item.channel, title="Generos", action="generos", url=host, thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png'))
+    itemlist.append( Item(channel=item.channel, title="Generos", action="generos", url=host, thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png'))
 
-    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host, thumbnail='https://s9.postimg.org/wmhzu9d7z/vistas.png', fanart='https://s9.postimg.org/wmhzu9d7z/vistas.png', extra ='masvistas'))
+    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host, thumbnail='https://s32.postimg.org/466gt3ipx/vistas.png', fanart='https://s32.postimg.org/466gt3ipx/vistas.png', extra ='masvistas'))
 
-    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", url=host, thumbnail='https://s30.postimg.org/pei7txpa9/buscar.png', fanart='https://s30.postimg.org/pei7txpa9/buscar.png'))
+    itemlist.append( Item(channel=item.channel, title="Buscar", action="search", url=host, thumbnail='https://s31.postimg.org/qose4p13f/Buscar.png', fanart='https://s31.postimg.org/qose4p13f/Buscar.png'))
    
     return itemlist
 
@@ -64,7 +64,7 @@ def lista (item):
         next_page = scrapertools.find_single_match(data,'class=current>.*?<\/span><a href=(.*?)>.*?<\/a>')
         import inspect
         if next_page !='' and item.extra != 'masvistas':
-           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = host+next_page, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png'))
+           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = host+next_page, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png'))
     return itemlist
 
 def generos(item):

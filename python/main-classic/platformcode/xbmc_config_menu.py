@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2017  mitvspain@gmail.com
+# 
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # XBMC Config Menu
 # ------------------------------------------------------------
@@ -30,7 +30,6 @@ import os
 
 import xbmcgui
 from core import channeltools
-from core import servertools
 from core import config
 from core import logger
 
@@ -147,12 +146,10 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
                 (opcional) title: (str) Titulo de la ventana de configuracion. Se puede localizar mediante un numero
                 precedido de '@'
                 (opcional) callback (str) Nombre de la funcion, del canal desde el que se realiza la llamada, que sera
-                invocada al pulsar el boton aceptar de la ventana. A esta funcion se le pasara como parametros el
-                objeto 'item' y el dicionario 'dict_values'. Si este parametro no existe, se busca en el canal una
-                funcion llamada 'cb_validate_config' y si existe se utiliza como callback.
-
-            Retorno: Si se especifica 'callback' o el canal incluye 'cb_validate_config' se devolvera lo que devuelva
-                esa funcion. Si no devolvera None
+                invocada al pulsar
+                    el boton aceptar de la ventana. A esta funcion se le pasara como parametros el objeto 'item' y el
+                    dicionario 'dict_values'
+            Retorno: Si se especifica 'callback' se devolvera lo que devuelva esta funcion. Si no devolvera None
 
     Ejemplos de uso:
         platformtools.show_channel_settings(): Así tal cual, sin pasar ningún argumento, la ventana detecta de que canal
@@ -168,7 +165,7 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
     """
     def start(self, list_controls=None, dict_values=None, title="Opciones", callback=None, item=None,
               custom_button=None, channelpath=None):
-        logger.info()
+        logger.info("[xbmc_config_menu] start")
 
         # Ruta para las imagenes de la ventana
         self.mediapath = os.path.join(config.get_runtime_path(), 'resources', 'skins', 'Default', 'media')
@@ -193,7 +190,6 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
         if not channelpath:
             channelpath = inspect.currentframe().f_back.f_back.f_code.co_filename
         self.channel = os.path.basename(channelpath).replace(".py", "")
-        self.ch_type = os.path.basename(os.path.dirname(channelpath))
 
         # Si no tenemos list_controls, hay que sacarlos del xml del canal
         if not self.list_controls:
@@ -203,15 +199,7 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
 
                 # La llamada se hace desde un canal
                 self.list_controls, default_values = channeltools.get_channel_controls_settings(self.channel)
-                self.kwargs = {"channel": self.channel}
-                
-            # Si la ruta del canal esta en la carpeta "servers", obtenemos los controles y valores mediante servertools
-            elif os.path.join(config.get_runtime_path(), "servers") in channelpath:
 
-                # La llamada se hace desde un canal
-                self.list_controls, default_values = servertools.get_server_controls_settings(self.channel)
-                self.kwargs = {"server": self.channel}
-                
             # En caso contrario salimos
             else:
                 return None
@@ -576,9 +564,9 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
 
             # Decidimos si usar el valor por defecto o el valor guardado
             if c["type"] in ["bool", "text", "list"]:
-                if c["id"] not in self.values:
+                if id not in self.values:
                     if not self.callback:
-                        self.values[c["id"]] = config.get_setting(c["id"], **self.kwargs)
+                        self.values[c["id"]] = config.get_setting(c["id"], self.channel)
                     else:
                         self.values[c["id"]] = c["default"]
 
@@ -691,7 +679,7 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
 
     def check_default(self):
         if self.custom_button is None:
-            def_values = dict([[c["id"], c.get("default")] for c in self.list_controls if not c["type"] == "label"])
+            def_values = dict([[c["id"], c.get("default")] for c in self.list_controls])
 
             if def_values == self.values:
                 self.getControl(10006).setEnabled(False)
@@ -704,34 +692,19 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
         # Valores por defecto
         if id == 10006:
             if self.custom_button is not None:
-                if self.custom_button["close"]:
-                    self.close()
-                    
                 if '.' in self.callback:
                     package, self.callback = self.callback.rsplit('.', 1)
                 else:
-                    package = '%s.%s' % (self.ch_type, self.channel)
-
+                    package = 'channels.%s' % self.channel
                 try:
                     cb_channel = __import__(package, None, None, [package])
                 except ImportError:
                     logger.error('Imposible importar %s' % package)
                 else:
-                    self.return_value = getattr(cb_channel, self.custom_button['function'])(self.item, self.values)
-                    if not self.custom_button["close"]:
-                        if isinstance(self.return_value, dict) and self.return_value.has_key("label"):
-                            self.getControl(10006).setLabel(self.return_value['label'])
+                    self.return_value = getattr(cb_channel, self.custom_button['function'])(self.item)
+                    if self.custom_button["close"]:
+                        self.close()
 
-                        for c in self.list_controls:
-                            if c["type"] == "text":
-                                c["control"].setText(self.values[c["id"]])
-                            if c["type"] == "bool":
-                                c["control"].setSelected(self.values[c["id"]])
-                            if c["type"] == "list":
-                                c["label"].setLabel(c["lvalues"][self.values[c["id"]]])
-
-                        self.evaluate_conditions()
-                        self.dispose_controls(self.index, force=True)
 
             else:
                 for c in self.list_controls:
@@ -756,30 +729,23 @@ class SettingsWindow(xbmcgui.WindowXMLDialog):
 
         # Boton Aceptar
         if id == 10004:
-            self.close()
-            if self.callback and '.' in self.callback:
-                package, self.callback = self.callback.rsplit('.', 1)
+            if not self.callback:
+                for v in self.values:
+                    config.set_setting(v, self.values[v], self.channel)
+                self.close()
             else:
-                package = '%s.%s' % (self.ch_type, self.channel)
-
-            cb_channel = None
-            try:
-                cb_channel = __import__(package, None, None, [package])
-            except ImportError:
-                logger.error('Imposible importar %s' % package)
-
-            if self.callback:
-                # Si existe una funcion callback la invocamos ...
-                self.return_value = getattr(cb_channel, self.callback)(self.item, self.values)
-            else:
-                # si no, probamos si en el canal existe una funcion 'cb_validate_config' ...
+                self.close()
+                if '.' in self.callback:
+                    package, self.callback = self.callback.rsplit('.',1)
+                else:
+                    package = 'channels.%s' % self.channel
+                cb_channel = None
                 try:
-                    self.return_value = getattr(cb_channel, 'cb_validate_config')(self.item, self.values)
-                except AttributeError:
-                    # ... si tampoco existe 'cb_validate_config'...
-                    for v in self.values:
-                        config.set_setting(v, self.values[v], **self.kwargs)
+                    cb_channel = __import__(package, None, None, [package])
+                except ImportError:
+                    logger.error('Imposible importar %s' % package)
 
+                self.return_value = getattr(cb_channel, self.callback)(self.item, self.values)
 
         # Controles de ajustes, si se cambia el valor de un ajuste, cambiamos el valor guardado en el diccionario de
         # valores

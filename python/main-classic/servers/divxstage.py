@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para divxstage/cloudtime
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -14,8 +14,8 @@ from core import scrapertools
 host = "http://www.cloudtime.to"
 
 
-def test_video_exists(page_url):
-    logger.info("(page_url='%s')" % page_url)
+def test_video_exists( page_url ):
+    logger.info("[divxstage.py] test_video_exists(page_url='%s')" % page_url)
 
     data = httptools.downloadpage(page_url.replace('/embed/?v=', '/video/')).data
 
@@ -25,15 +25,15 @@ def test_video_exists(page_url):
     return True, ""
 
 
-def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("(page_url='%s')" % page_url)
+def get_video_url(page_url, premium = False, user="", password="", video_password=""):
+    logger.info("[divxstage.py] get_video_url(page_url='%s')" % page_url)
 
     if "divxstage.net" in page_url:
         page_url = page_url.replace("divxstage.net", "cloudtime.to")
 
     data = httptools.downloadpage(page_url).data
 
-    video_urls = []
+    video_urls = [] 
     videourls = scrapertools.find_multiple_matches(data, 'src\s*:\s*[\'"]([^\'"]+)[\'"]')
     if not videourls:
         videourls = scrapertools.find_multiple_matches(data, '<source src=[\'"]([^\'"]+)[\'"]')
@@ -87,3 +87,4 @@ def find_videos(data):
             logger.info("url duplicada=" + url)
 
     return devuelve
+

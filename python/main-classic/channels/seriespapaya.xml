@@ -11,20 +11,10 @@
     <thumbnail>http://i.imgur.com/P1D92cf.png</thumbnail>
     <bannermenu>http://i.imgur.com/OHHvi5z.png</bannermenu>
 
-    <update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-    <version>2</version>
+    <update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+    <version>1</version>
 
     <changes>
-        <change>
-			<date>06/04/2017</date>
-			<autor></autor>
-			<description>Mejoras en filtertools</description>
-		</change>
-        <change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
         <change>
             <date>02/10/2016</date>
             <description>Primera version</description>
@@ -36,20 +26,6 @@
         <category>anime</category>
     </categories>
 
-    <settings>
-		<id>filter_languages</id>
-		<type>list</type>
-		<label>Mostrar enlaces en idioma...</label>
-		<default>0</default>
-		<enabled>true</enabled>
-		<visible>true</visible>
-		<lvalues>No filtrar</lvalues>
-		<lvalues>Español</lvalues>
-		<lvalues>Inglés</lvalues>
-		<lvalues>Latino</lvalues>
-		<lvalues>Catalán</lvalues>
-		<lvalues>VOS</lvalues>
-	</settings>
     <settings>
         <id>include_in_global_search</id>
         <type>bool</type>

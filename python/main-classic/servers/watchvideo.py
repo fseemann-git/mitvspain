@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para watchvideo
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -16,7 +16,7 @@ def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
 
     data = httptools.downloadpage(page_url).data
-
+    
     if "Not Found" in data or "File was deleted" in data:
         return False, "[Watchvideo] El fichero no existe o ha sido borrado"
 
@@ -39,7 +39,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     if m3u8:
         title = video_urls[-1][0].split(" ", 1)[1]
         video_urls.insert(0, [".m3u8 %s" % title, m3u8])
-
+        
     for video_url in video_urls:
         logger.info("%s - %s" % (video_url[0], video_url[1]))
 
@@ -48,12 +48,13 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
 # Encuentra vídeos del servidor en el texto pasado
 def find_videos(data):
+
     # Añade manualmente algunos erróneos para evitarlos
     encontrados = set()
     devuelve = []
 
-    # http://watchvideo.us/z3nnqbspjyne
-    # http://watchvideo.us/embed-z3nnqbspjyne
+    #http://watchvideo.us/z3nnqbspjyne
+    #http://watchvideo.us/embed-z3nnqbspjyne
     patronvideos = 'watchvideo.us/(?:embed-|)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)

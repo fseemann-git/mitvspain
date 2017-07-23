@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para nosvideo
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -12,7 +12,7 @@ from core import scrapertools
 
 
 def test_video_exists(page_url):
-    logger.info("(page_url='%s')" % page_url)
+    logger.info("mitvspain.servers.nosvideo.py test_video_exists(page_url='%s')" % page_url)
 
     data = scrapertools.cache_page(page_url)
 
@@ -23,7 +23,7 @@ def test_video_exists(page_url):
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("(page_url='%s')" % page_url)
+    logger.info("mitvspain.servers.nosvideo.py get_video_url(page_url='%s')" % page_url)
     video_urls = []
 
     # Lee la URL
@@ -40,10 +40,10 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
             filename = "rtmp"
         else:
             filename = scrapertools.get_filename_from_url(media_url)[-4:]
-        video_urls.append([filename + " [nosvideo]", media_url])
+        video_urls.append([ filename + " [nosvideo]", media_url])
 
     for video_url in video_urls:
-        logger.info("%s - %s" % (video_url[0], video_url[1]))
+        logger.info("mitvspain.servers.nosvideo.py %s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
 
@@ -56,7 +56,7 @@ def find_videos(data):
     # http://nosvideo.com/?v=iij5rw25kh4c
     # http://nosvideo.com/vj/video.php?u=27cafd27ce64900d&w=640&h=380
     patronvideos = 'nosvideo.com/(?:\?v=|vj/video.php\?u=|)([a-z0-9]+)'
-    logger.info("#" + patronvideos + "#")
+    logger.info("mitvspain.servers.nosvideo.py find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:
@@ -71,7 +71,7 @@ def find_videos(data):
 
     # http://nosupload.com/?v=iij5rw25kh4c
     patronvideos = 'nosupload.com(/\?v\=[a-z0-9]+)'
-    logger.info("#" + patronvideos + "#")
+    logger.info("mitvspain.servers.nosvideo.py find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:

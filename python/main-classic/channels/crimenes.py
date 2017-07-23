@@ -3,10 +3,16 @@ import re
 import urlparse
 
 import xbmc
+
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
+from core import servertools
+
+
+DEBUG = config.get_setting("debug")
 
 
 # Main list manual
@@ -98,7 +104,7 @@ def busqueda(item):
 
 def mainlist(item):
 
-    logger.info()
+    logger.info("[crimenes] mainlist")
     itemlist = []
     
     item.url='https://www.youtube.com/results?q=crimenes+imperfectos&sp=CAI%253D'
@@ -146,8 +152,8 @@ def mainlist(item):
     
     
 def play(item):
-    logger.info("url=" + item.url)
-
-    itemlist = servertools.find_video_items(data=item.url)
-
-    return itemlist
+   logger.info("[crimenes] play url="+item.url)
+   
+   itemlist = servertools.find_video_items(data=item.url)
+    
+   return itemlist

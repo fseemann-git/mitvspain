@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# MiTvSpain - XBMC Plugin
 # Conector para cloudy
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+
+#------------------------------------------------------------
 
 import re
 
@@ -23,7 +23,7 @@ def test_video_exists(page_url):
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("(page_url='%s')" % page_url)
-
+    
     video_urls = []
     data = httptools.downloadpage(page_url).data
 
@@ -32,7 +32,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         title = "%s [cloudy]" % scrapertools.get_filename_from_url(mediaurl)[-4:]
         mediaurl += "|User-Agent=Mozilla/5.0"
         video_urls.append([title, mediaurl])
-
+    
     return video_urls
 
 
@@ -40,7 +40,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 def find_videos(data):
     encontrados = set()
     devuelve = []
-
+    
     # http://www.cloudy.ec/embed.php?id=189a5a19d08de
     patronvideos = 'cloudy.ec/(?:embed.php\?id=|v/)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")

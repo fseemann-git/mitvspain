@@ -3,22 +3,13 @@
 	<id>personal</id>
 	<name>Personal</name>
 	<language>es</language>
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
+	<update_url></update_url>
 	<active>false</active>
+	<include_in_global_search>disabled</include_in_global_search>
+	<version>1</version>
 	<adult>false</adult>
-	<version>2</version>
-	<changes>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>01/07/2016</date>
-			<autor></autor>
-			<description>Eliminado código innecesario.</description>
-		</change>
-	</changes>
+	<date>01/07/2016</date>
+	<changes>Eliminado código innecesario.</changes>
 	<fanart></fanart>
 	<thumbnail></thumbnail>
 	<categories>

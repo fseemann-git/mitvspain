@@ -11,26 +11,10 @@
 	<thumbnail>http://i.imgur.com/HA7fvgD.png</thumbnail>
 	<bannermenu></bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>3</version>
-
-	<changes>
-		<change>
-			<date>12/05/2017</date>
-			<autor></autor>
-			<description>Corregida sección myanimelist y cambios menores</description>
-		</change>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>04/01/2017</date>
-			<autor></autor>
-			<description>Primera version.</description>
-		</change>
-	</changes>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+	<version>1</version>
+	<date>04/01/2017</date>
+	<changes>Primera version</changes>
 
 	<categories>
 		<category>movie</category>
@@ -38,6 +22,9 @@
 		<category>anime</category>
 	</categories>
 
+	<settings>
+		<include_in_global_search>disabled</include_in_global_search>
+	</settings>
 	<settings>
 		<id>tmdb</id>
 		<type>list</type>

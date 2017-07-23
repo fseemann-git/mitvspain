@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para Descargasmix
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# Por SeiTaN, robalo y Cmos
+# 
 # ------------------------------------------------------------
 import re
 import urllib
@@ -32,9 +33,9 @@ def mainlist(item):
 
     # Resetear host y comprobacion de error en https (por si se actualiza Kodi)
     config.set_setting("url_error", False, "descargasmix")
-    host = config.set_setting("host", "https://ddmix.net", "descargasmix")
+    host = config.set_setting("host", "https://descargasmix.com", "descargasmix")
     host_check = get_data(host, True)
-    if host_check and host_check.startswith("http"):
+    if host_check:
         config.set_setting("host", host_check, "descargasmix")
 
     itemlist.append(item.clone(title="Películas", action="lista", fanart="http://i.imgur.com/c3HS8kj.png"))
@@ -287,7 +288,10 @@ def epienlaces(item):
         if scrapedserver == "magnet":
             itemlist.insert(0, item.clone(action="play", title=titulo, server="torrent", url=scrapedurl, extra=item.url))
         else:
-            if servertools.is_server_enabled(scrapedserver):
+            mostrar_server = True
+            if config.get_setting("hidepremium") == "true":
+                mostrar_server = servertools.is_server_enabled(scrapedserver)
+            if mostrar_server:
                 try:
                     servers_module = __import__("servers." + scrapedserver)
                     lista_enlaces.append(item.clone(action="play", title=titulo, server=scrapedserver, url=scrapedurl,
@@ -420,7 +424,10 @@ def findvideos(item):
                 itemlist.append(item.clone(action="play", server="torrent", title=title, url=scrapedurl,
                                            text_color="green"))
                 continue
-            if servertools.is_server_enabled(scrapedserver):
+            mostrar_server = True
+            if config.get_setting("hidepremium") == "true":
+                mostrar_server = servertools.is_server_enabled(scrapedserver)
+            if mostrar_server:
                 try:
                     servers_module = __import__("servers." + scrapedserver)
                     # Saca numero de enlaces

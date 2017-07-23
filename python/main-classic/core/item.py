@@ -1,26 +1,26 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2015 mitvspain@gmail.com
+
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Item is the object we use for representing data 
 # --------------------------------------------------------------------------------
@@ -160,8 +160,7 @@ class Item(object):
         kw = copy.copy(kwargs)
         for k in kw:
             if k in ["contentTitle", "contentPlot", "contentSerieName", "show", "contentType", "contentEpisodeTitle",
-                     "contentSeason", "contentEpisodeNumber", "contentThumbnail", "plot", "duration", "contentQuality",
-                     "quality"]:
+                     "contentSeason", "contentEpisodeNumber", "contentThumbnail", "plot", "duration", "contentQuality"]:
                 self.__setattr__(k, kw[k])
                 del kwargs[k]
 
@@ -191,9 +190,9 @@ class Item(object):
 
         # Al modificar cualquiera de estos atributos content...
         if name in ["contentTitle", "contentPlot", "plot", "contentSerieName", "contentType", "contentEpisodeTitle",
-                    "contentSeason", "contentEpisodeNumber", "contentThumbnail", "show", "contentQuality", "quality"]:
+                    "contentSeason", "contentEpisodeNumber", "contentThumbnail", "show", "contentQuality"]:
             # ... marcamos hasContentDetails como "true"...
-            self.__dict__["hasContentDetails"] = True
+            self.__dict__["hasContentDetails"] = "true"
             # ...y actualizamos infoLables
             if name == "contentTitle":
                 self.__dict__["infoLabels"]["title"] = value
@@ -211,7 +210,7 @@ class Item(object):
                 self.__dict__["infoLabels"]["episode"] = value
             elif name == "contentThumbnail":
                 self.__dict__["infoLabels"]["thumbnail"] = value
-            elif name == "contentQuality" or name == "quality":
+            elif name == "contentQuality":
                 self.__dict__["infoLabels"]["quality"] = value
 
         elif name == "duration":
@@ -260,12 +259,12 @@ class Item(object):
 
         # Valor por defecto para hasContentDetails
         elif name == "hasContentDetails":
-            return False
+            return "false"
 
         # valores guardados en infoLabels
         elif name in ["contentTitle", "contentPlot", "contentSerieName", "show", "contentType", "contentEpisodeTitle",
                       "contentSeason", "contentEpisodeNumber", "contentThumbnail", "plot", "duration",
-                      "contentQuality", "quality"]:
+                      "contentQuality"]:
             if name == "contentTitle":
                 return self.__dict__["infoLabels"]["title"]
             elif name == "contentPlot" or name == "plot":
@@ -286,7 +285,7 @@ class Item(object):
                 return self.__dict__["infoLabels"]["episode"]
             elif name == "contentThumbnail":
                 return self.__dict__["infoLabels"]["thumbnail"]
-            elif name == "contentQuality" or name == "quality":
+            elif name == "contentQuality":
                 return self.__dict__["infoLabels"]["quality"]
             else:
                 return self.__dict__["infoLabels"][name]
@@ -364,7 +363,7 @@ class Item(object):
     def fromurl(self, url):
         """
         Genera un item a partir de una cadena de texto. La cadena puede ser creada por la funcion tourl() o tener
-        el formato antiguo: plugin://plugin.video.pelisalacarta/?channel=... (+ otros parametros)
+        el formato antiguo: plugin://plugin.video.mitvspain/?channel=... (+ otros parametros)
         Uso: item.fromurl("cadena")
 
         @param url: url

@@ -1,26 +1,29 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para quierodibujosanimados
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core.item import Item
 
+DEBUG = config.get_setting("debug")
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.quierodibujosanimados mainlist")
 
     #itemlist.append( Item(channel=item.channel , action="novedades"  , title="Novedades" , url="http://www.quierodibujosanimados.com/"))
     return series( Item(channel=item.channel , action="series"     , title="Series"    , url="http://www.quierodibujosanimados.com/"))
 
 def series(item):
-    logger.info()
+    logger.info("mitvspain.channels.quierodibujosanimados series")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -35,18 +38,18 @@ def series(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = ""
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg"))        
+        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="http://mitvspain.mimediacenter.info/fanart/quierodibujosanimados.jpg"))        
 
     next_page_url = scrapertools.find_single_match(data,'</span[^<]+<a href="([^"]+)">')
     if next_page_url!="":
-        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg") )
+        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="http://mitvspain.mimediacenter.info/fanart/quierodibujosanimados.jpg") )
 
     return itemlist
 
 def episodios(item):
-    logger.info()
+    logger.info("mitvspain.channels.quierodibujosanimados episodios")
 
     '''
     <li>
@@ -98,12 +101,12 @@ def episodios(item):
         url = urlparse.urljoin(item.url,scrapedurl)
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         plot = ""
-        logger.debug("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg"))
+        itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="http://mitvspain.mimediacenter.info/fanart/quierodibujosanimados.jpg"))
 
     next_page_url = scrapertools.find_single_match(data,'</span[^<]+<a href="([^"]+)">')
     if next_page_url!="":
-        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg") )
+        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="http://mitvspain.mimediacenter.info/fanart/quierodibujosanimados.jpg") )
 
     return itemlist

@@ -7,30 +7,26 @@
 	<language>es</language>
     
     
-    <version>3</version>
+    <version>2</version>
     <changes>
          
             <change>
                     <date>06/12/2016</date>
-			        <autor></autor>
+			        <autor>Neno1978</autor>
                     <description>Release</description>
             </change>        
             <change> 
                     <date>04/04/2017</date>
-			        <autor></autor>
+			        <autor>Neno1978</autor>
                     <description>Migración a Httptools y algunos arreglos</description>
             </change>
-            <change>
-                    <date>28/06/2017</date>
-                    <autor></autor>
-                    <description>Correciones código y algunas mejoras</description>
-            </change>
+            
     </changes>        
     
     <fanart></fanart>
 	<thumbnail>http://imgur.com/KZoska0.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/miltorrents.png</bannermenu>
-    <update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/miltorrents.png</bannermenu>
+    <update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
     
 	<categories>
 		<category>torrent</category>

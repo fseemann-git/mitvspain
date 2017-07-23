@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para longurl (acortador de url)
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 
 

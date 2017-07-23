@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# 
 # ------------------------------------------------------------
 
 import glob
@@ -19,7 +19,6 @@ from platformcode import platformtools
 
 def mainlist(item):
     logger.info()
-    item.channel = "buscador"
 
     itemlist = list()
     context = [{"title": "Elegir canales incluidos",
@@ -32,8 +31,7 @@ def mainlist(item):
                          title="Buscar por categorias (busqueda avanzada)", extra="categorias",
                          context=context,
                          thumbnail=get_thumbnail_path("thumb_buscar.png")))
-    itemlist.append(Item(channel=item.channel, action="opciones", title="Opciones",
-                         thumbnail=get_thumbnail_path("thumb_buscar.png")))
+    # itemlist.append(Item(channel=item.channel, action="opciones", title="Opciones"))
 
     saved_searches_list = get_saved_searches()
     context2 = context[:]
@@ -71,7 +69,7 @@ def opciones(item):
 
 def get_thumbnail_path(thumb_name):
     import urlparse
-    web_path = "https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/"
+    web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/"
     return urlparse.urljoin(web_path, thumb_name)
 
 
@@ -92,11 +90,11 @@ def settingCanal(item):
         channel_parameters = channeltools.get_channel_parameters(channel_name)
 
         # No incluir si es un canal inactivo
-        if channel_parameters["active"] != True:
+        if channel_parameters["active"] != "true":
             continue
 
         # No incluir si es un canal para adultos, y el modo adulto está desactivado
-        if channel_parameters["adult"] == True and config.get_setting("adult_mode") == 0:
+        if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "false":
             continue
 
         # No incluir si el canal es en un idioma filtrado
@@ -104,13 +102,16 @@ def settingCanal(item):
             continue
 
         # No incluir si en la configuracion del canal no existe "include_in_global_search"
-        include_in_global_search = channel_parameters["include_in_global_search"]
-
-        if include_in_global_search == False:
+        include = channel_parameters["include_in_global_search"]
+        if include not in ["", "true"]:
             continue
         else:
             # Se busca en la configuración del canal el valor guardado
             include_in_global_search = config.get_setting("include_in_global_search", channel_name)
+
+        # Si no hay valor en la configuración del canal se coloca como True ya que así estaba por defecto
+        if include_in_global_search == "":
+            include_in_global_search = True
 
         control = {'id': channel_name,
                    'type': "bool",
@@ -121,43 +122,14 @@ def settingCanal(item):
 
         list_controls.append(control)
 
-
-    if config.get_setting("custom_button_value", item.channel):
-        custom_button_label = "Ninguno"
-    else:
-        custom_button_label = "Todos"
-
     return platformtools.show_channel_settings(list_controls=list_controls,
                                                caption="Canales incluidos en la búsqueda global",
-                                               callback="save_settings", item=item,
-                                               custom_button={'visible': True,
-                                                              'function':"cb_custom_button",
-                                                              'close': False,
-                                                              'label':custom_button_label})
+                                               callback="save_settings", item=item, custom_button={'visible': False})
 
 
 def save_settings(item, dict_values):
-    progreso = platformtools.dialog_progress("Guardando configuración...", "Espere un momento por favor.")
-    n = len(dict_values)
-    for i, v in enumerate(dict_values):
-        progreso.update((i * 100) / n, "Guardando configuración...")
+    for v in dict_values:
         config.set_setting("include_in_global_search", dict_values[v], v)
-
-    progreso.close()
-
-
-def cb_custom_button(item, dict_values):
-    value = config.get_setting("custom_button_value", item.channel)
-    if value == "":
-        value = False
-
-    for v in dict_values.keys():
-        dict_values[v] = not value
-
-    if config.set_setting("custom_button_value", not value, item.channel) == True:
-        return {"label": "Ninguno"}
-    else:
-        return {"label": "Todos"}
 
 
 def searchbycat(item):
@@ -213,7 +185,6 @@ def search_cb(item, values=""):
 # y lo pasará en el parámetro "tecleado"
 def search(item, tecleado):
     logger.info()
-    itemlist = []
     tecleado = tecleado.replace("+", " ")
     item.category = tecleado
 
@@ -222,46 +193,28 @@ def search(item, tecleado):
 
     if item.extra == "categorias":
         item.extra = tecleado
-        itemlist = searchbycat(item)
-    else:
-        item.extra = tecleado
-        itemlist = do_search(item, [])
+        return searchbycat(item)
 
-    return itemlist
+    item.extra = tecleado
+    return do_search(item, [])
 
 
-def show_result(item):
-    tecleado = None
-    if item.adult and config.get_setting("adult_request_password"):
-        # Solicitar contraseña
-        tecleado = platformtools.dialog_input("", "Contraseña para canales de adultos", True)
-        if tecleado is None or tecleado != config.get_setting("adult_pin"):
-            return []
-
-    item.channel = item.__dict__.pop('from_channel')
-    item.action = item.__dict__.pop('from_action')
-    if item.__dict__.has_key('tecleado'):
-        tecleado = item.__dict__.pop('tecleado')
-
+def channel_result(item):
+    extra = item.extra.split("{}")[0]
+    channel = item.extra.split("{}")[1]
+    tecleado = item.extra.split("{}")[2]
+    exec "from channels import " + channel + " as module"
+    item.channel = channel
+    item.extra = extra
+    # print item.url
     try:
-        channel = __import__('channels.%s' % item.channel, fromlist=["channels.%s" % item.channel])
+        itemlist = module.search(item, tecleado)
     except:
         import traceback
         logger.error(traceback.format_exc())
-        return []
+        itemlist = []
 
-
-    if tecleado:
-        # Mostrar resultados: agrupados por canales
-        return channel.search(item, tecleado)
-    else:
-        # Mostrar resultados: todos juntos
-        try:
-            from platformcode import launcher
-            launcher.run(item)
-        except ImportError:
-            return getattr(channel, item.action)(item)
-
+    return itemlist
 
 
 def channel_search(search_results, channel_parameters, tecleado):
@@ -280,9 +233,7 @@ def channel_search(search_results, channel_parameters, tecleado):
                 if not channel_parameters["title"] in search_results:
                     search_results[channel_parameters["title"]] = []
 
-                search_results[channel_parameters["title"]].append({"item": item,
-                                                                    "itemlist": result,
-                                                                    "adult": channel_parameters["adult"]})
+                search_results[channel_parameters["title"]].append({"item": item, "itemlist": result})
 
     except:
         logger.error("No se puede buscar en: %s" % channel_parameters["title"])
@@ -293,7 +244,7 @@ def channel_search(search_results, channel_parameters, tecleado):
 # Esta es la función que realmente realiza la búsqueda
 def do_search(item, categories=[]):
     multithread = config.get_setting("multithread", "buscador")
-    result_mode = "result_mode_%s" % config.get_setting("result_mode", "buscador")
+    result_mode = config.get_setting("result_mode", "buscador")
     logger.info()
 
     tecleado = item.extra
@@ -329,13 +280,12 @@ def do_search(item, categories=[]):
 
             basename = os.path.basename(infile)
             basename_without_extension = basename[:-4]
-            if basename_without_extension == "version": continue
             logger.info("%s..." % basename_without_extension)
 
             channel_parameters = channeltools.get_channel_parameters(basename_without_extension)
 
             # No busca si es un canal inactivo
-            if channel_parameters["active"] != True:
+            if channel_parameters["active"] != "true":
                 logger.info("%s no incluido" % basename_without_extension)
                 continue
 
@@ -346,7 +296,7 @@ def do_search(item, categories=[]):
                     continue
 
             # No busca si es un canal para adultos, y el modo adulto está desactivado
-            if channel_parameters["adult"] == True and config.get_setting("adult_mode") == 0:
+            if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "false":
                 logger.info("%s no incluido" % basename_without_extension)
                 continue
 
@@ -357,11 +307,14 @@ def do_search(item, categories=[]):
 
             # No busca si es un canal excluido de la busqueda global
             include_in_global_search = channel_parameters["include_in_global_search"]
-            if include_in_global_search == True:
+            if include_in_global_search in ["", "true"]:
                 # Buscar en la configuracion del canal
-                include_in_global_search = config.get_setting("include_in_global_search", basename_without_extension)
+                include_in_global_search = str(config.get_setting("include_in_global_search", basename_without_extension))
+                # Si no hay valor en la configuración del canal se incluye ya que así estaba por defecto
+                '''if include_in_global_search == "":
+                    include_in_global_search = "true"'''
 
-            if include_in_global_search != True:
+            if include_in_global_search.lower() != "true":
                 logger.info("%s no incluido" % basename_without_extension)
                 continue
 
@@ -387,10 +340,10 @@ def do_search(item, categories=[]):
             progreso.update(percentage / 2, "Iniciada busqueda de '%s' en %s..." % (tecleado, channel_parameters["title"]))
 
         except:
+            continue
             logger.error("No se puede buscar en: %s" % channel_parameters["title"])
             import traceback
             logger.error(traceback.format_exc())
-            continue
 
     # Modo Multi Thread
     # Usando isAlive() no es necesario try-except,
@@ -423,7 +376,7 @@ def do_search(item, categories=[]):
         for search in search_results[channel]:
             total += len(search["itemlist"])
             title = channel
-            if result_mode == "result_mode_0":
+            if result_mode == 0:
                 if len(search_results[channel]) > 1:
                     title += " [" + search["item"].title.strip() + "]"
                 title += " (" + str(len(search["itemlist"])) + ")"
@@ -431,19 +384,15 @@ def do_search(item, categories=[]):
                 title = re.sub("\[COLOR [^\]]+\]", "", title)
                 title = re.sub("\[/COLOR]", "", title)
 
-                #extra = search["item"].extra + "{}" + search["item"].channel + "{}" + tecleado
-                itemlist.append(Item(title=title, channel="buscador", action="show_result", url=search["item"].url,
-                                     extra=search["item"].extra, folder=True, adult=search["adult"],from_action="search",
-                                     from_channel=search["item"].channel, tecleado=tecleado))
+                extra = search["item"].extra + "{}" + search["item"].channel + "{}" + tecleado
+                itemlist.append(Item(title=title, channel="buscador", action="channel_result", url=search["item"].url,
+                                     extra=extra, folder=True))
             else:
                 title = ">> Resultados del canal %s:" % title
                 itemlist.append(Item(title=title, channel="buscador", action="",
                                      folder=False, text_color="yellow"))
-                #itemlist.extend(search["itemlist"])
-                for i in search["itemlist"]:
-                    if i.action:
-                        itemlist.append(i.clone(from_action=i.action, from_channel=i.channel, channel="buscador",
-                                        action="show_result", adult=search["adult"]))
+                itemlist.extend(search["itemlist"])
+                # itemlist.append(Item(title="", channel="buscador", action="", folder=False))
 
     title = "Buscando: '%s' | Encontrado: %d vídeos | Tiempo: %2.f segundos" % (tecleado, total, time.time()-start_time)
     itemlist.insert(0, Item(title=title, text_color='yellow'))

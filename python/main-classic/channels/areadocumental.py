@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para Area-Documental
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 
 import urllib
@@ -56,7 +56,7 @@ def search(item, texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 
@@ -186,7 +186,7 @@ def play(item):
             try:
                 filetools.remove(ficherosubtitulo)
             except IOError:
-                logger.error("Error al eliminar el archivo "+ficherosubtitulo)
+                logger.info("Error al eliminar el archivo "+ficherosubtitulo)
                 raise
         
         data = httptools.downloadpage(item.subtitle, headers={'Referer': item.extra}).data
@@ -194,7 +194,7 @@ def play(item):
         subtitle = ficherosubtitulo
     except:
         subtitle = ""
-        logger.error("Error al descargar el subtítulo")
+        logger.info("Error al descargar el subtítulo")
 
     extension = item.url.rsplit("|", 1)[0][-4:]
     itemlist.append(['%s %s [directo]' % (extension, item.calidad), item.url, 0, subtitle])

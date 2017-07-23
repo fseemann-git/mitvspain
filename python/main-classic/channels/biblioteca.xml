@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <channel>
-	<id>biblioteca</id>
+	<id>libreria</id>
 	<name>Biblioteca</name>
 
 	<active>false</active>
@@ -11,26 +11,23 @@
 	<thumbnail></thumbnail>
 	<bannermenu></bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>4</version>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
+	<version>3</version>
 
 	<changes>
 		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
 			<date>01/07/16</date>
-			<autor></autor>
+			<autor>SeiTaN</autor>
 			<description>Eliminado código innecesario.</description>
 		</change>
 		<change>
 			<date>30/04/2016</date>
-			<autor></autor>
+			<autor>Seitan</autor>
 			<description>Version inicial</description>
 		</change>
 	</changes>
+
+	<include_in_global_search>disabled</include_in_global_search>
 
 	<settings>
 		<id>updatelibrary</id>
@@ -184,7 +181,6 @@
 		<lvalues>30%</lvalues>
 		<lvalues>50%</lvalues>
 		<lvalues>80%</lvalues>
-		<lvalues>0 seg</lvalues>
 	</settings>
 	<settings>
 		<id>sync_trakt</id>

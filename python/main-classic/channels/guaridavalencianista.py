@@ -1,20 +1,24 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para guaridavalencianista
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 import re
 import urlparse
 
+from core import config
 from core import logger
 from core import scrapertools
 from core import servertools
 from core.item import Item
 
 
+DEBUG = config.get_setting("debug")
+
+
 def mainlist(item):
-    logger.info()
+    logger.info("[guaridavalencianista.py] mainlist")
     itemlist=[]
     
     itemlist.append( Item(channel=item.channel, title="Novedades"  , action="listvideos" , url="http://guaridavalencia.blogspot.com.es"))
@@ -25,7 +29,7 @@ def mainlist(item):
     return itemlist
 
 def DocuSeries(item):
-    logger.info()
+    logger.info("[guaridavalencianista.py] DocuSeries")
     itemlist=[]
     
     # Descarga la página
@@ -41,13 +45,13 @@ def DocuSeries(item):
         scrapedtitle = match[1]
         scrapedthumbnail = ""
         scrapedplot = ""
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="listvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
 
 def DocuTag(item):
-    logger.info()
+    logger.info("[guaridavalencianista.py] DocuTag")
     itemlist=[]
     # Descarga la página
     data = scrapertools.cache_page(item.url)
@@ -65,13 +69,13 @@ def DocuTag(item):
 	#~ scrapedtitle = match[1]
         scrapedthumbnail = ""
         scrapedplot = ""
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="listvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
 
 def DocuARCHIVO(item):
-    logger.info()
+    logger.info("[guaridavalencianista.py] DocuSeries")
     itemlist=[]
 
     # Descarga la página
@@ -86,13 +90,13 @@ def DocuARCHIVO(item):
         scrapedtitle = match[1] + " " + match[2]
         scrapedthumbnail = ""
         scrapedplot = ""
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="listvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     return itemlist
     
 def listvideos(item):
-    logger.info()
+    logger.info("[guaridavalencianista.py] listvideos")
     itemlist=[]
 
     scrapedthumbnail = ""
@@ -126,7 +130,7 @@ def listvideos(item):
 
         scrapedplot = re.sub("<[^>]+>"," ",scrapedplot)
         scrapedplot = scrapertools.unescape(scrapedplot)
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append( Item(channel=item.channel, action="findvideos", title=scrapedtitle , url=scrapedurl , thumbnail=scrapedthumbnail , plot=scrapedplot , folder=True) )
 
     # Extrae la marca de siguiente página
@@ -145,7 +149,7 @@ def listvideos(item):
 
     #~ return itemlist
 def findvideos(item):
-    logger.info()
+    logger.info("[guaridavalencianista.py] findvideos")
     data = scrapertools.cachePage(item.url)
     
     

@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (18hentai)
+# Canal (18hentai) por Hernan_Ar_c
 # ------------------------------------------------------------
 
-import re
+import urlparse,urllib2,urllib,re
+import os, sys
 
-from core import httptools
+
 from core import logger
+from core import config
 from core import scrapertools
 from core.item import Item
+from core import servertools
+from core import httptools
 
 
 host='http://www.18hentaionline.eu/'
@@ -34,7 +38,7 @@ def mainlist(item):
 
 def todas(item):
 
-    logger.info()
+    logger.info("mitvspain.channels.x18hentai todas")
     itemlist = []
     data = httptools.downloadpage(item.url, headers = headers).data
     patron ='<h3><a href="([^"]+)" title="([^"]+)">.*?<\/a><\/h3>.*?'
@@ -69,7 +73,7 @@ def search(item,texto):
         return []
         
 def categorias(item):
-    logger.info()
+    logger.info("mitvspain.channels.x18hentai categoias")
     itemlist = []
     data = httptools.downloadpage(item.url, headers = headers).data
     patron ="<a href='([^']+)' class='tag-link-.*? tag-link-position-.*?' title='.*?' style='font-size: 11px;'>([^<]+)<\/a>" 

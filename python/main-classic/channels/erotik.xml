@@ -11,21 +11,10 @@
 	<thumbnail>http://www.youfreeporntube.com/uploads/custom-logo.png</thumbnail>
 	<bannermenu>http://www.youfreeporntube.com/uploads/custom-logo.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
-	<version>2</version>
-
-	<changes>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>26/12/2016</date>
-			<autor></autor>
-			<description>Release.</description>
-		</change>
-	</changes>
+	<update_url></update_url>
+	<version>1</version>
+	<date>26/12/2016</date>
+	<changes></changes>
 
 	<categories>
 		<category>adult</category>

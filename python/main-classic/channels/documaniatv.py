@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# mitvspain - XBMC Plugin
 # Canal para documaniatv.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+# 
+#------------------------------------------------------------
 
 import re
 import sys
-import urllib
 import urlparse
+import urllib
 
 from core import config
 from core import jsontools
@@ -16,6 +16,8 @@ from core import logger
 from core import scrapertools
 from core.item import Item
 
+
+DEBUG = config.get_setting("debug")
 host = "http://www.documaniatv.com/"
 account = config.get_setting("documaniatvaccount", "documaniatv")
 
@@ -24,7 +26,7 @@ headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/2
 
 
 def login():
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv login")
 
     user = config.get_setting("documaniatvuser", "documaniatv")
     password = config.get_setting("documaniatvpassword", "documaniatv")
@@ -39,14 +41,14 @@ def login():
     data = scrapertools.cachePage("http://www.documaniatv.com/login.php", headers=headers, post=post)
 
     if "Nombre de usuario o contraseña incorrectas" in data:
-        logger.error("login erróneo")
+        logger.info("mitvspain.channels.documaniatv login erróneo")
         return True, ""
 
     return False, user
 
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv mainlist")
 
     itemlist = []
     itemlist.append(item.clone(action="novedades", title="Novedades", url="http://www.documaniatv.com/newvideos.html"))
@@ -110,7 +112,7 @@ def newest(categoria):
 
 
 def search(item, texto):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv search")
     data = scrapertools.cachePage(host, headers=headers)
     item.url = scrapertools.find_single_match(data, 'form action="([^"]+)"') + "?keywords=%s&video-id="
     texto = texto.replace(" ", "+")
@@ -121,12 +123,12 @@ def search(item, texto):
     except:
         import sys
         for line in sys.exc_info():
-            logger.error("%s" % line)
+            logger.error( "%s" % line )
         return []
 
 
 def novedades(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv novedades")
     itemlist = []
 
     # Descarga la pagina
@@ -151,7 +153,7 @@ def novedades(item):
                     scrapedthumbnail += "|"+headers[0][0]+"="+headers[0][1]
                 else:
                     scrapedthumbnail = item.thumbnail
-                logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+                if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
                 itemlist.append(item.clone(action="play_", title=scrapedtitle , url=scrapedurl,
                                            thumbnail=scrapedthumbnail , fanart=scrapedthumbnail, plot=scrapedplot,
                                            fulltitle=scrapedtitle, contentTitle=contentTitle, folder=False))
@@ -167,7 +169,7 @@ def novedades(item):
                     scrapedthumbnail += "|"+headers[0][0]+"="+headers[0][1]
                 else:
                     scrapedthumbnail = item.thumbnail
-                logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+                if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
                 itemlist.append(item.clone(action="findvideos", title=scrapedtitle , url=scrapedurl,
                                            thumbnail=scrapedthumbnail , fanart=scrapedthumbnail, plot=scrapedplot, id=video_id,
                                            fulltitle=scrapedtitle, contentTitle=contentTitle))
@@ -178,13 +180,13 @@ def novedades(item):
         next_page_url = urlparse.urljoin(host, next_page_url)
         itemlist.append(item.clone(action="novedades", title=">> Página siguiente", url=next_page_url))
     except:
-        logger.error("Siguiente pagina no encontrada")
+        logger.info("documaniatv.novedades Siguiente pagina no encontrada")
     
     return itemlist
 
 
 def categorias(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv categorias")
     itemlist = []
     data = scrapertools.cachePage(item.url, headers=headers)
 
@@ -208,7 +210,7 @@ def categorias(item):
 
 
 def viendo(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv viendo")
     itemlist = []
 
     # Descarga la pagina
@@ -223,7 +225,7 @@ def viendo(item):
             scrapedthumbnail += "|"+headers[0][0]+"="+headers[0][1]
         else:
             scrapedthumbnail = item.thumbnail
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append(item.clone(action="play_", title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail,
                                    fanart=scrapedthumbnail, fulltitle=scrapedtitle))
     
@@ -231,7 +233,7 @@ def viendo(item):
 
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv findvideos")
     itemlist = []
     
     # Se comprueba si el vídeo está ya en favoritos/ver más tarde
@@ -263,7 +265,7 @@ def findvideos(item):
 
 
 def play_(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv play_")
     itemlist = []
 
     try:
@@ -271,7 +273,7 @@ def play_(item):
         if  not xbmc.getCondVisibility('System.HasAddon(script.cnubis)'):
             from platformcode import platformtools
             platformtools.dialog_ok("Addon no encontrado", "Para ver vídeos alojados en cnubis necesitas tener su instalado su add-on",
-                                    line3="Descárgalo en http://cnubis.com/kodi-pelisalacarta.html" )
+                                    line3="Descárgalo en http://cnubis.com/kodi-mitvspain.html" )
             return itemlist
     except:
         pass
@@ -298,7 +300,7 @@ def play_(item):
 
 
 def usuario(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv usuario")
     itemlist = []
     data = scrapertools.cachePage(item.url, headers=headers)
     profile_id = scrapertools.find_single_match(data, 'data-profile-id="([^"]+)"')
@@ -326,7 +328,7 @@ def usuario(item):
 
 
 def acciones_playlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv acciones_playlist")
     itemlist = []
     if item.title == "Crear una nueva playlist y añadir el documental":
         from platformcode import platformtools
@@ -357,7 +359,7 @@ def acciones_playlist(item):
 
 
 def playlist(item):
-    logger.info()
+    logger.info("mitvspain.channels.documaniatv playlist")
     itemlist = []
     data = scrapertools.cachePage(item.url, headers=headers)
     patron = '<div class="pm-pl-list-index.*?src="([^"]+)".*?' \
@@ -365,7 +367,7 @@ def playlist(item):
     matches = scrapertools.find_multiple_matches(data, patron)
     for scrapedthumbnail, scrapedurl, scrapedtitle  in matches:
         scrapedthumbnail += "|"+headers[0][0]+"="+headers[0][1]
-        logger.debug("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
+        if (DEBUG): logger.info("title=["+scrapedtitle+"], url=["+scrapedurl+"], thumbnail=["+scrapedthumbnail+"]")
         itemlist.append(item.clone(action="play_", title=scrapedtitle, url=scrapedurl, thumbnail=scrapedthumbnail,
                                    fanart=scrapedthumbnail, fulltitle=scrapedtitle, folder=False))
     

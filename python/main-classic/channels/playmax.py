@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para playmax
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import re
@@ -306,7 +306,7 @@ def fichas(item):
              '<div class="c_fichas_title">(?:<div class="c_fichas_episode">([^<]+)</div>|)([^<]+)</div>'
     matches = scrapertools.find_multiple_matches(data, patron)
     for scrapedurl, scrapedthumbnail, marca, serie, episodio, scrapedtitle in matches:
-        tipo = "movie"
+        tipo = item.contentType
         scrapedurl = host + scrapedurl.rsplit("-dc=")[0]
         if not "-dc=" in scrapedurl:
             scrapedurl += "-dc="
@@ -774,7 +774,7 @@ def acciones_cuenta(item):
                  '<div class="c_fichas_title">(?:<div class="c_fichas_episode">([^<]+)</div>|)([^<]+)</div>'
         entradas = scrapertools.find_multiple_matches(contenido, patron)
         for scrapedurl, scrapedthumbnail, serie, episodio, scrapedtitle in entradas:
-            tipo = "movie"
+            tipo = item.contentType
             scrapedurl = host + scrapedurl
             scrapedthumbnail = host + scrapedthumbnail
             action = "findvideos"

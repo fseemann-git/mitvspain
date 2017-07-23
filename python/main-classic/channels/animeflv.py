@@ -1,26 +1,21 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# 
 # ------------------------------------------------------------
 
 import re
 import urlparse
 
+from channels import renumbertools
 from core import httptools
 from core import jsontools
 from core import logger
 from core import scrapertools
 from core.item import Item
-from core import config
-if config.is_xbmc():
-	from channels import renumbertools
-if not config.is_xbmc():
-	from platformcode import platformtools
-	platformtools.dialog_notification("¡ALERTA!",
-                                                "El renumerado no funciona "
-                                                "en la version Plex o Mediaserver")
+
 HOST = "http://animeflv.net/"
+
 
 def mainlist(item):
     logger.info()
@@ -42,11 +37,11 @@ def mainlist(item):
     itemlist.append(Item(channel=item.channel, action="search_section", title="    Estado", url=HOST + "browse",
                          extra="status"))
 
-    
-    if config.is_xbmc():
-     itemlist = renumbertools.show_option(item.channel, itemlist)
-	 
+    if renumbertools.context:
+        itemlist = renumbertools.show_option(item.channel, itemlist)
+
     return itemlist
+
 
 def search(item, texto):
     logger.info()
@@ -56,37 +51,30 @@ def search(item, texto):
     post = "value=%s" % texto
     data = httptools.downloadpage(item.url, post=post).data
 
-    try:
-        dict_data = jsontools.load_json(data)
+    dict_data = jsontools.load_json(data)
 
-        for e in dict_data:
-            if e["id"] != e["last_id"]:
-                _id = e["last_id"]
-            else:
-                _id = e["id"]
+    for e in dict_data:
+        if e["id"] != e["last_id"]:
+            _id = e["last_id"]
+        else:
+            _id = e["id"]
 
-            url = "%sanime/%s/%s" % (HOST, _id, e["slug"])
-            title = e["title"]
-            thumbnail = "%suploads/animes/covers/%s.jpg" % (HOST, e["id"])
-            new_item = item.clone(action="episodios", title=title, url=url, thumbnail=thumbnail)
+        url = "%sanime/%s/%s" % (HOST, _id, e["slug"])
+        title = e["title"]
+        thumbnail = "%suploads/animes/covers/%s.jpg" % (HOST, e["id"])
+        new_item = item.clone(action="episodios", title=title, url=url, thumbnail=thumbnail)
 
-            if e["type"] != "movie":
-             new_item.show = title
-             if config.is_xbmc():
-              new_item.context = renumbertools.context
-            else:
-                new_item.contentType = "movie"
-                new_item.contentTitle = title
+        if e["type"] != "movie":
+            new_item.show = title
+            new_item.context = renumbertools.context
+        else:
+            new_item.contentType = "movie"
+            new_item.contentTitle = title
 
-            itemlist.append(new_item)
-
-    except:
-        import sys
-        for line in sys.exc_info():
-            logger.error("%s" % line)
-        return []
+        itemlist.append(new_item)
 
     return itemlist
+
 
 def search_section(item):
     logger.info()
@@ -100,13 +88,11 @@ def search_section(item):
 
     for _id, title in matches:
         url = "%s?%s=%s&order=title" % (item.url, item.extra, _id)
-        if config.is_xbmc():
-         itemlist.append(Item(channel=item.channel, action="listado", title=title, url=url,
+        itemlist.append(Item(channel=item.channel, action="listado", title=title, url=url,
                              context=renumbertools.context))
-        if not config.is_xbmc():
-         itemlist.append(Item(channel=item.channel, action="listado", title=title, url=url))
 
-    return itemlist	
+    return itemlist
+
 
 def newest(categoria):
     itemlist = []
@@ -115,6 +101,7 @@ def newest(categoria):
         itemlist = novedades_episodios(Item(url=HOST))
 
     return itemlist
+
 
 def novedades_episodios(item):
     logger.info()
@@ -135,10 +122,8 @@ def novedades_episodios(item):
             season = 1
             episode = 1
         else:
-         if config.is_xbmc():
-          season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
-         if not config.is_xbmc():
-          season = 1
+            season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
+
         title = "%s: %sx%s" % (show, season, str(episode).zfill(2))
         url = urlparse.urljoin(HOST, url)
         thumbnail = urlparse.urljoin(HOST, thumbnail)
@@ -150,6 +135,7 @@ def novedades_episodios(item):
 
     return itemlist
 
+
 def novedades_anime(item):
     logger.info()
 
@@ -157,11 +143,11 @@ def novedades_anime(item):
     data = re.sub(r"\n|\r|\t|\s{2}|-\s", "", data)
     data = scrapertools.find_single_match(data, '<ul class="ListAnimes[^>]+>(.*?)</ul>')
 
-    matches = re.compile('href="([^"]+)".+?<img src="([^"]+)".+?<span class=.+?>(.*?)</span>.+?<h3.+?>(.*?)</h3>.+?'
-                         '(?:</p><p>(.*?)</p>.+?)?</article></li>', re.DOTALL).findall(data)
+    matches = re.compile('<img src="([^"]+)".+?<span class=.+?>(.*?)</span>.+?<p>(.*?)</p>.+?'
+                         '<a href="([^"]+)">(.*?)</a>', re.DOTALL).findall(data)
     itemlist = []
 
-    for url, thumbnail, _type, title, plot in matches:
+    for thumbnail, _type, plot, url, title in matches:
 
         url = urlparse.urljoin(HOST, url)
         thumbnail = urlparse.urljoin(HOST, thumbnail)
@@ -169,11 +155,8 @@ def novedades_anime(item):
         new_item = Item(channel=item.channel, action="episodios", title=title, url=url, thumbnail=thumbnail,
                         fulltitle=title, plot=plot)
         if _type != "Película":
-            if config.is_xbmc():
-             new_item.show = title
-             new_item.context = renumbertools.context
-            if not config.is_xbmc():
-             new_item.show = title
+            new_item.show = title
+            new_item.context = renumbertools.context
         else:
             new_item.contentType = "movie"
             new_item.contentTitle = title
@@ -193,12 +176,12 @@ def listado(item):
     data = scrapertools.find_multiple_matches(data, '<ul class="ListAnimes[^>]+>(.*?)</ul>')
     data = "".join(data)
 
-    matches = re.compile('<a href="([^"]+)">.+?<img src="([^"]+)".+?<span class=.+?>(.*?)</span>.+?<h3.*?>(.*?)</h3>'
-                         '.*?</p><p>(.*?)</p>', re.DOTALL).findall(data)
+    matches = re.compile('<img src="([^"]+)".+?<span class=.+?>(.*?)</span>.+?<a href="([^"]+)">(.*?)</a>.+?'
+                         'class="Desc ScrlV"><p>(.*?)</p>', re.DOTALL).findall(data)
 
     itemlist = []
 
-    for url, thumbnail, _type, title, plot in matches:
+    for thumbnail, _type, url, title, plot in matches:
 
         url = urlparse.urljoin(HOST, url)
         thumbnail = urlparse.urljoin(HOST, thumbnail)
@@ -207,10 +190,8 @@ def listado(item):
                         fulltitle=title, plot=plot)
 
         if _type == "Anime":
-
             new_item.show = title
-            if config.is_xbmc():
-             new_item.context = renumbertools.context
+            new_item.context = renumbertools.context
         else:
             new_item.contentType = "movie"
             new_item.contentTitle = title
@@ -233,60 +214,29 @@ def episodios(item):
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|-\s", "", data)
 
-    # fix para renumbertools
-    item.show = scrapertools.find_single_match(data, '<h1 class="Title">(.*?)</h1>')
-
     if item.plot == "":
         item.plot = scrapertools.find_single_match(data, 'Description[^>]+><p>(.*?)</p>')
 
-    matches = re.compile('href="([^"]+)"><figure><img class="[^"]+" data-original="([^"]+)".+?</h3>'
-                         '<p>(.*?)</p>', re.DOTALL).findall(data)
+    data = scrapertools.find_single_match(data, '<div class="Sect Episodes">(.*?)</div>')
+    matches = re.compile('<a href="([^"]+)"[^>]+>(.+?)<', re.DOTALL).findall(data)
 
-    if matches:
-        for url, thumb, title in matches:
-            title = title.strip()
-            url = urlparse.urljoin(item.url, url)
-            # thumbnail = item.thumbnail
+    for url, title in matches:
+        title = title.strip()
+        url = urlparse.urljoin(item.url, url)
+        thumbnail = item.thumbnail
 
-            try:
-                episode = int(scrapertools.find_single_match(title, "^.+?\s(\d+)$"))
-            except ValueError:
-                season = 1
-                episode = 1
-            else:
-                if config.is_xbmc():
-                 season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
-                if not config.is_xbmc():
-                 season = 1
+        try:
+            episode = int(scrapertools.find_single_match(title, "^.+?\s(\d+)$"))
+        except ValueError:
+            season = 1
+            episode = 1
+        else:
+            season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
 
-            title = "%s: %sx%s" % (item.title, season, str(episode).zfill(2))
+        title = "%s: %sx%s" % (item.title, season, str(episode).zfill(2))
 
-            itemlist.append(item.clone(action="findvideos", title=title, url=url, thumbnail=thumb, fulltitle=title,
-                                       fanart=item.thumbnail, contentType="episode"))
-    else:
-        # no hay thumbnail
-        matches = re.compile('<a href="(/ver/[^"]+)"[^>]+>(.*?)<', re.DOTALL).findall(data)
-
-        for url, title in matches:
-            title = title.strip()
-            url = urlparse.urljoin(item.url, url)
-            thumb = item.thumbnail
-
-            try:
-                episode = int(scrapertools.find_single_match(title, "^.+?\s(\d+)$"))
-            except ValueError:
-                season = 1
-                episode = 1
-            else:
-                if config.is_xbmc():
-                 season, episode = renumbertools.numbered_for_tratk(item.channel, item.show, 1, episode)
-                if not config.is_xbmc():
-                 season = 1
-
-            title = "%s: %sx%s" % (item.title, season, str(episode).zfill(2))
-
-            itemlist.append(item.clone(action="findvideos", title=title, url=url, thumbnail=thumb, fulltitle=title,
-                                       fanart=item.thumbnail, contentType="episode"))
+        itemlist.append(item.clone(action="findvideos", title=title, url=url, thumbnail=thumbnail, fulltitle=title,
+                                   fanart=thumbnail, contentType="episode"))
 
     return itemlist
 

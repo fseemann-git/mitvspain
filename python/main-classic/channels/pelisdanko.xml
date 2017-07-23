@@ -3,27 +3,15 @@
 	<id>pelisdanko</id>
 	<name>PelisDanko</name>
 	<language>es</language>
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
+	<update_url></update_url>
 	<active>true</active>
+	<version>2</version>
 	<adult>false</adult>
-	<version>3</version>
-
-	<changes>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
-			<date>08/07/2016</date>
-			<autor></autor>
-			<description>Correcciones y adaptacion a la nueva version.</description>
-		</change>
-	</changes>
-
+	<date>08/07/2016</date>
+	<changes>Correcciones y adaptacion a la nueva version</changes>
 	<fanart></fanart>
 	<thumbnail>http://i.imgur.com/F2tBKkG.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/pelisdanko.png</bannermenu>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/pelisdanko.png</bannermenu>
 	<categories>
 		<category>movie</category>
 		<category>latino</category>

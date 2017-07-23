@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para hdfull
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import base64
@@ -560,15 +560,19 @@ def findvideos(item):
     year = scrapertools.find_single_match(data, '<span>A&ntilde;o:\s*</span>.*?(\d{4})')
     infolabels["year"] = year
 
+    var0 = scrapertools.find_single_match(data_js, 'var_0=\[(.*?)\]').split(",")
     matches = []
     for match in data_decrypt:
         prov = eval(scrapertools.find_single_match(data_js, 'p\[%s\]\s*=\s*(\{.*?\}[\'"]\})' % match["provider"]))
-        function = prov["l"].replace("code", match["code"]).replace("var_1", match["code"])
+        function = prov["l"].replace("code", match["code"]).replace("var_2", match["code"])
+        index = scrapertools.find_single_match(function, 'var_1\[(\d+)\]')
+        function = function.replace("var_1[%s]" % index, var0[int(index)])
 
         url = scrapertools.find_single_match(function, "return\s*(.*?)[;]*\}")
         url = re.sub(r'\'|"|\s|\+', '', url)
         url = re.sub(r'var_\d+\[\d+\]', '', url)
-        embed = prov["e"]
+        index = scrapertools.find_single_match(prov["e"], 'var_1\[(\d+)\]')
+        embed = prov["e"].replace("var_1[%s]" % index, var0[int(index)])
 
         matches.append([match["lang"], match["quality"], url, embed])
 
@@ -579,7 +583,7 @@ def findvideos(item):
         if servername== "waaw": servername = "netutv"
         if servername == "uploaded" or servername == "ul": servername = "uploadedto"
         mostrar_server = True
-        if config.get_setting("hidepremium") == True:
+        if config.get_setting("hidepremium") == "true":
             mostrar_server = servertools.is_server_enabled(servername)
         if mostrar_server:
             option = "Ver"

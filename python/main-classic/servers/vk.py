@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-1 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para VK Server
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -12,7 +12,7 @@ from core import scrapertools
 
 
 def test_video_exists(page_url):
-    logger.info("(page_url='%s')" % page_url)
+    logger.info("mitvspain.servers.vk test_video_exists(page_url='%s')" % page_url)
 
     data = scrapertools.cache_page(page_url)
 
@@ -24,7 +24,7 @@ def test_video_exists(page_url):
 
 # Returns an array of possible video url's from the page_url
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("(page_url='%s')" % page_url)
+    logger.info("mitvspain.servers.vk get_video_url(page_url='%s')" % page_url)
 
     video_urls = []
     try:
@@ -43,7 +43,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         video_urls.append(["." + ext + " [vk:" + calidad + "]", media_url])
 
     for video_url in video_urls:
-        logger.info("%s - %s" % (video_url[0], video_url[1]))
+        logger.info("mitvspain.servers.vk %s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
 
@@ -61,7 +61,7 @@ def find_videos(data):
     data = data.replace("&amp;", "&")
     data = data.replace("&#038;", "&")
     patronvideos = '(/video_ext.php\?oid=[^&]+&id=[^&]+&hash=[a-z0-9]+)'
-    logger.info("#" + patronvideos + "#")
+    logger.info("mitvspain.servers.vk find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos).findall(data)
 
     for match in matches:
@@ -77,7 +77,7 @@ def find_videos(data):
 
     # http://vk.com/video97482389_161509127?section=all
     patronvideos = '(vk\.[a-z]+\/video[0-9]+_[0-9]+)'
-    logger.info("#" + patronvideos + "#")
+    logger.info("mitvspain.servers.vk find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:

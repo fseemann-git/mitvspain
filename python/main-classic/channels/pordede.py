@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para pordede
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 # ------------------------------------------------------------
 
 import os
@@ -25,14 +25,21 @@ def login():
     data = httptools.downloadpage(url_origen).data
     if config.get_setting("pordedeuser", "pordede") in data:
         return True
+    
+    key = scrapertools.find_single_match(data, 'data-sitekey="([^"]+)"')
+    sess_check = scrapertools.find_single_match(data, ' SESS\s*=\s*"([^"]+)"')
 
-    url = "http://www.pordede.com/api/login/auth?response_type=code&client_id=appclient&redirect_uri=http%3A%2F%2Fwww.pordede.com%2Fapi%2Flogin%2Freturn&state=none"
-    post = "username=%s&password=%s&authorized=autorizar" % (config.get_setting("pordedeuser", "pordede"), config.get_setting("pordedepassword", "pordede"))
-    data = httptools.downloadpage(url, post).data
-    if '"ok":true' in data:
-        return True
-    else:
-        return False
+    result = platformtools.show_recaptcha(key, url_origen)
+    if result:
+        post = "LoginForm[username]="+config.get_setting("pordedeuser", "pordede")+"&LoginForm[password]="+config.get_setting("pordedepassword", "pordede")
+        post += "&LoginForm[verifyCode]=&g-recaptcha-response=%s&popup=1&sesscheck=%s" % (result, sess_check)
+
+        headers = {"Referer": url_origen, "X-Requested-With": "XMLHttpRequest"}
+        data = httptools.downloadpage("http://www.pordede.com/site/login", post, headers=headers, replace_headers=True).data
+        if "Login correcto, entrando" in data:
+            return True
+
+    return False
 
 
 def mainlist(item):
@@ -65,7 +72,7 @@ def menuseries(item):
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Novedades"            , url="http://www.pordede.com/series/loadmedia/offset/0/showlist/hot" ))
     itemlist.append( Item(channel=item.channel, action="generos"   , title="Por géneros"          , url="http://www.pordede.com/series" ))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Siguiendo"            , url="http://www.pordede.com/series/following" ))
-    itemlist.append( Item(channel=item.channel, action="siguientes" , title="Siguientes Capítulos" , url="http://www.pordede.com/main/index" , viewmode="movie"))
+    itemlist.append( Item(channel=item.channel, action="siguientes" , title="Siguientes Capítulos" , url="http://www.pordede.com/index2.php" , viewmode="movie"))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Favoritas"            , url="http://www.pordede.com/series/favorite" ))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Pendientes"           , url="http://www.pordede.com/series/pending" ))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Terminadas"           , url="http://www.pordede.com/series/seen" ))
@@ -213,12 +220,16 @@ def siguientes(item):
     logger.info()
 
     # Descarga la pagina
-    data = httptools.downloadpage(item.url).data
+    headers = {"X-Requested-With": "XMLHttpRequest"}
+    data = httptools.downloadpage(item.url, headers=headers).data
     logger.debug("data="+data)
 
     # Extrae las entradas (carpetas)
-    bloque = scrapertools.find_single_match(data, '<h2>Siguiendo</h2>(.*?)<div class="box">')
-    patron = '<div class="coverMini     shadow tiptip" title="([^"]+)">[^<]+'
+    json_object = jsontools.load_json(data)
+    logger.debug("html2="+json_object["html"])
+    data = json_object["html"]
+    patron = ''
+    patron += '<div class="coverMini     shadow tiptip" title="([^"]+)">[^<]+'
     patron += '<img class="centeredPic centeredPicFalse"  onerror="[^"]+"  src="([^"]+)"[^<]+'
     patron += '<img src="/images/loading-mini.gif" class="loader"/>[^<]+'
     patron += '<div class="extra-info"><span class="year">[^<]+'

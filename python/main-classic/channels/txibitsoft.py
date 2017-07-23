@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para txibitsoft
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 
 import re
@@ -31,23 +31,24 @@ ACTION_MOVE_UP = 3
 OPTION_PANEL = 6
 OPTIONS_OK = 5
 
-api_key="2e2160006592024ba87ccdf78c28f49f"
-api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
+
 
 host = "http://www.txibitsoft.com/"
 
+DEBUG = config.get_setting("debug")
+
+
 
 def mainlist(item):
-    logger.info()
+    logger.info("mitvspain.txibitsoft mainlist")
     
     itemlist = []
     
     
-    itemlist.append( Item(channel=item.channel, title="[COLOR white][B]Peliculas[/B][/COLOR]" , action="peliculas"           , url="http://www.txibitsoft.com/torrents.php?procesar=1&categorias=%27Otras%20Peliculas%27&subcategoria=peliculas&pagina=1"	, thumbnail="http://imgur.com/v6iC6Er.jpg", fanart="http://imgur.com/tJUbfeC.jpg"))
+    itemlist.append( Item(channel=item.channel, title="[COLOR white][B]Peliculas[/B][/COLOR]" , action="peliculas"           , url="http://www.txibitsoft.com/torrents.php?procesar=1&categorias='Peliculas'&pagina=1", thumbnail="http://imgur.com/v6iC6Er.jpg", fanart="http://imgur.com/tJUbfeC.jpg"))
     itemlist.append( Item(channel=item.channel, title="[COLOR orange][B]Alta Calidad[/B][/COLOR]" , action=""           , url="", thumbnail="http://imgur.com/KXhvWIc.jpg", fanart="http://imgur.com/4kTqOKE.jpg"))
     
     itemlist.append( Item(channel=item.channel, title="         [COLOR white][B]1080[/B][/COLOR]" , action="peliculas"           , url="http://www.txibitsoft.com/torrents.php?procesar=1&categorias='Cine%20Alta%20Definicion%20HD'&subcategoria=1080p&pagina=1", thumbnail="http://imgur.com/KXhvWIc.jpg", fanart="http://imgur.com/4kTqOKE.jpg"))
-    itemlist.append( Item(channel=item.channel, title="         [COLOR white][B]720[/B][/COLOR]" , action="peliculas"           , url="http://www.txibitsoft.com/torrents.php?procesar=1&categorias=%27Peliculas%20x264%20MKV%27&pagina=1", thumbnail="http://imgur.com/KXhvWIc.jpg", fanart="http://imgur.com/4kTqOKE.jpg"))
     itemlist.append( Item(channel=item.channel, title="          [COLOR white][B]4k[/B][/COLOR]" , action="peliculas"           , url="http://www.txibitsoft.com/torrents.php?procesar=1&categorias=%27Cine%20Alta%20Definicion%20HD%27&subcategoria=4KULTRAHD&pagina=1", thumbnail="http://imgur.com/KXhvWIc.jpg", fanart="http://imgur.com/4kTqOKE.jpg"))
     title="[COLOR white][B]Series[/B][/COLOR]"
     itemlist.append( Item(channel=item.channel, title="          [COLOR white][B]BdRemux[/B][/COLOR]" , action="peliculas"           , url="http://www.txibitsoft.com/torrents.php?procesar=1&categorias=%27Cine%20Alta%20Definicion%20HD%27&subcategoria=BdRemux%201080p&pagina=1", thumbnail="http://imgur.com/KXhvWIc.jpg", fanart="http://imgur.com/4kTqOKE.jpg"))
@@ -60,7 +61,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.txibitsoft search")
     texto = texto.replace(" ","+")
     
     item.url = "http://www.txibitsoft.com/torrents.php?procesar=1&texto=%s" % (texto)
@@ -75,7 +76,7 @@ def search(item,texto):
         return []
 
 def buscador(item):
-    logger.info()
+    logger.info("mitvspain.txibitsoft buscador")
     itemlist = []
 
     # Descarga la página
@@ -124,7 +125,7 @@ def buscador(item):
     return itemlist
 
 def peliculas(item):
-    logger.info()
+    logger.info("mitvspain.txibitsoft peliculas")
     itemlist = []
     
     # Descar<div id="catalogheader">ga la página
@@ -185,7 +186,7 @@ def peliculas(item):
     return itemlist
 
 def fanart(item):
-    logger.info()
+    logger.info("mitvspain.txibitsoft fanart")
     itemlist = []
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
@@ -280,10 +281,10 @@ def fanart(item):
         print "ozuu"
         print critica
     
-        url="http://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query=" + title +"&year="+year+ "&language=es&include_adult=false"
+        url="http://api.themoviedb.org/3/search/movie?api_key=2e2160006592024ba87ccdf78c28f49f&query=" + title +"&year="+year+ "&language=es&include_adult=false"
         data = httptools.downloadpage(url).data
         data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
-        patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),'
+        patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),"popularity"'
         matches = re.compile(patron,re.DOTALL).findall(data)
         
         
@@ -291,11 +292,11 @@ def fanart(item):
                 
                 
                 title= re.sub(r":.*|\(.*?\)","",title)
-                url="http://api.themoviedb.org/3/search/movie?api_key="+api_key+"&query=" + title + "&language=es&include_adult=false"
+                url="http://api.themoviedb.org/3/search/movie?api_key=2e2160006592024ba87ccdf78c28f49f&query=" + title + "&language=es&include_adult=false"
                 
                 data = httptools.downloadpage(url).data
                 data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
-                patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),'
+                patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),"popularity"'
                 matches = re.compile(patron,re.DOTALL).findall(data)
                 if len(matches)==0:
                     extra=item.thumbnail+"|"+""+"|"+""+"|"+"Sin puntuación"+"|"+rating_filma+"|"+critica
@@ -314,7 +315,7 @@ def fanart(item):
             fan = re.sub(r'\\|"','',fan)
             
             try:
-                rating = scrapertools.find_single_match(data,'"vote_average":(.*?),')
+                rating = scrapertools.find_single_match(data,'"vote_average":(.*?)}')
             except:
                 rating = "Sin puntuación"
             
@@ -331,7 +332,7 @@ def fanart(item):
                 fanart="https://image.tmdb.org/t/p/original" + fan
             item.extra= fanart
             
-            url ="http://api.themoviedb.org/3/movie/"+id+"/images?api_key="+api_key
+            url ="http://api.themoviedb.org/3/movie/"+id+"/images?api_key=2e2160006592024ba87ccdf78c28f49f"
             data = httptools.downloadpage(url).data
             data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
             
@@ -352,7 +353,7 @@ def fanart(item):
                 if fanart =="http://imgur.com/21Oty9A.jpg":
                    fanart=fanart_info
             #clearart, fanart_2 y logo
-            url ="http://webservice.fanart.tv/v3/movies/"+id+"?api_key="+api_fankey
+            url ="http://webservice.fanart.tv/v3/movies/"+id+"?api_key=dffe90fba4d02c199ae7a9e71330c987"
             data = httptools.downloadpage(url).data
             data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
             patron = '"hdmovielogo":.*?"url": "([^"]+)"'
@@ -487,11 +488,11 @@ def fanart(item):
 
         ###Busqueda en tmdb
         
-        url_tmdb="http://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query=" + title +"&language=es&include_adult=false&first_air_date_year="+year
+        url_tmdb="http://api.themoviedb.org/3/search/tv?api_key=2e2160006592024ba87ccdf78c28f49f&query=" + title +"&language=es&include_adult=false&first_air_date_year="+year
     
         data_tmdb = scrapertools.cachePage(url_tmdb)
         data_tmdb = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data_tmdb)
-        patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),'
+        patron = '"page":1.*?,"id":(.*?),"backdrop_path":(.*?),"vote_average"'
         matches = re.compile(patron,re.DOTALL).findall(data_tmdb)
         
         ###Busqueda en bing el id de imdb de la serie
@@ -499,7 +500,7 @@ def fanart(item):
          url_tmdb="http://api.themoviedb.org/3/search/tv?api_key="+api_key+"&query=" + title +"&language=es"
          data_tmdb = scrapertools.cachePage(url_tmdb)
          data_tmdb = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data_tmdb)
-         patron = '"page":1.*?,"id":(.*?),.*?"backdrop_path":(.*?),'
+         patron = '"page":1.*?,"id":(.*?),"backdrop_path":(.*?),"vote_average"'
          matches = re.compile(patron,re.DOTALL).findall(data_tmdb)
          if len(matches)==0:
           urlbing_imdb = "http://www.bing.com/search?q=%s+%s+tv+series+site:imdb.com" % (title.replace(' ', '+'),  year)
@@ -535,14 +536,14 @@ def fanart(item):
 
         for id_tmdb, fan in matches:
             ###Busca id tvdb
-            urlid_tvdb="https://api.themoviedb.org/3/tv/"+id_tmdb+"/external_ids?api_key="+api_key+"&language=es"
+            urlid_tvdb="https://api.themoviedb.org/3/tv/"+id_tmdb+"/external_ids?api_key=2e2160006592024ba87ccdf78c28f49f&language=es"
             data_tvdb = scrapertools.cachePage(urlid_tvdb)
             id= scrapertools.find_single_match(data_tvdb,'tvdb_id":(.*?),"tvrage_id"')
             if id == "null":
                id = ""
             category = id
             ###Busqueda nºepisodios y temporadas,status
-            url_status ="http://api.themoviedb.org/3/tv/"+id_tmdb+"?api_key="+api_key+"&append_to_response=credits&language=es"
+            url_status ="http://api.themoviedb.org/3/tv/"+id_tmdb+"?api_key=2e2160006592024ba87ccdf78c28f49f&append_to_response=credits&language=es"
             data_status= scrapertools.cachePage(url_status)
             season_episodes=scrapertools.find_single_match(data_status,'"(number_of_episodes":\d+,"number_of_seasons":\d+,)"')
             season_episodes=re.sub(r'"','',season_episodes)
@@ -588,7 +589,7 @@ def fanart(item):
 
             item.extra= fanart
             
-            url ="http://api.themoviedb.org/3/tv/"+id_tmdb+"/images?api_key="+api_key
+            url ="http://api.themoviedb.org/3/tv/"+id_tmdb+"/images?api_key=2e2160006592024ba87ccdf78c28f49f"
             data = httptools.downloadpage(url).data
             data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
             
@@ -608,7 +609,7 @@ def fanart(item):
                 fanart_2 = "https://image.tmdb.org/t/p/original" + fanart_2
                 if fanart== "http://imgur.com/21Oty9A.jpg":
                     fanart=  fanart_info
-            url ="http://webservice.fanart.tv/v3/tv/"+id+"?api_key="+api_fankey
+            url ="http://webservice.fanart.tv/v3/tv/"+id+"?api_key=dffe90fba4d02c199ae7a9e71330c987"
             data = httptools.downloadpage(url).data
             data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
             patron = '"clearlogo":.*?"url": "([^"]+)"'
@@ -749,7 +750,7 @@ def fanart(item):
     return itemlist
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.txibitsoft findvideos")
     itemlist = []
     
     if not "serie" in item.url:
@@ -823,11 +824,7 @@ def findvideos(item):
                 
               if not os.path.exists(torrents_path):
                   os.mkdir(torrents_path)
-              #En algunos OS esta dando extraños problemas de certificado.Workaround
-              import ssl
-
-              ssl._create_default_https_context = ssl._create_unverified_context
-              urllib.URLopener.version = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36 SE 2.X MetaSr 1.0'  
+                
               urllib.urlretrieve (url, torrents_path+"/temp.torrent")
               pepe = open( torrents_path+"/temp.torrent", "rb").read()
                 
@@ -880,7 +877,7 @@ def findvideos(item):
             scrapedtitle = title_tag + scrapedtitle+" "+"[COLOR mediumslateblue]( Video [/COLOR]"+"[COLOR mediumpurple]"+ext_v+" -- "+size+" )[/COLOR]"
             itemlist.append( Item(channel=item.channel, title=scrapedtitle, url=scrapedurl, action="play", server="torrent", thumbnail=thumbnail, category = item.category, fanart=item.show.split("|")[0], folder=False) )
             ###thumb temporada###
-            url= "http://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+temp+"/images?api_key="+api_key
+            url= "http://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+temp+"/images?api_key=2e2160006592024ba87ccdf78c28f49f"
             data = httptools.downloadpage(url).data
             data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
             patron = '{"id".*?"file_path":"(.*?)","height"'
@@ -897,77 +894,73 @@ def findvideos(item):
             itemlist.append( Item(channel=item.channel, action="info_capitulos" , title=title , url=item.url, thumbnail=thumbnail, fanart=item.show.split("|")[1],show=item.show, extra = extra, folder=False ))
         
         else:
-              try:
-                  #buscamos peso y formato
-                  url = "http://www.txibitsoft.com" + scrapedurl
-                     
-                  torrents_path = config.get_library_path()+'/torrents'
-                    
-                  if not os.path.exists(torrents_path):
-                      os.mkdir(torrents_path)
-                  
-                  import ssl
-
-                  ssl._create_default_https_context = ssl._create_unverified_context  
-                  urllib.urlretrieve ("http://ssl-proxy.my-addr.org/myaddrproxy.php/"+url, torrents_path+"/temp.torrent")
-                  pepe = open( torrents_path+"/temp.torrent", "rb").read()
-                  
-                  if "used CloudFlare" in pepe:
-                      try:
-                         urllib.URLopener.version = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36 SE 2.X MetaSr 1.0' 
-                         urllib.urlretrieve("http://anonymouse.org/cgi-bin/anon-www.cgi/"+url.strip(), torrents_path+"/temp.torrent")
-                         pepe = open( torrents_path+"/temp.torrent", "rb").read()
-                      except:
-                        pepe=""
-
-                  torrent = decode(pepe)
-
-                  try:
-                    name = torrent["info"]["name"]
-                    sizet = torrent["info"]['length']
-                    sizet=convert_size(sizet)
-                  except:
-                        name = "no disponible"
-                  try:
-                       check_video = scrapertools.find_multiple_matches(str(torrent["info"]["files"]),"'length': (\d+)}")
-                    
-                       size=max([int(i) for i in check_video])
+            try:
+              #buscamos peso y formato
+              url = "http://www.txibitsoft.com" + scrapedurl
+                 
+              torrents_path = config.get_library_path()+'/torrents'
                 
-                       for file in torrent["info"]["files"]:
-                          manolo = "%r - %d bytes" % ("/".join(file["path"]), file["length"])
-                          if str(size) in manolo:
-                             video= manolo
-                       size =convert_size(size)
-                       ext_v= re.sub(r"-.*? bytes|.*?\[.*?\].|'|.*?COM.|.*?\[.*?\]|\(.*?\)|.*?\.","",video)
-                       try:
-                        os.remove(torrents_path+"/temp.torrent")
-                       except:
-                        pass
+              if not os.path.exists(torrents_path):
+                  os.mkdir(torrents_path)
+                
+              urllib.urlretrieve ("http://ssl-proxy.my-addr.org/myaddrproxy.php/"+url, torrents_path+"/temp.torrent")
+              pepe = open( torrents_path+"/temp.torrent", "rb").read()
+                
+              if "used CloudFlare" in pepe:
+                  try:
+                     urllib.urlretrieve("http://anonymouse.org/cgi-bin/anon-www.cgi/"+url.strip(), torrents_path+"/temp.torrent")
+                     pepe = open( torrents_path+"/temp.torrent", "rb").read()
                   except:
-                       size = sizet
-                       ext_v= re.sub(r"-.*? bytes|.*?\[.*?\].|'|.*?COM.|.*?\.es.|.*?\[.*?\]|.*?\(.*?\)\.|.*?\.","",name)
-                       try:
-                        os.remove(torrents_path+"/temp.torrent")
-                       except:
-                          pass
+                    pepe=""
+
+              torrent = decode(pepe)
+
+              try:
+                name = torrent["info"]["name"]
+                sizet = torrent["info"]['length']
+                sizet=convert_size(sizet)
               except:
+                    name = "no disponible"
+              try:
+                   check_video = scrapertools.find_multiple_matches(str(torrent["info"]["files"]),"'length': (\d+)}")
+                
+                   size=max([int(i) for i in check_video])
+            
+                   for file in torrent["info"]["files"]:
+                      manolo = "%r - %d bytes" % ("/".join(file["path"]), file["length"])
+                      if str(size) in manolo:
+                         video= manolo
+                   size =convert_size(size)
+                   ext_v= re.sub(r"-.*? bytes|.*?\[.*?\].|'|.*?COM.|.*?\[.*?\]|\(.*?\)|.*?\.","",video)
+                   try:
+                    os.remove(torrents_path+"/temp.torrent")
+                   except:
+                    pass
+              except:
+                   size = sizet
+                   ext_v= re.sub(r"-.*? bytes|.*?\[.*?\].|'|.*?COM.|.*?\.es.|.*?\[.*?\]|.*?\(.*?\)\.|.*?\.","",name)
+                   try:
+                    os.remove(torrents_path+"/temp.torrent")
+                   except:
+                      pass
+            except:
                 size = "en estos momentos..."
                 ext_v= "no disponible"
-              if "rar" in ext_v:
-                 ext_v= ext_v +" -- No reproducible"
-                 size= ""
-              scrapedurl = "http://www.txibitsoft.com" + scrapedurl
-              title_tag="[COLOR orange]Ver--[/COLOR]"
-              scrapedtitle=re.sub(r"\[.*?\]|\(.*?\)|\d+x\d+.*?Final|-\d+|-|\d+x\d+|Temporada.*?Completa| ;","",scrapedtitle)
-              scrapedtitle = "[COLOR magenta][B]"+scrapedtitle+"[/B][/COLOR]"
-              scrapedtitle = title_tag + scrapedtitle+" "+"[COLOR mediumslateblue]( Video [/COLOR]"+"[COLOR mediumpurple]"+ext_v+" -- "+size+" )[/COLOR]"
-              itemlist.append( Item(channel=item.channel, title=scrapedtitle, url=scrapedurl, action="play", server="torrent", thumbnail=item.extra, fanart=item.show, folder=False) )
+            if "rar" in ext_v:
+                ext_v= ext_v +" -- No reproducible"
+                size= ""
+            scrapedurl = "http://www.txibitsoft.com" + scrapedurl
+            title_tag="[COLOR orange]Ver--[/COLOR]"
+            scrapedtitle=re.sub(r"\[.*?\]|\(.*?\)|\d+x\d+.*?Final|-\d+|-|\d+x\d+|Temporada.*?Completa| ;","",scrapedtitle)
+            scrapedtitle = "[COLOR magenta][B]"+scrapedtitle+"[/B][/COLOR]"
+            scrapedtitle = title_tag + scrapedtitle+" "+"[COLOR mediumslateblue]( Video [/COLOR]"+"[COLOR mediumpurple]"+ext_v+" -- "+size+" )[/COLOR]"
+            itemlist.append( Item(channel=item.channel, title=scrapedtitle, url=scrapedurl, action="play", server="torrent", thumbnail=item.extra, fanart=item.show, folder=False) )
             
     
       
     return itemlist
 def info(item):
-    logger.info()
+    logger.info("mitvspain.zentorrents info")
     itemlist = []
     url=item.url
     id = item.extra
@@ -1038,7 +1031,7 @@ def info(item):
 
     try:
       if not "serie" in item.url:
-        url_plot = "http://api.themoviedb.org/3/movie/"+item.extra.split("|")[1]+"?api_key="+api_key+"&append_to_response=credits&language=es"
+        url_plot = "http://api.themoviedb.org/3/movie/"+item.extra.split("|")[1]+"?api_key=2e2160006592024ba87ccdf78c28f49f&append_to_response=credits&language=es"
         data_plot= scrapertools.cache_page( url_plot )
         plot,tagline = scrapertools.find_single_match(data_plot, '"overview":"(.*?)",.*?"tagline":(".*?")')
         if plot== "":
@@ -1106,12 +1099,12 @@ def info(item):
     if "serie" in item.url:
       
       
-      url_tpi="http://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/recommendations?api_key="+api_key+"&language=es"
+      url_tpi="http://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/recommendations?api_key=2e2160006592024ba87ccdf78c28f49f&language=es"
       data_tpi=scrapertools.cachePage(url_tpi)
       tpi=scrapertools.find_multiple_matches(data_tpi,'id":(.*?),.*?"original_name":"(.*?)",.*?"poster_path":(.*?),"popularity"')
 
     else:
-      url_tpi="http://api.themoviedb.org/3/movie/"+item.extra.split("|")[1]+"/recommendations?api_key="+api_key+"&language=es"
+      url_tpi="http://api.themoviedb.org/3/movie/"+item.extra.split("|")[1]+"/recommendations?api_key=2e2160006592024ba87ccdf78c28f49f&language=es"
       data_tpi=scrapertools.cachePage(url_tpi)
       tpi=scrapertools.find_multiple_matches(data_tpi,'id":(.*?),.*?"original_title":"(.*?)",.*?"poster_path":(.*?),"popularity"')
 
@@ -1135,9 +1128,9 @@ def info(item):
 
 
 def info_capitulos(item):
-    logger.info()
+    logger.info("mitvspain.bricocine trailer")
     
-    url= "https://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+item.extra.split("|")[2]+"/episode/"+item.extra.split("|")[3]+"?api_key="+api_key+"&language=es"
+    url= "https://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+item.extra.split("|")[2]+"/episode/"+item.extra.split("|")[3]+"?api_key=2e2160006592024ba87ccdf78c28f49f&language=es"
 
     if "/0" in url:
         url = url.replace("/0","/")

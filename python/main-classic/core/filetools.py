@@ -1,49 +1,48 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain
+# Copyright 2015 mitvspain@gmail.com
+
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of mitvspain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# mitvspain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# mitvspain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # filetools
 # Gestion de archivos con discriminación samba/local
-# ------------------------------------------------------------
+#------------------------------------------------------------
 
 import os
+import sys
 import traceback
-
 from core import logger
 from core import scrapertools
 from platformcode import platformtools
-
 try:
-    from lib.sambatools import libsmb as samba
+  from lib.sambatools import libsmb as samba
 except:
-    samba = None
-    # Python 2.4 No compatible con modulo samba, hay que revisar
+  samba = None
+  #Python 2.4 No compatible con modulo samba, hay que revisar
 
-# Windows es "mbcs" linux, osx, android es "utf8"
+#Windows es "mbcs" linux, osx, android es "utf8"
 if os.name == "nt":
-    fs_encoding = ""
+  fs_encoding = ""
 else:
-    fs_encoding = "utf8"
+  fs_encoding = "utf8"
 
 
 def validate_path(path):
@@ -141,7 +140,7 @@ def read(path, linea_inicio=0, total_lineas=None):
             data.append(line)
         f.close()
     except:
-        logger.error("ERROR al leer el archivo: %s" % path)
+        logger.error("ERROR al leer el archivo: %s" %(path))
         logger.error(traceback.format_exc())
         return False
     
@@ -169,12 +168,11 @@ def write(path, data):
         f.write(data)
         f.close()
     except:
-        logger.error("ERROR al guardar el archivo: %s" % path)
+        logger.error("ERROR al guardar el archivo: %s" %(path))
         logger.error(traceback.format_exc())
         return False
     else:
         return True
-
 
 def file_open(path, mode="r"):
     """
@@ -186,16 +184,17 @@ def file_open(path, mode="r"):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            return samba.smb_open(path, mode)
-        else:
-            return open(path, mode)
+      if path.lower().startswith("smb://"):
+          return samba.smb_open(path, mode)
+      else:
+          return open(path, mode)
     except:
-        logger.error("ERROR al abrir el archivo: %s" % path)
-        logger.error(traceback.format_exc())
-        platformtools.dialog_notification("Error al abrir", path)
-        return False
+      logger.error("ERROR al abrir el archivo: %s" %(path))
+      logger.error(traceback.format_exc())
+      platformtools.dialog_notification("Error al abrir", path)
+      return False
      
+
 
 def rename(path, new_name):
     """
@@ -209,20 +208,19 @@ def rename(path, new_name):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            new_name = encode(new_name, True)
-            samba.rename(path, join(dirname(path), new_name))
-        else:
-            new_name = encode(new_name, False)
-            os.rename(path, os.path.join(os.path.dirname(path), new_name))
+      if path.lower().startswith("smb://"):
+        new_name = encode(new_name, True)
+        samba.rename(path, join(dirname(path), new_name))
+      else:
+        new_name = encode(new_name, False)
+        os.rename(path, os.path.join(os.path.dirname(path), new_name))
     except:
-        logger.error("ERROR al renombrar el archivo: %s" % path)
+        logger.error("ERROR al renombrar el archivo: %s" %(path))
         logger.error(traceback.format_exc())
         platformtools.dialog_notification("Error al renombrar", path)
         return False
     else:
         return True
-
 
 def move(path, dest):
     """
@@ -235,62 +233,58 @@ def move(path, dest):
     @return: devuelve False en caso de error
     """
     try:
-        # samba/samba
+        #samba/samba
         if path.lower().startswith("smb://") and dest.lower().startswith("smb://"):
             dest = encode(dest, True)
             path = encode(path, True)
             samba.rename(path, dest)
                 
-        # local/local
+        #local/local
         elif not path.lower().startswith("smb://") and not dest.lower().startswith("smb://"):
             dest = encode(dest)
             path = encode(path)
             os.rename(path, dest)
-        # mixto En este caso se copia el archivo y luego se elimina el de origen
+        #mixto En este caso se copia el archivo y luego se elimina el de origen
         else:
-            return copy(path, dest) == True and remove(path) == True
+          return copy(path, dest) == True and remove(path) == True
     except:
-        logger.error("ERROR al mover el archivo: %s" % path)
+        logger.error("ERROR al mover el archivo: %s" %(path))
+        logger.error(traceback.format_exc())
         return False
     else:
       return True
 
 
-def copy(path, dest, silent=False):
+def copy(path, dest, silent = False):
     """
     Copia un archivo
     @param path: ruta del fichero a copiar
     @type path: str
     @param dest: ruta donde copiar
     @type dest: str
-    @param silent: se muestra o no el cuadro de dialogo
-    @type silent: bool
     @rtype: bool
     @return: devuelve False en caso de error
     """
+    import time
     try:
-        fo = file_open(path, "rb")
-        fd = file_open(dest, "wb")
-        if fo and fd:
-            if not silent:
-                dialogo = platformtools.dialog_progress("Copiando archivo", "")
-            size = getsize(path)
-            copiado = 0
-            while True:
-                if not silent:
-                    dialogo.update(copiado * 100 / size, basename(path))
-                buf = fo.read(1024 * 1024)
-                if not buf:
-                    break
-                if not silent and dialogo.iscanceled():
-                    dialogo.close()
-                    return False
-                fd.write(buf)
-                copiado += len(buf)
-            if not silent:
-                dialogo.close()
+      fo = file_open(path, "rb")
+      fd = file_open(dest, "wb")
+      if fo and fd:
+        if not silent: dialogo = platformtools.dialog_progress("Copiando archivo", "")
+        size = getsize(path)
+        copiado = 0
+        while True:
+          if not silent: dialogo.update(copiado * 100 / size, basename(path))
+          buf=fo.read(1024*1024)
+          if not buf: break
+          if not silent and dialogo.iscanceled():
+            dialogo.close()
+            return False
+          fd.write(buf)
+          copiado +=len(buf)
+        if not silent: dialogo.close()
     except:
-        logger.error("ERROR al copiar el archivo: %s" % path)
+        logger.error("ERROR al copiar el archivo: %s" %(path))
         logger.error(traceback.format_exc())
         return False
     else:
@@ -307,14 +301,14 @@ def exists(path):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            return samba.exists(path)
-        else:
-            return os.path.exists(path)
+      if path.lower().startswith("smb://"):
+          return samba.exists(path)
+      else:
+          return os.path.exists(path)
     except:
-        logger.error("ERROR al comprobar la ruta: %s" % path)
-        logger.error(traceback.format_exc())
-        return False
+      logger.error("ERROR al comprobar la ruta: %s" %(path))
+      logger.error(traceback.format_exc())
+      return False
 
 
 def isfile(path):
@@ -327,14 +321,14 @@ def isfile(path):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            return samba.isfile(path)
-        else:
-            return os.path.isfile(path)
+      if path.lower().startswith("smb://"):
+          return samba.isfile(path)
+      else:
+          return os.path.isfile(path)
     except:
-        logger.error("ERROR al comprobar el archivo: %s" % path)
-        logger.error(traceback.format_exc())
-        return False
+      logger.error("ERROR al comprobar el archivo: %s" %(path))
+      logger.error(traceback.format_exc())
+      return False
 
 
 def isdir(path):
@@ -347,14 +341,14 @@ def isdir(path):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            return samba.isdir(path)
-        else:
-            return os.path.isdir(path)
+      if path.lower().startswith("smb://"):
+          return samba.isdir(path)
+      else:
+          return os.path.isdir(path)
     except:
-        logger.error("ERROR al comprobar el directorio: %s" % path)
-        logger.error(traceback.format_exc())
-        return False
+      logger.error("ERROR al comprobar el directorio: %s" %(path))
+      logger.error(traceback.format_exc())
+      return False
 
 
 def getsize(path):
@@ -367,14 +361,14 @@ def getsize(path):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            return long(samba.get_attributes(path).file_size)
-        else:
-            return os.path.getsize(path)
+      if path.lower().startswith("smb://"):
+          return long(samba.get_attributes(path).file_size)
+      else:
+          return os.path.getsize(path)
     except:
-        logger.error("ERROR al obtener el tamaño: %s" % path)
-        logger.error(traceback.format_exc())
-        return 0L
+      logger.error("ERROR al obtener el tamaño: %s" %(path))
+      logger.error(traceback.format_exc())
+      return 0L
 
 
 def remove(path):
@@ -388,11 +382,11 @@ def remove(path):
     path = encode(path)
     try:
         if path.lower().startswith("smb://"):
-            samba.remove(path)
+          samba.remove(path)
         else:
-            os.remove(path)
+          os.remove(path)
     except:
-        logger.error("ERROR al eliminar el archivo: %s" % path)
+        logger.error("ERROR al eliminar el archivo: %s" %(path))
         logger.error(traceback.format_exc())
         platformtools.dialog_notification("Error al eliminar el archivo", path)
         return False
@@ -410,18 +404,18 @@ def rmdirtree(path):
     """
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            for raiz, subcarpetas, ficheros in samba.walk(path, topdown=False):
-                for f in ficheros:
-                    samba.remove(join(decode(raiz), decode(f)))
-                for s in subcarpetas:
-                    samba.rmdir(join(decode(raiz), decode(s)))
-            samba.rmdir(path)
-        else:
-            import shutil
-            shutil.rmtree(path, ignore_errors=True)
+      if path.lower().startswith("smb://"):
+          for raiz, subcarpetas, ficheros in samba.walk(path, topdown=False):
+              for f in ficheros:
+                  samba.remove(join(decode(raiz),decode(f)))
+              for s in subcarpetas:
+                  samba.rmdir(join(decode(raiz),decode(s)))
+          samba.rmdir(path)
+      else:
+        import shutil
+        shutil.rmtree(path, ignore_errors=True)
     except:
-        logger.error("ERROR al eliminar el directorio: %s" % path)
+        logger.error("ERROR al eliminar el directorio: %s" %(path))
         logger.error(traceback.format_exc())
         platformtools.dialog_notification("Error al eliminar el directorio", path)
         return False
@@ -440,11 +434,11 @@ def rmdir(path):
     path = encode(path)
     try:
         if path.lower().startswith("smb://"):
-            samba.rmdir(path)
+          samba.rmdir(path)
         else:
-            os.rmdir(path)
+          os.rmdir(path)
     except:
-        logger.error("ERROR al eliminar el directorio: %s" % path)
+        logger.error("ERROR al eliminar el directorio: %s" %(path))
         logger.error(traceback.format_exc())
         platformtools.dialog_notification("Error al eliminar el directorio", path)
         return False
@@ -467,7 +461,7 @@ def mkdir(path):
         else:
             os.mkdir(path)
     except:
-        logger.error("ERROR al crear el directorio: %s" % path)
+        logger.error("ERROR al crear el directorio: %s" %(path))
         logger.error(traceback.format_exc())
         platformtools.dialog_notification("Error al crear el directorio", path)
         return False
@@ -499,6 +493,7 @@ def walk(top, topdown=True, onerror=None):
             yield decode(a), decode(list(b)), decode(c)
 
 
+
 def listdir(path):
     """
     Lista un directorio
@@ -510,12 +505,12 @@ def listdir(path):
 
     path = encode(path)
     try:
-        if path.lower().startswith("smb://"):
-            return decode(samba.listdir(path))
-        else:
-            return decode(os.listdir(path))
+      if path.lower().startswith("smb://"):
+          return decode(samba.listdir(path))
+      else:
+          return decode(os.listdir(path))
     except:
-        logger.error("ERROR al leer el directorio: %s" % path)
+        logger.error("ERROR al leer el directorio: %s" %(path))
         logger.error(traceback.format_exc())
         return False
 
@@ -528,13 +523,12 @@ def join(*paths):
     @return: la ruta concatenada
     """
     list_path = []
-    if paths[0].startswith("/"):
-        list_path.append("")
-
+    if paths[0].startswith("/"): list_path.append("")
+    
     for path in paths:
-        if path:
-            list_path += path.replace("\\", "/").strip("/").split("/")
-
+      if path:
+        list_path += path.replace("\\", "/").strip("/").split("/")
+        
     if list_path[0].lower() == "smb:":
         return "/".join(list_path)
     else:
@@ -580,7 +574,7 @@ def dirname(path):
 
 
 def is_relative(path):
-    return "://" not in path and not path.startswith("/") and ":\\" not in path
+    return not "://" in path and not path.startswith("/") and not ":\\" in path 
 
 
 def remove_tags(title):
@@ -591,7 +585,7 @@ def remove_tags(title):
     @rtype: str
     @return: cadena sin tags
     """
-    logger.info()
+    logger.info("mitvspain.core.filetools remove_tags")
 
     title_without_tags = scrapertools.find_single_match(title, '\[color .+?\](.+)\[\/color\]')
 
@@ -599,4 +593,3 @@ def remove_tags(title):
         return title_without_tags
     else:
         return title
-

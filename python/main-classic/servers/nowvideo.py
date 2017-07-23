@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+#------------------------------------------------------------
+# MiTvSpain - XBMC Plugin
 # Conector para nowvideo
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
-# ------------------------------------------------------------
+
+#------------------------------------------------------------
 # Credits:
 # Unwise and main algorithm taken from Eldorado url resolver
 # https://github.com/Eldorados/script.module.urlresolver/blob/master/lib/urlresolver/plugins/nowvideo.py
@@ -19,7 +19,7 @@ def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
 
     data = httptools.downloadpage(page_url).data
-
+    
     if "The file is being converted" in data:
         return False, "El fichero está en proceso"
     elif "no longer exists" in data:
@@ -31,7 +31,7 @@ def test_video_exists(page_url):
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("(page_url='%s')" % page_url)
     video_urls = []
-
+    
     video_id = scrapertools.get_match(page_url, "http://www.nowvideo.../video/([a-z0-9]+)")
 
     if premium:
@@ -41,13 +41,13 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
         # Hace el login
         login_url = "http://www.nowvideo.eu/login.php?return="
-        post = "user=" + user + "&pass=" + password + "&register=Login"
+        post = "user="+user+"&pass="+password+"&register=Login"
         headers = {"Referer": "http://www.nowvideo.eu/login.php"}
         data = httptools.downloadpage(login_url, post, headers=headers).data
 
         # Descarga la página del vídeo 
         data = httptools.downloadpage(page_url).data
-
+        
         # URL a invocar: http://www.nowvideo.eu/api/player.api.php?user=aaa&file=rxnwy9ku2nwx7&pass=bbb&cid=1&cid2=undefined&key=83%2E46%2E246%2E226%2Dc7e707c6e20a730c563e349d2333e788&cid3=undefined
         # En la página:
         '''
@@ -63,16 +63,15 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
         '''
         flashvar_file = scrapertools.get_match(data, 'flashvars.file="([^"]+)"')
         flashvar_filekey = scrapertools.get_match(data, 'flashvars.filekey=([^;]+);')
-        flashvar_filekey = scrapertools.get_match(data, 'var ' + flashvar_filekey + '="([^"]+)"')
+        flashvar_filekey = scrapertools.get_match(data, 'var '+flashvar_filekey+'="([^"]+)"')
         flashvar_user = scrapertools.get_match(data, 'flashvars.user="([^"]+)"')
         flashvar_key = scrapertools.get_match(data, 'flashvars.key="([^"]+)"')
         flashvar_type = scrapertools.get_match(data, 'flashvars.type="([^"]+)"')
 
-        # http://www.nowvideo.eu/api/player.api.php?user=aaa&file=rxnwy9ku2nwx7&pass=bbb&cid=1&cid2=undefined&key=83%2E46%2E246%2E226%2Dc7e707c6e20a730c563e349d2333e788&cid3=undefined
-        url = "http://www.nowvideo.eu/api/player.api.php?user=" + flashvar_user + "&file=" + flashvar_file + "&pass=" + flashvar_key + "&cid=1&cid2=undefined&key=" + flashvar_filekey.replace(
-            ".", "%2E").replace("-", "%2D") + "&cid3=undefined"
+        #http://www.nowvideo.eu/api/player.api.php?user=aaa&file=rxnwy9ku2nwx7&pass=bbb&cid=1&cid2=undefined&key=83%2E46%2E246%2E226%2Dc7e707c6e20a730c563e349d2333e788&cid3=undefined
+        url = "http://www.nowvideo.eu/api/player.api.php?user="+flashvar_user+"&file="+flashvar_file+"&pass="+flashvar_key+"&cid=1&cid2=undefined&key="+flashvar_filekey.replace(".","%2E").replace("-","%2D")+"&cid3=undefined"
         data = httptools.downloadpage(url).data
-
+        
         location = scrapertools.get_match(data, 'url=([^\&]+)&')
         location = location + "?client=FLASH"
 
@@ -92,7 +91,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
             videourl = re.sub(r'/dl(\d)*/', '/dl/', videourl)
             ext = scrapertools.get_filename_from_url(videourl)[-4:]
             videourl = videourl.replace("%3F", "?") + \
-                       "|User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
+                   "|User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0"
             video_urls.append([ext + " [nowvideo]", videourl])
 
     for video_url in video_urls:
@@ -106,7 +105,7 @@ def find_videos(data):
     encontrados = set()
     devuelve = []
 
-    # http://www.nowvideo.eu/video/4fd0757fd4592
+    #http://www.nowvideo.eu/video/4fd0757fd4592
     patronvideos = 'nowvideo.../(?:video/|embed.php\?.*v=)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
@@ -116,7 +115,7 @@ def find_videos(data):
         url = "http://www.nowvideo.sx/video/" + match
         if url not in encontrados:
             logger.info("  url=" + url)
-            devuelve.append([titulo, url, 'nowvideo'])
+            devuelve.append([titulo, url , 'nowvideo'])
             encontrados.add(url)
         else:
             logger.info("  url duplicada=" + url)

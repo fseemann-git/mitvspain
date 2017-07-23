@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para ver_pelis
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 import string
 import os
@@ -38,7 +38,7 @@ OPTIONS_OK = 5
 
 __modo_grafico__ = config.get_setting('modo_grafico', "ver-pelis")
 
-
+DEBUG = config.get_setting("debug")
 
 #Para la busqueda en bing evitando baneos
 
@@ -80,7 +80,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 def mainlist(item):
 
-    logger.info()
+    logger.info("mitvspain.ver-pelis mainlist")
     itemlist=[]
     i=0
     global i
@@ -93,7 +93,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.ver-pelis search")
     texto = texto.replace(" ","+")
     item.url = "http://ver-pelis.me/ver/buscar?s="+texto
     item.extra="search"
@@ -102,7 +102,7 @@ def search(item,texto):
 
 
 def scraper(item):
-    logger.info()
+    logger.info("mitvspain.ver-pelis scraper")
     itemlist=[]
     url_next_page = ""
     global i
@@ -160,7 +160,7 @@ def scraper(item):
 
 
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.ver-pelis findvideos")
     itemlist = []
     th = Thread(target=get_art(item))
     th.setDaemon(True)
@@ -272,7 +272,7 @@ def fanartv(item, id_tvdb,id, images={}):
 
 
 def get_art(item):
-    logger.info()
+    logger.info("mitvspain.ver-pelis get_art")
     id =item.infoLabels['tmdb_id']
     check_fanart=item.infoLabels['fanart']
     if item.contentType!="movie":
@@ -420,5 +420,5 @@ def get_year(url):
     data =httptools.downloadpage(url).data
     year = scrapertools.find_single_match(data,'<p><strong>Año:</strong>(.*?)</p>')
     if year=="":
-      year=" "
+      year="1111"
     return year

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (PelisEnCasa)
+# Canal (PelisEnCasa) por Hernan_Ar_c
 # ------------------------------------------------------------
 
 import urlparse,urllib2,urllib,re
@@ -17,24 +17,24 @@ from lib import jsunpack
 
 host = 'http://pelisencasa.net'
 
-tgenero = {"Comedia":"https://s7.postimg.org/ne9g9zgwb/comedia.png",
-               "Suspense":"https://s13.postimg.org/wmw6vl1cn/suspenso.png",
-               "Drama":"https://s16.postimg.org/94sia332d/drama.png",
-               "Acción":"https://s3.postimg.org/y6o9puflv/accion.png",
-               "Aventura":"https://s10.postimg.org/6su40czih/aventura.png",
-               "Romance":"https://s15.postimg.org/fb5j8cl63/romance.png",
-               "Animación":"https://s13.postimg.org/5on877l87/animacion.png",
-               "Ciencia ficción":"https://s9.postimg.org/diu70s7j3/cienciaficcion.png",
-               "Terror":"https://s7.postimg.org/yi0gij3gb/terror.png",
-               "Documental":"https://s16.postimg.org/7xjj4bmol/documental.png",
-               "Música":"https://s29.postimg.org/bbxmdh9c7/musical.png",
-               "Western":"https://s23.postimg.org/lzyfbjzhn/western.png",
-               "Fantasía":"https://s13.postimg.org/65ylohgvb/fantasia.png",
-               "Guerra":"https://s23.postimg.org/71itp9hcr/belica.png",
-               "Misterio":"https://s1.postimg.org/w7fdgf2vj/misterio.png",
-               "Crimen":"https://s4.postimg.org/6z27zhirx/crimen.png",
-               "Historia":"https://s15.postimg.org/fmc050h1n/historia.png",
-               "Familia":"https://s7.postimg.org/6s7vdhqrf/familiar.png"}
+tgenero = {"Comedia":"https://s32.postimg.org/q7g2qs90l/comedia.png",
+               "Suspense":"https://s31.postimg.org/kb629gscb/suspenso.png",
+               "Drama":"https://s32.postimg.org/e6z83sqzp/drama.png",
+               "Acción":"https://s32.postimg.org/4hp7gwh9x/accion.png",
+               "Aventura":"https://s32.postimg.org/whwh56is5/aventura.png",
+               "Romance":"https://s31.postimg.org/y7vai8dln/romance.png",
+               "Animación":"https://s32.postimg.org/rbo1kypj9/animacion.png",
+               "Ciencia ficción":"https://s32.postimg.org/6hp3tsxsl/ciencia_ficcion.png",
+               "Terror":"https://s32.postimg.org/ca25xg0ed/terror.png",
+               "Documental":"https://s32.postimg.org/7opmvc5ut/documental.png",
+               "Música":"https://s31.postimg.org/7i32lca7f/musical.png",
+               "Western":"https://s31.postimg.org/nsksyt3hn/western.png",
+               "Fantasía":"https://s32.postimg.org/pklrf01id/fantasia.png",
+               "Guerra":"https://s32.postimg.org/kjbko3xhx/belica.png",
+               "Misterio":"https://s4.postimg.org/kd48bcxe5/misterio.png",
+               "Crimen":"https://s14.postimg.org/5lez1j1gx/crimen.png",
+               "Historia":"https://s13.postimg.org/52evvjrqf/historia.png",
+               "Familia":"https://s28.postimg.org/4wwzkt2f1/familiar.png"}
 
 tletras = {'#':'https://s32.postimg.org/drojt686d/image.png',
     'a':'https://s32.postimg.org/llp5ekfz9/image.png',
@@ -69,13 +69,13 @@ def mainlist(item):
 
     itemlist = []
     
-    itemlist.append(item.clone (title="Todas", action="lista", thumbnail='https://s18.postimg.org/fwvaeo6qh/todas.png', fanart='https://s18.postimg.org/fwvaeo6qh/todas.png', url = host))
+    itemlist.append(item.clone (title="Todas", action="lista", thumbnail='https://s12.postimg.org/iygbg8ip9/todas.png', fanart='https://s12.postimg.org/iygbg8ip9/todas.png', url = host))
 
-    itemlist.append( item.clone (title="Generos", action="seccion", thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png', url=host, extra = 'generos'))
+    itemlist.append( item.clone (title="Generos", action="seccion", thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png', url=host, extra = 'generos'))
     
-    itemlist.append( item.clone (title="Alfabetico", action="seccion", thumbnail='https://s17.postimg.org/fwi1y99en/a-z.png', fanart='https://s17.postimg.org/fwi1y99en/a-z.png', url=host, extra = 'letras'))
+    itemlist.append( item.clone (title="Alfabetico", action="seccion", thumbnail='https://s31.postimg.org/c3bm9cnl7/a_z.png', fanart='https://s31.postimg.org/c3bm9cnl7/a_z.png', url=host, extra = 'letras'))
 
-    itemlist.append( item.clone (title="Buscar", action="search", url=host+'/?s=', thumbnail='https://s30.postimg.org/pei7txpa9/buscar.png', fanart='https://s30.postimg.org/pei7txpa9/buscar.png'))
+    itemlist.append( item.clone (title="Buscar", action="search", url=host+'/?s=', thumbnail='https://s31.postimg.org/qose4p13f/Buscar.png', fanart='https://s31.postimg.org/qose4p13f/Buscar.png'))
     
 
     return itemlist
@@ -110,7 +110,7 @@ def lista (item):
         next_page = scrapertools.find_single_match(data,'<a class="nextpostslink" rel="next" href="(.*?)">')
         import inspect
         if next_page !='':
-           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png'))
+           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png'))
     return itemlist
 
 def seccion(item):

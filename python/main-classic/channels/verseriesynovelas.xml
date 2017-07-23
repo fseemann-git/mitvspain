@@ -3,37 +3,27 @@
 	<id>verseriesynovelas</id>
 	<name>Ver Series y Novelas</name>
 	<language>es</language>
-	<active>false</active>
+	<active>true</active>
 	<adult>false</adult>
 
-	<version>8</version>
+	<version>6</version>
 	<changes>
 		<change>
-			<date>17/05/2017</date>
-			<autor></autor>
-			<description>Canal desactivado por cambio de dominio, a la espera de si lo arreglan</description>
-		</change>
-		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
 			<date>16/02/2017</date>
-			<autor></autor>
+			<autor>Cmos</autor>
 			<description>Ligeros cambios para mejorar la carga de enlaces</description>
 		</change>
 		<change>
 			<date>11/10/2016</date>
-			<autor></autor>
+			<autor>Cmos</autor>
 			<description>Reparado por cambios en la web, ahora necesita registro</description>
 		</change>
 	</changes>
 
 	<fanart></fanart>
 	<thumbnail>http://i.imgur.com/ZhQknRE.png</thumbnail>
-    <bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/verseriesynovelas.png</bannermenu>
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
+    <bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/verseriesynovelas.png</bannermenu>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
 
 	<categories>
 		<category>latino</category>

@@ -8,28 +8,23 @@
 	<language>es</language>
 
 	<fanart></fanart>
-	<thumbnail>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/pelismagnet.png</thumbnail>
-	<bannermenu>https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/bannermenu/pelismagnet.png</bannermenu>
+	<thumbnail>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/pelismagnet.png</thumbnail>
+	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/pelismagnet.png</bannermenu>
 
-	<update_url>https://raw.githubusercontent.com/pelisalacarta-ce/pelisalacarta-ce/master/python/main-classic/channels/</update_url>
+	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
 	<changes>
 		<change>
-			<date>15/03/2017</date>
-			<autor></autor>
-			<description>limpieza código</description>
-		</change>
-		<change>
 			<date>21/02/2017</date>
-			<autor></autor>
+			<autor>Cmos</autor>
 			<description>Reparado a causa del cambio a https y añadida opcion para buscar info en tmdb</description>
 		</change>
 		<change>
 			<date>01/07/2016</date>
-			<autor></autor>
+			<autor>SeiTaN</autor>
 			<description>Eliminado código innecesario.</description>
 		</change>
 	</changes>
-	<version>5</version>
+	<version>4</version>
 
 	<categories>
 		<category>torrent</category>

@@ -1,26 +1,25 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta 4
-# Copyright 2015 tvalacarta@gmail.com
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# MiTvSpain
+# Copyright 2017 mitvspain@gmail.com
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of pelisalacarta 4.
+# This file is part of MiTvSpain.
 #
-# pelisalacarta 4 is free software: you can redistribute it and/or modify
+# MiTvSpain is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# pelisalacarta 4 is distributed in the hope that it will be useful,
+# MiTvSpain is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with MiTvSpain.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 
 import glob
@@ -73,7 +72,7 @@ def getmainlist(preferred_thumb=""):
                          context=[{"title": "Configurar descargas", "channel": "configuracion", "config": "descargas",
                                    "action": "channel_config"}]))
 
-    thumb_configuracion = "thumb_configuracion_%s.png" % config.get_setting("plugin_updates_available")
+    thumb_configuracion = "thumb_configuracion_"+config.get_setting("plugin_updates_available")+".png"
 
     itemlist.append(Item(title=config.get_localized_string(30100), channel="configuracion", action="mainlist",
                          thumbnail=get_thumb(preferred_thumb, thumb_configuracion),
@@ -98,8 +97,7 @@ def getchanneltypes(preferred_thumb=""):
                        'anime': config.get_localized_string(30124), 'documentary': config.get_localized_string(30125),
                        'vos': config.get_localized_string(30136), 'adult': config.get_localized_string(30126),
                        'latino': config.get_localized_string(30127)}
-
-    if config.get_setting("adult_mode") != 0:
+    if config.get_setting("adult_mode") == "true":
         channel_types.append("adult")
 
     channel_language = config.get_setting("channel_language")
@@ -130,10 +128,10 @@ def filterchannels(category, preferred_thumb=""):
     channelslist = []
 
     # Si category = "allchannelstatus" es que estamos activando/desactivando canales
-    appenddisabledchannels = False
+    appenddisabledchannels = "false"
     if category == "allchannelstatus":
         category = "all"
-        appenddisabledchannels = True
+        appenddisabledchannels = "true"
 
     # Lee la lista de canales
     channel_path = os.path.join(config.get_runtime_path(), "channels", '*.xml')
@@ -153,11 +151,6 @@ def filterchannels(category, preferred_thumb=""):
 
         try:
             channel_parameters = channeltools.get_channel_parameters(channel[:-4])
-
-            # si el canal no es compatible, no se muestra
-            if not channel_parameters["compatible"]:
-                continue
-
             # Si no es un canal lo saltamos
             if not channel_parameters["channel"]:
                 continue
@@ -167,37 +160,18 @@ def filterchannels(category, preferred_thumb=""):
             if preferred_thumb == "bannermenu" and "bannermenu" in channel_parameters:
                 channel_parameters["thumbnail"] = channel_parameters["bannermenu"]
 
-            # si en el xml el canal está desactivado no se muestra el canal en la lista
-            if not channel_parameters["active"]:
-                continue
-
             # Se salta el canal si no está activo y no estamos activando/desactivando los canales
-            channel_status = config.get_setting("enabled", channel_parameters["channel"])
-
-            if channel_status is None:
-                # si channel_status no existe es que NO HAY valor en _data.json.
-                # como hemos llegado hasta aquí (el canal está activo en xml), se devuelve True
-                channel_status = True
-
-            # fix temporal para solucionar que enabled aparezca como "true/false"(str) y sea true/false(bool)
-            # TODO borrar este fix en la versión > 4.2.1, ya que no sería necesario
+            if config.get_setting("enabled", channel_parameters["channel"]):
+                channel_status = config.get_setting("enabled", channel_parameters["channel"])
             else:
-                if isinstance(channel_status, basestring):
-                    if channel_status == "true":
-                        channel_status = True
-                    else:
-                        channel_status = False
-                    config.set_setting("enabled", channel_status, channel_parameters["channel"])
+                channel_status = channel_parameters["active"]
 
-            if channel_status != True:
-                # si obtenemos el listado de canales desde "activar/desactivar canales", y el canal está desactivado
-                # lo mostramos, si estamos listando todos los canales desde el listado general y está desactivado,
-                # no se muestra
-                if appenddisabledchannels != True:
+            if channel_status != "true":
+                if appenddisabledchannels != "true":
                     continue
 
             # Se salta el canal para adultos si el modo adultos está desactivado
-            if channel_parameters["adult"] == True and config.get_setting("adult_mode") == 0:
+            if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") != "true":
                 continue
 
             # Se salta el canal si está en un idioma filtrado
@@ -220,7 +194,7 @@ def filterchannels(category, preferred_thumb=""):
                                      action="mainlist", thumbnail=channel_parameters["thumbnail"],
                                      fanart=channel_parameters["fanart"], category=channel_parameters["title"],
                                      language=channel_parameters["language"], viewmode="list",
-                                     version=channel_parameters["version"], context=context))
+                                     context=context))
 
         except:
             logger.error("Se ha producido un error al leer los datos del canal " + channel)
@@ -230,23 +204,23 @@ def filterchannels(category, preferred_thumb=""):
     channelslist.sort(key=lambda item: item.title.lower().strip())
 
     if category == "all":
-        if config.get_setting("personalchannel5") == True:
+        if config.get_setting("personalchannel5") == "true":
             channelslist.insert(0, Item(title=config.get_setting("personalchannelname5"), action="mainlist",
                                         channel="personal5", thumbnail=config.get_setting("personalchannellogo5"),
                                         type="generic", viewmode="list"))
-        if config.get_setting("personalchannel4") == True:
+        if config.get_setting("personalchannel4") == "true":
             channelslist.insert(0, Item(title=config.get_setting("personalchannelname4"), action="mainlist",
                                         channel="personal4", thumbnail=config.get_setting("personalchannellogo4"),
                                         type="generic", viewmode="list"))
-        if config.get_setting("personalchannel3") == True:
+        if config.get_setting("personalchannel3") == "true":
             channelslist.insert(0, Item(title=config.get_setting("personalchannelname3"), action="mainlist",
                                         channel="personal3", thumbnail=config.get_setting("personalchannellogo3"),
                                         type="generic", viewmode="list"))
-        if config.get_setting("personalchannel2") == True:
+        if config.get_setting("personalchannel2") == "true":
             channelslist.insert(0, Item(title=config.get_setting("personalchannelname2"), action="mainlist",
                                         channel="personal2", thumbnail=config.get_setting("personalchannellogo2"),
                                         type="generic", viewmode="list"))
-        if config.get_setting("personalchannel") == True:
+        if config.get_setting("personalchannel") == "true":
             channelslist.insert(0, Item(title=config.get_setting("personalchannelname"), action="mainlist",
                                         channel="personal", thumbnail=config.get_setting("personalchannellogo"),
                                         type="generic", viewmode="list"))
@@ -269,14 +243,14 @@ def get_thumbnail_path(preferred_thumb=""):
     if preferred_thumb == "":
         thumbnail_type = config.get_setting("thumbnail_type")
         if thumbnail_type == "":
-            thumbnail_type = 2
-        if thumbnail_type == 0:
-            web_path = "https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/posters/"
-        elif thumbnail_type == 1:
-            web_path = "https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/banners/"
-        elif thumbnail_type == 2:
-            web_path = "https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/"
+            thumbnail_type = "2"
+        if thumbnail_type == "0":
+            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/posters/"
+        elif thumbnail_type == "1":
+            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/banners/"
+        elif thumbnail_type == "2":
+            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/squares/"
     else:
-        web_path = "https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/" + preferred_thumb + "/"
+        web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/" + preferred_thumb + "/"
 
     return web_path

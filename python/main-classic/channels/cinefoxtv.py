@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (cinefoxtv)
+# Canal (cinefoxtv) por Hernan_Ar_c
 # ------------------------------------------------------------
 
-import re
-import sys
-import urlparse
+import urlparse,urllib2,urllib,re, time
+import os, sys, threading
 
-from core import config
-from core import httptools
 from core import logger
+from core import config
 from core import scrapertools
+from core import httptools
+from core.item import Item
 from core import servertools
 from core import tmdb
-from core.item import Item
+
+
 
 host = 'http://cinefoxtv.net/'
 headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0'],
@@ -24,50 +25,48 @@ global itemlist
 global temp_list
 canal = 'cinefoxtv'
 
-tgenero = {"Comedia":"https://s7.postimg.org/ne9g9zgwb/comedia.png",
-               "Suspenso":"https://s13.postimg.org/wmw6vl1cn/suspenso.png",
-               "Drama":"https://s16.postimg.org/94sia332d/drama.png",
-               "Acción":"https://s3.postimg.org/y6o9puflv/accion.png",
-               "Aventuras":"https://s10.postimg.org/6su40czih/aventura.png",
-               "Animacion":"https://s13.postimg.org/5on877l87/animacion.png",
-               "Ciencia Ficcion":"https://s9.postimg.org/diu70s7j3/cienciaficcion.png",
-               "Terror":"https://s7.postimg.org/yi0gij3gb/terror.png",
-               "Documentales":"https://s16.postimg.org/7xjj4bmol/documental.png",
-               "Musical":"https://s29.postimg.org/bbxmdh9c7/musical.png",
-               "Western":"https://s23.postimg.org/lzyfbjzhn/western.png",
-               "Belico":"https://s23.postimg.org/71itp9hcr/belica.png",
-               "Crimen":"https://s4.postimg.org/6z27zhirx/crimen.png",
-               "Biográfica":"https://s15.postimg.org/5lrpbx323/biografia.png",
-               "Deporte":"https://s13.postimg.org/xuxf5h06v/deporte.png",
-               "Fantástico":"https://s10.postimg.org/pbkbs6j55/fantastico.png",
-               "Estrenos":"https://s21.postimg.org/fy69wzm93/estrenos.png",
-               "Película 18+":"https://s15.postimg.org/exz7kysjf/erotica.png",
-               "Thriller":"https://s22.postimg.org/5y9g0jsu9/thriller.png",
-               "Familiar":"https://s7.postimg.org/6s7vdhqrf/familiar.png",
-               "Romanticas":"https://s21.postimg.org/xfsj7ua0n/romantica.png",
-               "Intriga":"https://s27.postimg.org/v9og43u2b/intriga.png",
-               "Infantil":"https://s23.postimg.org/g5rmazozv/infantil.png"}
+tgenero = {"Comedia":"https://s32.postimg.org/q7g2qs90l/comedia.png",
+               "Suspenso":"https://s31.postimg.org/kb629gscb/suspenso.png",
+               "Drama":"https://s32.postimg.org/e6z83sqzp/drama.png",
+               "Acción":"https://s32.postimg.org/4hp7gwh9x/accion.png",
+               "Aventuras":"https://s32.postimg.org/whwh56is5/aventura.png",
+               "Animacion":"https://s32.postimg.org/rbo1kypj9/animacion.png",
+               "Ciencia Ficcion":"https://s32.postimg.org/6hp3tsxsl/ciencia_ficcion.png",
+               "Terror":"https://s32.postimg.org/ca25xg0ed/terror.png",
+               "Documentales":"https://s32.postimg.org/7opmvc5ut/documental.png",
+               "Musical":"https://s31.postimg.org/7i32lca7f/musical.png",
+               "Western":"https://s31.postimg.org/nsksyt3hn/western.png",
+               "Belico":"https://s32.postimg.org/kjbko3xhx/belica.png",
+               "Crimen":"https://s14.postimg.org/5lez1j1gx/crimen.png",
+               "Biográfica":"https://s23.postimg.org/u49p87o3f/biografia.png",
+               "Deporte":"https://s31.postimg.org/pdc8etc0r/deporte.png",
+               "Fantástico":"https://s32.postimg.org/b6xwbui6d/fantastico.png",
+               "Estrenos":"https://s12.postimg.org/4zj0rbun1/estrenos.png",
+               "Película 18+":"https://s31.postimg.org/6kcxutv3v/erotica.png",
+               "Thriller":"https://s31.postimg.org/4d7bl25y3/thriller.png",
+               "Familiar":"https://s28.postimg.org/4wwzkt2f1/familiar.png",
+               "Romanticas":"https://s30.postimg.org/4i5sbj7n5/romantica.png",
+               "Intriga":"https://s32.postimg.org/xc2ovcqfp/intriga.png",
+               "Infantil":"https://s32.postimg.org/i53zwwgsl/infantil.png"}
 
 def mainlist(item):
     logger.info()
 
     itemlist = []
     
-    itemlist.append( item.clone (title="Todas", action="lista",thumbnail='https://s18.postimg.org/fwvaeo6qh/todas.png', fanart='https://s18.postimg.org/fwvaeo6qh/todas.png', extra='peliculas/', url = host+'page/1.html'))
+    itemlist.append( item.clone (title="Todas", action="lista",thumbnail='https://s12.postimg.org/iygbg8ip9/todas.png', fanart='https://s12.postimg.org/iygbg8ip9/todas.png', extra='peliculas/', url = host+'page/1.html'))
     
-    itemlist.append( itemlist[-1].clone (title="Generos", action="generos", thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png',url = host))
+    itemlist.append( itemlist[-1].clone (title="Generos", action="generos", thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png',url = host))
 
-    itemlist.append( itemlist[-1].clone (title="Mas Vistas", action="lista", thumbnail='https://s9.postimg.org/wmhzu9d7z/vistas.png', fanart='https://s9.postimg.org/wmhzu9d7z/vistas.png',url = host+'top-peliculas-online/1.html'))
+    itemlist.append( itemlist[-1].clone (title="Mas Vistas", action="lista", thumbnail='https://s32.postimg.org/466gt3ipx/vistas.png', fanart='https://s32.postimg.org/466gt3ipx/vistas.png',url = host+'top-peliculas-online/1.html'))
 
-    itemlist.append( itemlist[-1].clone (title="Buscar", action="search",
-                                         thumbnail='https://s30.postimg.org/pei7txpa9/buscar.png',
-                                         fanart='https://s30.postimg.org/pei7txpa9/buscar.png',url = host+'search/'))
+    itemlist.append( itemlist[-1].clone (title="Buscar", action="search", thumbnail='https://s31.postimg.org/qose4p13f/Buscar.png', fanart='https://s31.postimg.org/qose4p13f/Buscar.png',url = host+'tag/'))
 
     return itemlist
 
 
 def lista (item):
-    logger.info()
+    logger.info ()
     itemlist =[]
     duplicado = []
     max_items = 24
@@ -75,8 +74,10 @@ def lista (item):
 
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|&nbsp;|<br>", "", data)
+    if item.title == 'Todas':
+      data = scrapertools.find_single_match(data,'<h3>Ver Últimas Peliculas Completa Online Gratis Agregadas.*?clearall')
     data = scrapertools.decodeHtmlentities(data)
-    patron = '"box_image_b.*?"><a href="([^"]+)" title=".*?><img src="([^"]+)" alt="(.*?)(\d{4}).*?"'
+    patron = '"box_image_b"><a href="([^"]+)" title=".*?><img src="([^"]+)" alt="(.*?)(\d{4}).*?"'
     matches = re.compile(patron,re.DOTALL).findall(data)
 
     if item.next_page != 'b':
@@ -107,11 +108,11 @@ def lista (item):
 
     tmdb.set_infoLabels_itemlist(itemlist, seekTmdb = True)
     if next_page_url !='':
-      itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page_url, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png',extra=item.extra, next_page = next_page))
+      itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page_url, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png',extra=item.extra, next_page = next_page))
     return itemlist
 
 def generos (item):
-    logger.info()
+    logger.info ()
     
     itemlist = []
 
@@ -135,7 +136,7 @@ def generos (item):
 
 def getinfo(page_url):
     
-    logger.info()
+    logger.info ()
     data = httptools.downloadpage(page_url).data
     plot = scrapertools.find_single_match(data,'<\/em>\.(?:\s*|.)(.*?)\s*<\/p>')
     info = plot
@@ -143,7 +144,7 @@ def getinfo(page_url):
     return info
 
 def findvideos(item):
-    logger.info()
+    logger.info ()
     itemlist =[]
     info = getinfo(item.url)
     data = httptools.downloadpage(item.url, headers = headers).data
@@ -169,7 +170,7 @@ def findvideos(item):
 def search(item,texto):
     logger.info()
     texto = texto.replace(" ","-")
-    item.url = item.url+texto
+    item.url = item.url+texto+'/'
     if texto!='':
        return lista(item)
 

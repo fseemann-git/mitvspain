@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para vidup.me
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -16,7 +16,7 @@ def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
 
     data = httptools.downloadpage(page_url).data
-
+    
     if "Not Found" in data:
         return False, "[Vidup.me] El fichero no existe o ha sido borrado"
 
@@ -31,7 +31,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     key = scrapertools.find_single_match(data, "var mpri_Key\s*=\s*'([^']+)'")
     data_vt = httptools.downloadpage("http://vidup.me/jwv/%s" % key).data
     vt = scrapertools.find_single_match(data_vt, 'direct\|([^\|]+)\|')
-
+    
     # Extrae la URL
     video_urls = []
     media_urls = scrapertools.find_multiple_matches(data, '\{"file"\:"([^"]+)","label"\:"([^"]+)"\}')
@@ -48,12 +48,13 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 
 # Encuentra vídeos del servidor en el texto pasado
 def find_videos(data):
+
     # Añade manualmente algunos erróneos para evitarlos
     encontrados = set()
     devuelve = []
 
-    # http://vidup.me/z3nnqbspjyne
-    # http://vidup.me/embed-z3nnqbspjyne
+    #http://vidup.me/z3nnqbspjyne
+    #http://vidup.me/embed-z3nnqbspjyne
     patronvideos = 'vidup.me/(?:embed-|)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)

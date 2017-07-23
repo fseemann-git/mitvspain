@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# MiTvSpain - XBMC Plugin
 # Conector para bitvidsx ex videoweed
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+
 # ------------------------------------------------------------
 
 import re
@@ -27,7 +27,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     logger.info("(page_url='%s')" % page_url)
     data = httptools.downloadpage(page_url).data
 
-    video_urls = []
+    video_urls = [] 
     videourls = scrapertools.find_multiple_matches(data, 'src\s*:\s*[\'"]([^\'"]+)[\'"]')
     if not videourls:
         videourls = scrapertools.find_multiple_matches(data, '<source src=[\'"]([^\'"]+)[\'"]')
@@ -48,7 +48,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
 # Encuentra vídeos del servidor en el texto pasado
 def find_videos(data):
     encontrados = set()
-    devuelve = []
+    devuelve = []    
     data = data.replace('videoweed.es', 'bitvid.sx')
 
     patronvideos = '(?:embed.|)bitvid.sx/(?:file/|embed/\?v=)([A-z0-9]{13})'
@@ -65,17 +65,17 @@ def find_videos(data):
             encontrados.add(url)
         else:
             logger.info("  url duplicada=" + url)
-
-    # rep="/rep2.php?vw=wuogenrzatq40&t=18&c=13"
+           
+    #rep="/rep2.php?vw=wuogenrzatq40&t=18&c=13"
     patronvideos = 'src="" rep="([^"]+)" width="([^"]+)" height="([^"]+)"'
     logger.info("#" + patronvideos + "#")
-    matches = re.compile(patronvideos, re.DOTALL).findall(data)
+    matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:
         titulo = "[bitvidsx]"
         url = match[0]
         url = url.replace("/rep2.php?vw=", "http://www.bitvid.sx/embed/?v=")
-
+        
         if url not in encontrados:
             logger.info("  url=" + url)
             devuelve.append([titulo, url, 'bitvidsx'])

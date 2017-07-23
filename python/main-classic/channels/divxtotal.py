@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
+# mitvspain - XBMC Plugin
 # Canal para Divxtotal
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# 
 #------------------------------------------------------------
 import string
 import os
@@ -23,7 +23,6 @@ from core.scrapertools import decodeHtmlentities as dhe
 import unicodedata
 from threading import Thread
 
-header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0'}
 
 ACTION_SHOW_FULLSCREEN = 36
 ACTION_GESTURE_SWIPE_LEFT = 511
@@ -37,8 +36,9 @@ OPTION_PANEL = 6
 OPTIONS_OK = 5
 
 
-__modo_grafico__ = config.get_setting('modo_grafico', "divxtotal")
+__modo_grafico__ = config.get_setting('modo_grafico', "borrachodetorrent")
 
+DEBUG = config.get_setting("debug")
 
 #Para la busqueda en bing evitando baneos
 
@@ -79,17 +79,17 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 
 def mainlist(item):
-    logger.info()
+    
+    logger.info("mitvspain.divxtotal mainlist")
     itemlist=[]
     itemlist.append( item.clone(title="[COLOR orange][B]Películas[/B][/COLOR]", action="scraper",url="http://www.divxtotal.com/peliculas/",thumbnail="http://imgur.com/A4zN3OP.png", fanart="http://imgur.com/fdntKsy.jpg",contentType= "movie"))
-    itemlist.append( item.clone(title="[COLOR orange][B]        Películas HD[/B][/COLOR]", action="scraper",url="http://www.divxtotal.com/peliculas-hd/",thumbnail="http://imgur.com/A4zN3OP.png", fanart="http://imgur.com/fdntKsy.jpg",contentType= "movie"))
     itemlist.append( itemlist[-1].clone(title="[COLOR orange][B]Series[/B][/COLOR]", action="scraper",url="http://www.divxtotal.com/series/",thumbnail="http://imgur.com/GPX2wLt.png",contentType="tvshow"))
     
     itemlist.append( itemlist[-1].clone(title="[COLOR orangered][B]Buscar[/B][/COLOR]", action="search",thumbnail="http://imgur.com/aiJmi3Z.png"))
     return itemlist
 
 def search(item,texto):
-    logger.info()
+    logger.info("mitvspain.divxtotal search")
     texto = texto.replace(" ","+")
     item.url = "http://www.divxtotal.com/?s="+texto
     item.extra="search"
@@ -102,15 +102,15 @@ def search(item,texto):
         return []
 
 def buscador(item):
-    logger.info()
+    logger.info("mitvspain.divxtotal buscador")
     itemlist=[]
-    data = httptools.downloadpage(item.url,headers=header, cookies=False).data
-    data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
+    data = httptools.downloadpage(item.url).data
+    data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data) 
+    patron=scrapertools.find_multiple_matches(data,'<p class="seccontnom"><img src="([^"]+)".*?href="([^"]+)" title="([^"]+)".+?<p class="seccontgen">(.*?)</p>')
     
-    patron=scrapertools.find_multiple_matches(data,'<tr><td class="text-left"><a href="([^"]+)" title="([^"]+)">.*?-left">(.*?)</td>')
-    
-    for url,title,check in patron :
-        
+    for thumb,url,title,check in patron :
+        logger.info("pacooo")        
+        logger.info(check)
         if "N/A" in check:
             checkmt="tvshow"
             
@@ -118,24 +118,18 @@ def buscador(item):
             checkmt="movie"
             
         titulo = title 
-        title= re.sub(r"!|¡|HD|\d+\d+\d+\d+|\(.*?\).*\[.*?]\]","",title)
+        title= re.sub(r"!|¡","",title)
         title= re.sub(r"&#8217;|PRE-Estreno","'",title)
         
         if checkmt =="movie":
-         new_item= item.clone(action="findvideos", title=titulo, url=url, fulltitle=title,contentTitle=title, contentType="movie",library=True)
+         new_item= item.clone(action="findvideos", title=titulo, url=url, thumbnail=thumb,fulltitle=title,contentTitle=title, contentType="movie",library=True)
         else:
           if item.extra=="search":  
-             new_item= item.clone(action="findtemporadas", title=titulo, url=url, fulltitle=title,contentTitle=title, show=title,contentType="tvshow",library=True)
+             new_item= item.clone(action="findtemporadas", title=titulo, url=url, thumbnail=thumb,fulltitle=title,contentTitle=title, show=title,contentType="tvshow",library=True)
           else:
-             new_item= item.clone(action="findvideos", title=titulo, url=url, fulltitle=title,contentTitle=title, show=title,contentType="tvshow",library=True)   
+             new_item= item.clone(action="findvideos", title=titulo, url=url, thumbnail=thumb,fulltitle=title,contentTitle=title, show=title,contentType="tvshow",library=True)   
         new_item.infoLabels['year'] = get_year(url)
         itemlist.append(new_item) 
-    ## Paginación
-    next=scrapertools.find_single_match(data,"<ul class=\"pagination\">.*?\(current\).*?href='([^']+)'")
-    if len(next)>0:
-        url =next
-       
-        itemlist.append(item.clone( title="[COLOR springgreen][B]Siguiente >>[/B][/COLOR]",action="buscador", url=url))
 
     try:
         from core import tmdb
@@ -149,24 +143,28 @@ def buscador(item):
               item.title= item.title+ "  "+ str(item.infoLabels['rating'])
     except:
            pass
-    
+    ## Paginación
+    next=scrapertools.find_single_match(data,"<div class=\"pagination\">.*?class='current'>.*?href='([^']+)'")
+    if len(next)>0:
+        url =next
+       
+        itemlist.append(item.clone( title="[COLOR springgreen][B]Siguiente >>[/B][/COLOR]",action="buscador", url=url))
     return itemlist
 
 def scraper(item):
-    logger.info()
+    logger.info("mitvspain.divxtotal scraper")
     itemlist=[]
-    data = httptools.downloadpage(item.url,headers=header, cookies=False).data
-    data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
+    data = httptools.downloadpage(item.url).data
     
     
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
     
     if item.contentType=="movie":
-       patron =scrapertools.find_multiple_matches(data, '<tr><td><a href="([^"]+)" title="([^"]+)".*?\d+-\d+-([^"]+)</td><td>')
+       patron =scrapertools.find_multiple_matches(data, '<p class="seccontnom"><a href="([^"]+)" title="([^"]+)".*?"seccontfetam">\d+-\d+-([^"]+)</p>')
        
        for url,title,year in patron:
-           titulo = re.sub(r"\d+\d+\d+\d+|\(.*?\).*","",title)
-           title= re.sub(r"!|¡|HD|\d+\d+\d+\d+|\(.*?\).*","",title)
+           titulo = title 
+           title= re.sub(r"!|¡","",title)
            title=title.replace("Autosia","Autopsia")
            title= re.sub(r"&#8217;|PRE-Estreno","'",title)
            new_item= item.clone(action="findvideos", title="[COLOR orange]"+titulo+"[/COLOR]", url=url, fulltitle=title,contentTitle=title, contentType="movie",extra=year,library=True)
@@ -176,11 +174,11 @@ def scraper(item):
           
     else:     
         
-       patron =scrapertools.find_multiple_matches(data, '<p class="secconimagen"><a href="([^"]+)" title="[^"]+"><img src="([^"]+)".*?title="[^"]+">([^"]+)</a>')
+       patron =scrapertools.find_multiple_matches(data, '<li class="series_section_item2"><p class="secconimagen">.*?<img src="([^"]+)".*?<p class="seccontnom"><a href=\'([^\']+)\' title=".*?">(.*?)</a>')
        
-       for url,thumb,title in patron:
+       for thumb,url,title in patron:
            titulo = title.strip() 
-           title= re.sub(r"\d+x.*|\(.*?\)","",title)
+           title= re.sub(r"\d+x.*","",title)
            new_item = item.clone(action="findvideos", title="[COLOR orange]"+titulo+"[/COLOR]", url=url, thumbnail=thumb,
                               fulltitle=title,contentTitle=title,show=title,contentType="tvshow",library=True)
            new_item.infoLabels['year'] = get_year(url)                   
@@ -189,7 +187,7 @@ def scraper(item):
     
            
     ## Paginación
-    next=scrapertools.find_single_match(data,"<ul class=\"pagination\">.*?\(current\).*?href='([^']+)'")
+    next=scrapertools.find_single_match(data,"<div class=\"pagination\">.*?class='current'>.*?href='([^']+)'")
     if len(next)>0:
         url =next
         
@@ -218,7 +216,7 @@ def scraper(item):
 
 
 def findtemporadas(item):
-    logger.info()
+    logger.info("mitvspain.divxtotal findtempordas")
     itemlist = []
     
     if item.extra=="search":
@@ -286,12 +284,12 @@ def findtemporadas(item):
     return itemlist
 
 def epis(item):
-    logger.info()
+    logger.info("mitvspain.divxtotal epis") 
     itemlist = []
     if item.extra=="serie_add":
        item.url=item.datalibrary
-      
-    patron= scrapertools.find_multiple_matches(item.url,'<td><img src=".*?images/(.*?)\.png.*?<a href="([^"]+)" title="">.*?(\d+x\d+).*?td>')
+       
+    patron= scrapertools.find_multiple_matches(item.url,'"capitulonombre"><img src=".*?images/(.*?)\.png.*?<a href="([^"]+)" title="">.*?(\d+x\d+).*?td>')
     for idioma,url,epi in patron:
         episodio= scrapertools.find_single_match(epi,'\d+x(\d+)')
         item.infoLabels['episode']=episodio	
@@ -304,7 +302,7 @@ def epis(item):
            item.title = item.title + " -- \""+ title +"\""
     return itemlist
 def findvideos(item):
-    logger.info()
+    logger.info("mitvspain.divxtotal findvideos")
     itemlist = []
     data = httptools.downloadpage(item.url).data
      
@@ -348,7 +346,7 @@ def findvideos(item):
           itemlist.append( Item(channel=item.channel,title = "[COLOR moccasin][B]Todos los episodios[/B][/COLOR]", url=item.url,  action="findtemporadas",server="torrent", fanart=item.extra.split("|")[1],thumbnail= item.thumbnail,extra=item.extra+"|"+item.thumbnail,contentType=item.contentType,contentTitle=item.contentTitle, InfoLabels=item.infoLabels,thumb_art=item.thumb_art,thumb_info=item.thumbnail,fulltitle=item.fulltitle,library=item.library, folder=True) )
       
     else:   
-     url= scrapertools.find_single_match(data,'<h3 class="orange text-center">.*?href="([^"]+)"')   
+     url= scrapertools.find_single_match(data,'<h3>.*?href="([^"]+)"')   
      item.infoLabels['year']=None
      ext_v,size=ext_size(url)
      itemlist.append( Item(channel=item.channel, title = "[COLOR saddlebrown][B]Torrent [/B][/COLOR]"+"-"+"[COLOR khaki] ( Video"+"[/COLOR]"+" "+"[COLOR khaki]"+ext_v+"[/COLOR]"+" "+"[COLOR khaki] "+size+" )"+"[/COLOR]", url=url,  action="play",server="torrent", fanart=item.fanart,thumbnail= item.thumbnail,extra=item.extra,InfoLabels=item.infoLabels, folder=False) )
@@ -365,7 +363,7 @@ def findvideos(item):
 
 
 def info_capitulos(item,images={}):
-    logger.info()
+    logger.info("mitvspain.divxtotal info_capitulos")
     try:
         url="http://thetvdb.com/api/1D62F2F90030C444/series/"+str(item.InfoLabels['tvdb_id'])+"/default/"+str(item.InfoLabels['season'])+"/"+str(item.InfoLabels['episode'])+"/es.xml"
         if "/0" in url:
@@ -550,7 +548,6 @@ def fanartv(item, id_tvdb,id, images={}):
     if item.contentType == "movie":
         url = "http://webservice.fanart.tv/v3/movies/%s?api_key=cab16e262d72fea6a6843d679aa10300" \
                   % id
-                 
     else:
         url = "http://webservice.fanart.tv/v3/tv/%s?api_key=cab16e262d72fea6a6843d679aa10300" % id_tvdb
     try:
@@ -668,7 +665,7 @@ def filmaffinity(item,infoLabels):
 
 
 def get_art(item):
-    logger.info()
+    logger.info("mitvspain.divxtotal get_art")
     id =item.infoLabels['tmdb_id']
     check_fanart=item.infoLabels['fanart']
     if item.contentType!="movie":
@@ -895,11 +892,11 @@ def get_art(item):
         item.extra=item.extra+"|"+item.thumbnail
 
 def get_year(url):
-    data = httptools.downloadpage(url,headers=header, cookies=False).data
+    data=httptools.downloadpage(url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
-    year = scrapertools.find_single_match(data,'<h3>.*?(\d+\d+\d+\d+)')
+    year = scrapertools.find_single_match(data,'</h3><br/>.*?(\d+\d+\d+\d+)<br/>')
     if year =="":
-       year=" "
+       year="1111"
     return year
 def ext_size(url):
      torrents_path = config.get_library_path()+'/torrents'

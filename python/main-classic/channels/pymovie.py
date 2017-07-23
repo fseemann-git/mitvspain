@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# Canal (pymovie)
+# Canal (pymovie) por Hernan_Ar_c
 # ------------------------------------------------------------
 
-import re
-import sys
+import urlparse,urllib2,urllib,re
+import os, sys
 
-from core import config
-from core import httptools
 from core import logger
+from core import config
 from core import scrapertools
-from core import servertools
 from core.item import Item
+from core import servertools
+from core import httptools
 
 host ="http://www.pymovie.com.mx"
 
@@ -19,27 +19,27 @@ headers = [['User-Agent', 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/2
           ['Referer', host]]
 
 
-tgenero = {"comedia":"https://s7.postimg.org/ne9g9zgwb/comedia.png",
-           "drama":"https://s16.postimg.org/94sia332d/drama.png",
-           "accion":"https://s3.postimg.org/y6o9puflv/accion.png",
-           "aventura":"https://s10.postimg.org/6su40czih/aventura.png",
-           "romance":"https://s15.postimg.org/fb5j8cl63/romance.png",
-           "animacion":"https://s13.postimg.org/5on877l87/animacion.png",
-           "ciencia ficcion":"https://s9.postimg.org/diu70s7j3/cienciaficcion.png",
-           "terror":"https://s7.postimg.org/yi0gij3gb/terror.png",
-           "musical":"https://s29.postimg.org/bbxmdh9c7/musical.png",
-           "deporte":"https://s13.postimg.org/xuxf5h06v/deporte.png",
-           "artes Marciales":"https://s24.postimg.org/w1aw45j5h/artesmarciales.png",
-           "intriga":"https://s27.postimg.org/v9og43u2b/intriga.png",
-           "infantil":"https://s23.postimg.org/g5rmazozv/infantil.png",
-           "mexicanas":"https://s3.postimg.org/p36ntnxfn/mexicana.png",
-           "espionaje":"https://s2.postimg.org/5hv64b989/espionaje.png",
-           "biografia":"https://s15.postimg.org/5lrpbx323/biografia.png"}
+tgenero = {"comedia":"https://s32.postimg.org/q7g2qs90l/comedia.png",
+           "drama":"https://s32.postimg.org/e6z83sqzp/drama.png",
+           "accion":"https://s32.postimg.org/4hp7gwh9x/accion.png",
+           "aventura":"https://s32.postimg.org/whwh56is5/aventura.png",
+           "romance":"https://s31.postimg.org/y7vai8dln/romance.png",
+           "animacion":"https://s32.postimg.org/rbo1kypj9/animacion.png",
+           "ciencia ficcion":"https://s32.postimg.org/6hp3tsxsl/ciencia_ficcion.png",
+           "terror":"https://s32.postimg.org/ca25xg0ed/terror.png",
+           "musical":"https://s31.postimg.org/7i32lca7f/musical.png",
+           "deporte":"https://s31.postimg.org/pdc8etc0r/deporte.png",
+           "artes Marciales":"https://s32.postimg.org/5e80taodh/artes_marciales.png",
+           "intriga":"https://s32.postimg.org/xc2ovcqfp/intriga.png",
+           "infantil":"https://s32.postimg.org/i53zwwgsl/infantil.png",
+           "mexicanas":"https://s30.postimg.org/rplllq9wx/mexicana.png",
+           "espionaje":"https://s30.postimg.org/myjqzg6xt/espionaje.png",
+           "biografia":"https://s23.postimg.org/u49p87o3f/biografia.png"}
 
 
 tcalidad = {'hd-1080':'[COLOR limegreen]HD-1080[/COLOR]','hd-720':'[COLOR limegreen]HD-720[/COLOR]','blueray':'[COLOR limegreen]BLUERAY[/COLOR]','dvd':'[COLOR limegreen]DVD[/COLOR]','cam':'[COLOR red]CAM[/COLOR]'}
 
-tcalidad2 = {'hd-1080':'https://s21.postimg.org/4h1s0t1wn/hd1080.png','hd-720':'https://s12.postimg.org/lthu7v4q5/hd720.png','blueray':'','dvd':'https://s1.postimg.org/m89hus1tb/dvd.png','cam':'https://s11.postimg.org/ad4o5wpz7/cam.png'}
+tcalidad2 = {'hd-1080':'https://s24.postimg.org/vto15vajp/hd1080.png','hd-720':'https://s28.postimg.org/wllbt2kgd/hd720.png','blueray':'','dvd':'https://s31.postimg.org/6sksfqarf/dvd.png','cam':'https://s29.postimg.org/c7em44e9j/cam.png'}
 
 
 def mainlist(item):
@@ -47,11 +47,11 @@ def mainlist(item):
 
     itemlist = []
     
-    itemlist.append( item.clone(title="Peliculas", action="menupeliculas",thumbnail='https://s8.postimg.org/6wqwy2c2t/peliculas.png', fanart='https://s8.postimg.org/6wqwy2c2t/peliculas.png', extra='peliculas/'))
+    itemlist.append( item.clone(title="Peliculas", action="menupeliculas",thumbnail='https://s31.postimg.org/4g4lytrqj/peliculas.png', fanart='https://s31.postimg.org/4g4lytrqj/peliculas.png', extra='peliculas/'))
     
-    itemlist.append( itemlist[-1].clone(title="Series", action="menuseries",thumbnail='https://s27.postimg.org/iahczwgrn/series.png', fanart='https://s27.postimg.org/iahczwgrn/series.png', extra='peliculas/'))
+    itemlist.append( itemlist[-1].clone(title="Series", action="menuseries",thumbnail='https://s32.postimg.org/544rx8n51/series.png', fanart='https://s32.postimg.org/544rx8n51/series.png', extra='peliculas/'))
     
-    itemlist.append( itemlist[-1].clone (title="Documentales", action="menudocumental",thumbnail='https://s16.postimg.org/7xjj4bmol/documental.png', fanart='https://s16.postimg.org/7xjj4bmol/documental.png', extra='documental'))
+    itemlist.append( itemlist[-1].clone (title="Documentales", action="menudocumental",thumbnail='https://s21.postimg.org/i9clk3u6v/documental.png', fanart='https://s21.postimg.org/i9clk3u6v/documental.png', extra='documental'))
     
     return itemlist
 
@@ -60,21 +60,21 @@ def menupeliculas(item):
     logger.info()
     itemlist = []
     
-    itemlist.append( Item(channel=item.channel, title="Ultimas", action="lista", url=host+'/Ordenar/Estreno/?page=1', thumbnail='https://s22.postimg.org/cb7nmhwv5/ultimas.png', fanart='https://s22.postimg.org/cb7nmhwv5/ultimas.png', extra='Estreno'))
+    itemlist.append( Item(channel=item.channel, title="Ultimas", action="lista", url=host+'/Ordenar/Estreno/?page=1', thumbnail='https://s31.postimg.org/3ua9kwg23/ultimas.png', fanart='https://s31.postimg.org/3ua9kwg23/ultimas.png', extra='Estreno'))
 
-    itemlist.append( Item(channel=item.channel, title="Todas", action="lista", url=host+'?page=1', thumbnail='https://s18.postimg.org/fwvaeo6qh/todas.png', fanart='https://s18.postimg.org/fwvaeo6qh/todas.png', extra='todas'))
+    itemlist.append( Item(channel=item.channel, title="Todas", action="lista", url=host+'?page=1', thumbnail='https://s12.postimg.org/iygbg8ip9/todas.png', fanart='https://s12.postimg.org/iygbg8ip9/todas.png', extra='todas'))
     
-    itemlist.append( Item(channel=item.channel, title="Generos", action="seccion", url=host, thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png', extra='generos'))
+    itemlist.append( Item(channel=item.channel, title="Generos", action="seccion", url=host, thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png', extra='generos'))
 
-    itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lista", url=host+'/Ordenar/Alfabetico/?page=1', thumbnail='https://s17.postimg.org/fwi1y99en/a-z.png', fanart='https://s17.postimg.org/fwi1y99en/a-z.png', extra='Alfabetico'))
+    itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lista", url=host+'/Ordenar/Alfabetico/?page=1', thumbnail='https://s31.postimg.org/c3bm9cnl7/a_z.png', fanart='https://s31.postimg.org/c3bm9cnl7/a_z.png', extra='Alfabetico'))
 
-    itemlist.append( Item(channel=item.channel, title="Calidad", action="seccion", url=host, thumbnail='https://s13.postimg.org/6nzv8nlkn/calidad.png', fanart='https://s13.postimg.org/6nzv8nlkn/calidad.png', extra='calidad'))
+    itemlist.append( Item(channel=item.channel, title="Calidad", action="seccion", url=host, thumbnail='https://s23.postimg.org/ui42030wb/calidad.png', fanart='https://s23.postimg.org/ui42030wb/calidad.png', extra='calidad'))
 
-    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host+'/Ordenar/MasVistas/?page=1', thumbnail='https://s9.postimg.org/wmhzu9d7z/vistas.png', fanart='https://s9.postimg.org/wmhzu9d7z/vistas.png', extra='Estreno'))
+    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host+'/Ordenar/MasVistas/?page=1', thumbnail='https://s32.postimg.org/466gt3ipx/vistas.png', fanart='https://s32.postimg.org/466gt3ipx/vistas.png', extra='Estreno'))
 
-    itemlist.append( Item(channel=item.channel, title="Mas Votadas", action="lista", url=host+'/Ordenar/MasVotos/?page=1', thumbnail='https://s7.postimg.org/9kg1nthzf/votadas.png', fanart='https://s7.postimg.org/9kg1nthzf/votadas.png', extra='Estreno'))
+    itemlist.append( Item(channel=item.channel, title="Mas Votadas", action="lista", url=host+'/Ordenar/MasVotos/?page=1', thumbnail='https://s31.postimg.org/9ooh78xej/votadas.png', fanart='https://s31.postimg.org/9ooh78xej/votadas.png', extra='Estreno'))
 
-    itemlist.append( Item(channel=item.channel, title="Calificacion", action="lista", url=host+'/Ordenar/Calificacion/?page=1', thumbnail='https://s18.postimg.org/mjqrl49h5/calificacion.png', fanart='https://s18.postimg.org/mjqrl49h5/calificacion.png', extra='Estreno'))
+    itemlist.append( Item(channel=item.channel, title="Calificacion", action="lista", url=host+'/Ordenar/Calificacion/?page=1', thumbnail='https://s28.postimg.org/r1xdh0xz1/calificacion.png', fanart='https://s28.postimg.org/r1xdh0xz1/calificacion.png', extra='Estreno'))
     
     return itemlist
 
@@ -84,18 +84,18 @@ def menuseries(item):
     logger.info()
     itemlist = []
     
-    itemlist.append( Item(channel=item.channel, title="Ultimas", action="lista", url=host+"/Series-estreno/?page=1",thumbnail='https://s22.postimg.org/cb7nmhwv5/ultimas.png', fanart='https://s22.postimg.org/cb7nmhwv5/ultimas.png', extra='series'))
+    itemlist.append( Item(channel=item.channel, title="Ultimas", action="lista", url=host+"/Series-estreno/?page=1",thumbnail='https://s31.postimg.org/3ua9kwg23/ultimas.png', fanart='https://s31.postimg.org/3ua9kwg23/ultimas.png', extra='series'))
         
-    itemlist.append( Item(channel=item.channel, title="Generos", action="seccion", url=host, thumbnail='https://s3.postimg.org/5s9jg2wtf/generos.png', fanart='https://s3.postimg.org/5s9jg2wtf/generos.png', extra='series-generos'))
+    itemlist.append( Item(channel=item.channel, title="Generos", action="seccion", url=host, thumbnail='https://s31.postimg.org/szbr0gmkb/generos.png', fanart='https://s31.postimg.org/szbr0gmkb/generos.png', extra='series-generos'))
 
-    itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lista", url=host+'/Ordernar-Serie/Alfabetico/?page=1', thumbnail='https://s17.postimg.org/fwi1y99en/a-z.png', fanart='https://s17.postimg.org/fwi1y99en/a-z.png', extra='series-alpha'))
+    itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lista", url=host+'/Ordernar-Serie/Alfabetico/?page=1', thumbnail='https://s31.postimg.org/c3bm9cnl7/a_z.png', fanart='https://s31.postimg.org/c3bm9cnl7/a_z.png', extra='series-alpha'))
 
    
-    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host+'/Ordernar-Serie/MasVistas/?page=1', thumbnail='https://s9.postimg.org/wmhzu9d7z/vistas.png', fanart='https://s9.postimg.org/wmhzu9d7z/vistas.png', extra='series-masvistas'))
+    itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host+'/Ordernar-Serie/MasVistas/?page=1', thumbnail='https://s32.postimg.org/466gt3ipx/vistas.png', fanart='https://s32.postimg.org/466gt3ipx/vistas.png', extra='series-masvistas'))
 
-    itemlist.append( Item(channel=item.channel, title="Mas Votadas", action="lista", url=host+'/Ordernar-Serie/Masvotos/?page=1', thumbnail='https://s7.postimg.org/9kg1nthzf/votadas.png', fanart='https://s7.postimg.org/9kg1nthzf/votadas.png', extra='series-masvotadas'))
+    itemlist.append( Item(channel=item.channel, title="Mas Votadas", action="lista", url=host+'/Ordernar-Serie/Masvotos/?page=1', thumbnail='https://s31.postimg.org/9ooh78xej/votadas.png', fanart='https://s31.postimg.org/9ooh78xej/votadas.png', extra='series-masvotadas'))
 
-    itemlist.append( Item(channel=item.channel, title="Recomendadas", action="lista", url=host+'/Ordernar-Serie/Recomendadas/?page=1', thumbnail='https://s12.postimg.org/s881laywd/recomendadas.png', fanart='https://s12.postimg.org/s881laywd/recomendadas.png', extra='series-recomendadas'))
+    itemlist.append( Item(channel=item.channel, title="Recomendadas", action="lista", url=host+'/Ordernar-Serie/Recomendadas/?page=1', thumbnail='https://s31.postimg.org/4bsjyc4iz/recomendadas.png', fanart='https://s31.postimg.org/4bsjyc4iz/recomendadas.png', extra='series-recomendadas'))
     
         
     return itemlist
@@ -104,11 +104,11 @@ def menudocumental(item):
 	logger.info()
 	itemlist =[]
 
-	itemlist.append( Item(channel=item.channel, title="Todas", action="lista", url=host+"/Documentales/?page=1",thumbnail='https://s18.postimg.org/fwvaeo6qh/todas.png', fanart='https://s18.postimg.org/fwvaeo6qh/todas.png', extra='documental'))
+	itemlist.append( Item(channel=item.channel, title="Todas", action="lista", url=host+"/Documentales/?page=1",thumbnail='https://s12.postimg.org/iygbg8ip9/todas.png', fanart='https://s12.postimg.org/iygbg8ip9/todas.png', extra='documental'))
 
-	itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lista", url=host+"/OrdenarDocumental/Alfabetico/?page=1",thumbnail='https://s17.postimg.org/fwi1y99en/a-z.png', fanart='https://s17.postimg.org/fwi1y99en/a-z.png', extra='documental'))
+	itemlist.append( Item(channel=item.channel, title="Alfabetico", action="lista", url=host+"/OrdenarDocumental/Alfabetico/?page=1",thumbnail='https://s31.postimg.org/c3bm9cnl7/a_z.png', fanart='https://s31.postimg.org/c3bm9cnl7/a_z.png', extra='documental'))
 
-	itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host+"/OrdenarDocumental/MasVistas/?page=1",thumbnail='https://s9.postimg.org/wmhzu9d7z/vistas.png', fanart='https://s9.postimg.org/wmhzu9d7z/vistas.png', extra='documental'))
+	itemlist.append( Item(channel=item.channel, title="Mas Vistas", action="lista", url=host+"/OrdenarDocumental/MasVistas/?page=1",thumbnail='https://s32.postimg.org/466gt3ipx/vistas.png', fanart='https://s32.postimg.org/466gt3ipx/vistas.png', extra='documental'))
 
 	
 
@@ -162,8 +162,9 @@ def lista(item):
         while item.url[-1] != '=':
         	item.url=item.url[:-1]
         next_page_url= item.url+next_page
+        import inspect
         if next_page !='':
-           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page_url, thumbnail='https://s16.postimg.org/9okdu7hhx/siguiente.png',extra=item.extra))
+           itemlist.append(Item(channel = item.channel, action = "lista", title = 'Siguiente >>>', url = next_page_url, thumbnail='https://s32.postimg.org/4zppxf5j9/siguiente.png',extra=item.extra))
     return itemlist
     
 

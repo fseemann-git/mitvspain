@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------
-# pelisalacarta - XBMC Plugin
-# ayuda - Videos de ayuda y tutoriales para pelisalacarta
-# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
+# mitvspain - XBMC Plugin
+# ayuda - Videos de ayuda y tutoriales para mitvspain
+# 
+# contribuci?n de jurrabi
 # ----------------------------------------------------------------------
 import os
 
@@ -51,6 +52,10 @@ def mainlist(item):
         itemlist.append(Item(channel=item.channel, action="", title="FAQ:",
                              thumbnail=get_thumbnail_path("thumb_ayuda.png"),
                              folder=False))
+        itemlist.append(Item(channel=item.channel, action="faq",
+                             title="    - ¿Como reportar un error?",
+                             thumbnail=get_thumbnail_path("thumb_ayuda.png"),
+                             folder=False, extra="report_error"))
         itemlist.append(Item(channel=item.channel, action="faq",
                              title="    - ¿Se pueden filtrar los enlaces?",
                              thumbnail=get_thumbnail_path("thumb_ayuda.png"),
@@ -117,9 +122,9 @@ def mainlist(item):
         from core import channeltools
         title = "Activar cuenta real-debrid (No activada)"
         action = "realdebrid"
-        token_auth = config.get_setting("token", server="realdebrid")
-        if not config.get_setting("premium", server="realdebrid"):
-            title = "Activar cuenta real-debrid (Marca la casilla en la ventana de configuración de pelisalacarta para continuar)"
+        token_auth = channeltools.get_channel_setting("realdebrid_token", "realdebrid")
+        if config.get_setting("realdebridpremium") == "false":
+            title = "Activar cuenta real-debrid (Marca la casilla en la ventana de configuración de mitvspain para continuar)"
             action = ""
         elif token_auth:
             title = "Activar cuenta real-debrid (Activada correctamente)"
@@ -131,7 +136,7 @@ def mainlist(item):
 def faq(item):
 
     if item.extra == "filtrar_enlaces":
-        respuesta = platformtools.dialog_yesno("pelisalacarta",
+        respuesta = platformtools.dialog_yesno("mitvspain",
                                                "Puedes configurar el filtro en 'Configuración'>Preferencias'>'Otros'.",
                                                "RECOMENDACIÓN: Pon los nombres en minúsculas, "
                                                "sin tildes y separados por una coma y un espacio.",
@@ -141,7 +146,7 @@ def faq(item):
             configuracion.settings("")
 
     elif item.extra == "onoff_canales":
-        respuesta = platformtools.dialog_yesno("pelisalacarta",
+        respuesta = platformtools.dialog_yesno("mitvspain",
                                                "Esto se puede hacer en 'Configuración'>'Activar/Desactivar canales'. "
                                                "Puedes activar/desactivar los canales uno por uno o todos a la vez. ",
                                                "¿Deseas gestionar ahora los canales?")
@@ -150,7 +155,7 @@ def faq(item):
             configuracion.conf_tools(Item(extra='channels_onoff'))
 
     elif item.extra == "trakt_sync":
-        respuesta = platformtools.dialog_yesno("pelisalacarta",
+        respuesta = platformtools.dialog_yesno("mitvspain",
                                                "Actualmente se puede activar la sincronización (silenciosa) "
                                                "tras marcar como visto un episodio (esto se hace automáticamente). "
                                                "Esta opción se puede activar en 'Configuración'>'Ajustes "
@@ -161,7 +166,7 @@ def faq(item):
             biblioteca.channel_config(Item(channel='biblioteca'))
 
     elif item.extra == "tiempo_enlaces":
-        respuesta = platformtools.dialog_yesno("pelisalacarta",
+        respuesta = platformtools.dialog_yesno("mitvspain",
                                                "Esto puede mejorarse limitando el número máximo de "
                                                "enlaces o mostrandolos en una ventana emergente. "
                                                "Estas opciones se encuentran en 'Configuración'>'Ajustes "
@@ -172,7 +177,7 @@ def faq(item):
             biblioteca.channel_config(Item(channel='biblioteca'))
 
     elif item.extra == "prob_busquedacont":
-        title = "pelisalacarta - FAQ - %s" % item.title[6:]
+        title = "mitvspain - FAQ - %s" % item.title[6:]
         text = ("Puede que no hayas escrito la ruta de la librería correctamente en "
                 "'Configuración'>'Preferencias'.\n"
                 "La ruta a específicada debe ser exactamente la misma de la 'fuente' "
@@ -181,7 +186,7 @@ def faq(item):
                 "También puedes estar experimentando problemas por estar "
                 "usando algun fork de Kodi y rutas con 'special://'. "
                 "SPMC, por ejemplo, tiene problemas con esto, y no parece tener solución, "
-                "ya que es un problema ajeno a pelisalacarta que existe desde hace mucho.\n"
+                "ya que es un problema ajeno a mitvspain que existe desde hace mucho.\n"
                 "Puedes intentar subsanar estos problemas en 'Configuración'>'Ajustes de "
                 "la biblioteca', cambiando el ajuste 'Realizar búsqueda de contenido en' "
                 "de 'La carpeta de cada serie' a 'Toda la biblioteca'."
@@ -190,26 +195,26 @@ def faq(item):
         return TextBox("DialogTextViewer.xml", os.getcwd(), "Default", title=title, text=text)
 
     elif item.extra == "canal_fallo":
-        title = "pelisalacarta - FAQ - %s" % item.title[6:]
+        title = "mitvspain - FAQ - %s" % item.title[6:]
         text = ("Puede ser que la página web del canal no funcione. "
                 "En caso de que funcione la página web puede que no seas el primero"
                 " en haberlo visto y que el canal este arreglado. "
                 "Puedes mirar en 'mimediacenter.info/foro/' o en el "
-                "repositorio de GitHub (github.com/pelisalacarta-ce/pelisalacarta-ce). "
+                "repositorio de GitHub (github.com/tvalacarta/mitvspain). "
                 "Si no encuentras el canal arreglado puedes reportar un "
                 "problema en el foro.")
 
         return TextBox("DialogTextViewer.xml", os.getcwd(), "Default", title=title, text=text)
 
     elif item.extra == "prob_bib":
-        platformtools.dialog_ok("pelisalacarta",
+        platformtools.dialog_ok("mitvspain",
                                 "Puede ser que hayas actualizado el plugin recientemente "
                                 "y que las actualizaciones no se hayan aplicado del todo "
                                 "bien. Puedes probar en 'Configuración'>'Otras herramientas', "
                                 "comprobando los archivos *_data.json o "
                                 "volviendo a añadir toda la biblioteca.")
 
-        respuesta = platformtools.dialog_yesno("pelisalacarta",
+        respuesta = platformtools.dialog_yesno("mitvspain",
                                                "¿Deseas acceder ahora a esa seccion?")
         if respuesta == 1:
             itemlist = []
@@ -219,7 +224,7 @@ def faq(item):
             return itemlist
 
     elif item.extra == "prob_torrent":
-        title = "pelisalacarta - FAQ - %s" % item.title[6:]
+        title = "mitvspain - FAQ - %s" % item.title[6:]
         text = ("Puedes probar descargando el modulo 'libtorrent' de Kodi o "
                 "instalando algun addon como 'Quasar' o 'Torrenter', "
                 "los cuales apareceran entre las opciones de la ventana emergente "
@@ -230,7 +235,7 @@ def faq(item):
         return TextBox("DialogTextViewer.xml", os.getcwd(), "Default", title=title, text=text)
 
     elif item.extra == "buscador_juntos":
-        respuesta = platformtools.dialog_yesno("pelisalacarta",
+        respuesta = platformtools.dialog_yesno("mitvspain",
                                                "Si. La opcion de mostrar los resultados juntos "
                                                "o divididos por canales se encuentra en "
                                                "'Configuracion'>'Ajustes del buscador global'>"
@@ -240,15 +245,28 @@ def faq(item):
             from channels import buscador
             buscador.settings("")
 
+    elif item.extra == "report_error":
+        title = "mitvspain - FAQ - %s" % item.title[6:]
+        text = ("Para reportar un problema en 'mimediacenter.info/foro/' es necesario:\n"
+                "  - Versión que usas de mitvspain.\n"
+                "  - Versión que usas de kodi, plex, mediaserver, etc.\n"
+                "  - Nombre del skin (en el caso que uses Kodi) y si se "
+                "te ha resuelto el problema si al usar el skin por defecto.\n"
+                "  - Agregar el log en modo detallado, una vez hecho esto, "
+                "zipea el log y lo puedes adjuntar en un post.\n"
+                "  - Descripción del problema y algún caso de prueba.")
+
+        return TextBox("DialogTextViewer.xml", os.getcwd(), "Default", title=title, text=text)
+
     else:
-        platformtools.dialog_ok("pelisalacarta",
+        platformtools.dialog_ok("mitvspain",
                                 "Tu problema/duda parece no tener una respuesta sencilla. "
-                                "")
+                                "Puedes acudir a 'mimediacenter.info/foro/' en busca de ayuda.")
 
 
 def get_thumbnail_path(thumb_name):
     import urlparse
-    web_path = "https://raw.githubusercontent.com/pelisalacarta-ce/media/master/pelisalacarta/squares/"
+    web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/"
     return urlparse.urljoin(web_path, thumb_name)
 
 
@@ -258,7 +276,7 @@ def tutoriales(item):
     itemlist = []
 
     for playlist in playlists:
-        if playlist.title == "Tutoriales de pelisalacarta":
+        if playlist.title == "Tutoriales de mitvspain":
             itemlist = youtube_channel.videos(playlist)
 
     return itemlist
@@ -269,7 +287,7 @@ def force_creation_advancedsettings(item):
 
     # Ruta del advancedsettings
     advancedsettings_kodi = xbmc.translatePath("special://profile/advancedsettings.xml")
-    advancedsettings_pelisalacarta = os.path.join(config.get_runtime_path(), "resources",
+    advancedsettings_mitvspain = os.path.join(config.get_runtime_path(), "resources",
                                                   "advancedsettings.xml")
     fichero_backup = os.path.join(config.get_data_path(), "original_advancedsettings_backup.xml")
 
@@ -293,7 +311,7 @@ def force_creation_advancedsettings(item):
         if os.path.exists(advancedsettings_kodi) and orig_size != 0:
             logger.info("La ruta de advanced settings del usuario existe!")
 
-            if platformtools.dialog_yesno("pelisalacarta",
+            if platformtools.dialog_yesno("mitvspain",
                                           "Esto modificará los ajustes avanzados de Kodi.",
                                           "¿Deseas continuar?") == 1:
 
@@ -306,11 +324,11 @@ def force_creation_advancedsettings(item):
                     for line in f_origen:
                         f_backup.write(line)
                     f_backup.close()
-                    platformtools.dialog_notification("pelisalacarta",
+                    platformtools.dialog_notification("mitvspain",
                                                       "Backup creado")
 
                 else:
-                    if platformtools.dialog_yesno("pelisalacarta",
+                    if platformtools.dialog_yesno("mitvspain",
                                                   "Backup anterior encontrado. ",
                                                   "¿Deseas sobreescribirlo?") == 1:
                         os.remove(fichero_backup)
@@ -322,18 +340,18 @@ def force_creation_advancedsettings(item):
 
                         f_backup.close()
 
-                        platformtools.dialog_notification("pelisalacarta",
+                        platformtools.dialog_notification("mitvspain",
                                                           "¡Backup terminado!")
                         logger.info("Backup terminado")
                     else:
-                        platformtools.dialog_notification("pelisalacarta",
+                        platformtools.dialog_notification("mitvspain",
                                                           "Backup no modificado")
                         logger.info("Backup no modificado")
 
                 f_origen.close()
 
                 # Edicion de advancedsettings.xml
-                f_mod = open(os.path.join(advancedsettings_pelisalacarta))
+                f_mod = open(os.path.join(advancedsettings_mitvspain))
                 f_trans = open(os.path.join(advancedsettings_trans), "w")
                 f_same = open(os.path.join(advancedsettings_same), "w")
                 f_orig = open(os.path.join(advancedsettings_kodi))
@@ -390,19 +408,19 @@ def force_creation_advancedsettings(item):
                 f_same.close()
 
                 import filecmp
-                if filecmp.cmp(advancedsettings_pelisalacarta, advancedsettings_same):
-                    platformtools.dialog_ok("pelisalacarta",
+                if filecmp.cmp(advancedsettings_mitvspain, advancedsettings_same):
+                    platformtools.dialog_ok("mitvspain",
                                             "¡'advancessettings.xml' estaba optimizado!",
                                             "(No sera editado)")
                 else:
-                    platformtools.dialog_notification("pelisalacarta",
+                    platformtools.dialog_notification("mitvspain",
                                                       "modificando advancedsettings.xml...")
 
                     # Se vacia el advancedsettings.xml del usuario
                     open(os.path.join(advancedsettings_kodi), "w").close
 
                     nospaces = False
-                    f_mod = open(os.path.join(advancedsettings_pelisalacarta))
+                    f_mod = open(os.path.join(advancedsettings_mitvspain))
                     f_trans = open(os.path.join(advancedsettings_trans))
                     f_orig = open(os.path.join(advancedsettings_kodi), "w")
 
@@ -452,7 +470,7 @@ def force_creation_advancedsettings(item):
                     f_trans.close()
                     f_orig.close()
 
-                    platformtools.dialog_notification("pelisalacarta",
+                    platformtools.dialog_notification("mitvspain",
                                                       "Modificacion completada")
                 f_mod.close()
 
@@ -461,12 +479,12 @@ def force_creation_advancedsettings(item):
                 if os.path.exists(advancedsettings_trans):
                     os.remove(advancedsettings_trans)
             else:
-                platformtools.dialog_notification("pelisalacarta",
+                platformtools.dialog_notification("mitvspain",
                                                   "Operacion cancelada")
 
         else:
             # Si no hay advancedsettings.xml se copia del directorio resources
-            f_optimo = open(advancedsettings_pelisalacarta)
+            f_optimo = open(advancedsettings_mitvspain)
             f_original = open(advancedsettings_kodi, "w")
 
             for line in f_optimo:
@@ -481,14 +499,14 @@ def force_creation_advancedsettings(item):
             f_optimo.close()
             f_original.close()
 
-            platformtools.dialog_ok("pelisalacarta",
+            platformtools.dialog_ok("mitvspain",
                                     "Se ha creado un fichero advancedsettings.xml",
                                     "con la configuración óptima para streaming")
 
         logger.info("Optimizacion finalizada")
 
     else:
-        platformtools.dialog_notification("pelisalacarta",
+        platformtools.dialog_notification("mitvspain",
                                           "Operacion abortada")
 
 
@@ -499,7 +517,7 @@ def recover_advancedsettings(item):
                                   "original_advancedsettings_backup.xml")
     advancedsettings_kodi = xbmc.translatePath("special://profile/advancedsettings.xml")
 
-    if platformtools.dialog_yesno("pelisalacarta",
+    if platformtools.dialog_yesno("mitvspain",
                                   "¿Deseas restaurar el backup de advancedsettings.xml?") == 1:
         if os.path.exists(fichero_backup):
             logger.info("Existe un backup de advancedsettings.xml")
@@ -521,7 +539,7 @@ def recover_advancedsettings(item):
 
         else:
             logger.info("No hay ningun backup disponible")
-            if platformtools.dialog_yesno("pelisalacarta",
+            if platformtools.dialog_yesno("mitvspain",
                                           "No hay ningun backup disponible. "
                                           "¿Deseas crearlo?") == 1:
                 f_origen = open(advancedsettings_kodi)
@@ -531,18 +549,18 @@ def recover_advancedsettings(item):
                 f_origen.close()
                 f_backup.close()
 
-                platformtools.dialog_notification("pelisalacarta", "Backup completado")
+                platformtools.dialog_notification("mitvspain", "Backup completado")
             else:
-                platformtools.dialog_notification("pelisalacarta", "Backup no creado")
+                platformtools.dialog_notification("mitvspain", "Backup no creado")
 
     else:
-        platformtools.dialog_notification("pelisalacarta",
+        platformtools.dialog_notification("mitvspain",
                                           "Operacion cancelada por el usuario")
         logger.info("Restauracion de adavancedsettings.xml cancelada")
 
 
 def realdebrid(item):
-    logger.info()
+    logger.info("mitvspain.channels.ayuda realdebrid")
     itemlist = []
 
     verify_url, user_code, device_code = request_access()
@@ -556,7 +574,7 @@ def realdebrid(item):
 
 
 def request_access():
-    logger.info()
+    logger.info("mitvspain.channels.ayuda request_access")
     from core import jsontools
     from core import scrapertools
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'}
@@ -579,7 +597,7 @@ def request_access():
 
 
 def authentication(item):
-    logger.info()
+    logger.info("mitvspain.channels.ayuda authentication")
     import urllib
     from core import channeltools
     from core import jsontools
@@ -609,10 +627,10 @@ def authentication(item):
         token = data["access_token"]
         refresh = data["refresh_token"]
 
-        config.set_setting("id", debrid_id, server="realdebrid")
-        config.set_setting("secret", secret, server="realdebrid")
-        config.set_setting("token", token, server="realdebrid")
-        config.set_setting("refresh", refresh, server="realdebrid")
+        channeltools.set_channel_setting("realdebrid_id", debrid_id, "realdebrid")
+        channeltools.set_channel_setting("realdebrid_secret", secret, "realdebrid")
+        channeltools.set_channel_setting("realdebrid_token", token, "realdebrid")
+        channeltools.set_channel_setting("realdebrid_refresh", refresh, "realdebrid")
 
     except:
         import traceback

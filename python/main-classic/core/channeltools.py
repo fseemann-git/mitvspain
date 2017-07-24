@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # channeltools - Herramientas para trabajar con canales
 # ------------------------------------------------------------
@@ -32,7 +32,7 @@ import jsontools
 import logger
 import scrapertools
 
-DEFAULT_UPDATE_URL = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/"
+DEFAULT_UPDATE_URL = "https://raw.githubusercontent.com/tvalacarta/pelisalacarta/develop/python/main-classic/channels/"
 
 
 def is_adult(channel_name):
@@ -44,7 +44,7 @@ def is_adult(channel_name):
 
 
 def get_channel_parameters(channel_name):
-    # logger.info("mitvspain.core.channeltools get_channel_parameters channel_name="+channel_name)
+    # logger.info("pelisalacarta.core.channeltools get_channel_parameters channel_name="+channel_name)
     channel_xml = os.path.join(config.get_runtime_path(), 'channels', channel_name+".xml")
 
     if os.path.exists(channel_xml):
@@ -170,7 +170,7 @@ def get_channel_setting(name, channel):
 
     Devuelve el valor del parametro 'name' en la configuracion propia del canal 'channel'.
 
-    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.mitvspain\settings_channels el
+    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta\settings_channels el
     archivo channel_data.json y lee el valor del parametro 'name'. Si el archivo channel_data.json no existe busca en la
     carpeta channels el archivo channel.xml y crea un archivo channel_data.json antes de retornar el valor solicitado.
 
@@ -231,7 +231,7 @@ def set_channel_setting(name, value, channel):
     Establece 'value' como el valor del parametro 'name' en la configuracion propia del canal 'channel'.
     Devuelve el valor cambiado o None si la asignacion no se ha podido completar.
 
-    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.mitvspain\settings_channels el
+    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta\settings_channels el
     archivo channel_data.json y establece el parametro 'name' al valor indicado por 'value'.
     Si el parametro 'name' no existe lo añade, con su valor, al archivo correspondiente.
 
@@ -301,8 +301,8 @@ def get_channel_remote_url(channel_name):
     remote_channel_url = channel_parameters["update_url"]+channel_name+".py"
     remote_version_url = channel_parameters["update_url"]+channel_name+".xml" 
 
-    logger.info("mitvspain.core.channeltools get_channel_remote_url remote_channel_url="+remote_channel_url)
-    logger.info("mitvspain.core.channeltools get_channel_remote_url remote_version_url="+remote_version_url)
+    logger.info("pelisalacarta.core.channeltools get_channel_remote_url remote_channel_url="+remote_channel_url)
+    logger.info("pelisalacarta.core.channeltools get_channel_remote_url remote_version_url="+remote_version_url)
     
     return remote_channel_url, remote_version_url
 
@@ -318,8 +318,8 @@ def get_channel_local_path(channel_name):
         local_version_path = os.path.join(config.get_runtime_path(), channel_name + ".xml")
         local_compiled_path = os.path.join(config.get_runtime_path(), channel_name + ".pyo")
 
-    logger.info("mitvspain.core.channeltools get_channel_local_path local_channel_path=" + local_channel_path)
-    logger.info("mitvspain.core.channeltools get_channel_local_path local_version_path=" + local_version_path)
-    logger.info("mitvspain.core.channeltools get_channel_local_path local_compiled_path=" + local_compiled_path)
+    logger.info("pelisalacarta.core.channeltools get_channel_local_path local_channel_path=" + local_channel_path)
+    logger.info("pelisalacarta.core.channeltools get_channel_local_path local_version_path=" + local_version_path)
+    logger.info("pelisalacarta.core.channeltools get_channel_local_path local_compiled_path=" + local_compiled_path)
 
     return local_channel_path, local_version_path, local_compiled_path

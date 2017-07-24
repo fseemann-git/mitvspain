@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # -----------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para Pelisxporno
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # -----------------------------------------------------------
 
 from core import httptools

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para youanimehd creado por Itsuki Minami
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -19,7 +19,7 @@ USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:20.0) Gecko/201001
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.youanimehd mainlist")
+    logger.info("pelisalacarta.channels.youanimehd mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="completo"  , title="Portada"                        , url="http://youanimehd.com/" , viewmode="movie_with_plot"))
@@ -33,7 +33,7 @@ def mainlist(item):
     return itemlist
 
 def completo(item):
-    logger.info("mitvspain.channels.youanimehd completo")
+    logger.info("pelisalacarta.channels.youanimehd completo")
     itemlist = []
     
     # Descarga la pagina
@@ -97,7 +97,7 @@ def completo(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.youanimehd letras")
+    logger.info("pelisalacarta.channels.youanimehd letras")
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="completo" , title="0-9", url="http://youanimehd.com/tags/0-9", viewmode="movie_with_plot"))
     itemlist.append( Item(channel=item.channel, action="completo" , title="A"  , url="http://youanimehd.com/tags/a", viewmode="movie_with_plot"))
@@ -131,7 +131,7 @@ def letras(item):
 
 
 def serie(item):
-    logger.info("mitvspain.channels.youanimehd serie")
+    logger.info("pelisalacarta.channels.youanimehd serie")
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
     data = data.replace('\n',"")
@@ -183,7 +183,7 @@ def serie(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.youanimehd play url="+item.url)
+    logger.info("pelisalacarta.channels.youanimehd play url="+item.url)
 
     itemlist=[]
     data = scrapertools.cache_page(item.url)

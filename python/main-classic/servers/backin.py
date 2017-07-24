@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para backin.net
 # by be4t5
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re

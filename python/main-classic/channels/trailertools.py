@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain 4
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain 4.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain 4 is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain 4 is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Search trailers from youtube, filmaffinity, abandomoviez, vimeo, etc...
 # --------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ else:
 
 
 def buscartrailer(item, trailers=[]):
-    logger.info("mitvspain.channels.trailertools buscartrailer")
+    logger.info("pelisalacarta.channels.trailertools buscartrailer")
 
     # Lista de acciones si se ejecuta desde el menú contextual
     if item.action == "manual_search" and item.contextual:
@@ -81,8 +81,8 @@ def buscartrailer(item, trailers=[]):
 
         item.year = item.infoLabels['year']
           
-        logger.info("mitvspain.channels.trailertools Búsqueda: %s" % item.contentTitle)
-        logger.info("mitvspain.channels.trailertools Año: %s" % item.year)
+        logger.info("pelisalacarta.channels.trailertools Búsqueda: %s" % item.contentTitle)
+        logger.info("pelisalacarta.channels.trailertools Año: %s" % item.year)
         if item.infoLabels['trailer'] and not trailers:
             url = item.infoLabels['trailer']
             if "youtube" in url:
@@ -134,7 +134,7 @@ def buscartrailer(item, trailers=[]):
 
 
 def manual_search(item):
-    logger.info("mitvspain.channels.trailertools manual_search")
+    logger.info("pelisalacarta.channels.trailertools manual_search")
     texto = platformtools.dialog_input(default=item.contentTitle, heading=config.get_localized_string(30112))
     if texto is not None:
         if item.extra == "abandomoviez":
@@ -148,7 +148,7 @@ def manual_search(item):
 
 
 def tmdb_trailers(item, tipo="movie"):
-    logger.info("mitvspain.channels.trailertools tmdb_trailers")
+    logger.info("pelisalacarta.channels.trailertools tmdb_trailers")
 
     from core.tmdb import Tmdb
     itemlist = []
@@ -168,7 +168,7 @@ def tmdb_trailers(item, tipo="movie"):
 
 
 def youtube_search(item):
-    logger.info("mitvspain.channels.trailertools youtube_search")
+    logger.info("pelisalacarta.channels.trailertools youtube_search")
     itemlist = []
 
     titulo = item.contentTitle
@@ -220,7 +220,7 @@ def youtube_search(item):
 
 
 def abandomoviez_search(item):
-    logger.info("mitvspain.channels.trailertools abandomoviez_search")
+    logger.info("pelisalacarta.channels.trailertools abandomoviez_search")
 
     # Comprueba si es una búsqueda de cero o viene de la opción Siguiente
     if item.page != "":
@@ -275,7 +275,7 @@ def abandomoviez_search(item):
 
 
 def search_links_abando(item):
-    logger.info("mitvspain.channels.trailertools search_links_abando")
+    logger.info("pelisalacarta.channels.trailertools search_links_abando")
 
     data = scrapertools.downloadpage(item.url)
     itemlist = []
@@ -334,7 +334,7 @@ def search_links_abando(item):
 
 
 def filmaffinity_search(item):
-    logger.info("mitvspain.channels.trailertools filmaffinity_search")
+    logger.info("pelisalacarta.channels.trailertools filmaffinity_search")
 
     if item.filmaffinity:
         item.url = item.filmaffinity
@@ -392,7 +392,7 @@ def filmaffinity_search(item):
 
 
 def search_links_filmaff(item):
-    logger.info("mitvspain.channels.trailertools search_links_filmaff")
+    logger.info("pelisalacarta.channels.trailertools search_links_filmaff")
     
     itemlist = []
     data = scrapertools.downloadpage(item.url)
@@ -432,7 +432,7 @@ def search_links_filmaff(item):
 
 
 def jayhap_search(item):
-    logger.info("mitvspain.channels.trailertools jayhap_search")
+    logger.info("pelisalacarta.channels.trailertools jayhap_search")
     itemlist = []
 
     if item.extra != "jayhap":

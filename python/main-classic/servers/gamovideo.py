@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para gamovideo
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -12,14 +12,14 @@ from core import logger
 from core import scrapertools
 from lib import jsunpack
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:51.0) Gecko/20100101 Firefox/51.0'}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0'}
 
 
 def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
     data = httptools.downloadpage(page_url, headers=headers).data
 
-    if ("File was deleted" or "Not Found" or "File was locked by administrator") in data:
+    if "File was deleted" in data or "Not Found" in data or "File was locked by administrator" in data:
         return False, "[Gamovideo] El archivo no existe o ha sido borrado"
     if "Video is processing now" in data:
         return False, "[Gamovideo] El video está procesándose en estos momentos. Inténtelo mas tarde."

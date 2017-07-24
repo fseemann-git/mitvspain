@@ -12,9 +12,19 @@
 	<bannermenu>http://i.imgur.com/trFDT39.png</bannermenu>
 
 	<update_url>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/python/main-classic/channels/</update_url>
-	<version>1</version>
-	<date>10/11/2016</date>
-	<changes>Primera versión</changes>
+	<version>2</version>
+	<changes>
+        <change>
+            <date>09/05/2017</date>
+            <autor>Cmos</autor>
+            <description>Corregida seccion lista de torrents y regex de listados</description>
+        </change>
+        <change>
+            <date>10/11/2016</date>
+            <autor>Cmos</autor>
+            <description>Primera versión</description>
+        </change>
+	</changes>
 
 	<categories>
 		<category>anime</category>

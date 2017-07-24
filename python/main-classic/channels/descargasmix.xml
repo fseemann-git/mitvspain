@@ -11,6 +11,11 @@
 
 	<changes>
 		<change>
+			<date>06/05/17</date>
+			<autor>tvalacarta</autor>
+			<description>Cambio de dominio</description>
+		</change>
+		<change>
 			<date>17/04/17</date>
 			<autor>Cmos</autor>
 			<description>Mejorado en la deteccion del dominio para futuros cambios</description>

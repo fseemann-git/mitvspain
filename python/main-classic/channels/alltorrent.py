@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para Alltorrent
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import string
 import os
@@ -80,7 +80,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 def mainlist(item):
 
-    logger.info("mitvspain.altorrent mainlist")
+    logger.info("pelisalacarta.altorrent mainlist")
     itemlist=[]
     i=0
     global i
@@ -98,7 +98,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.altorrent search")
+    logger.info("pelisalacarta.altorrent search")
     texto = texto.replace(" ","+")
     if item.extra=="titulo":
        item.url = "http://alltorrent.net/?s="+texto
@@ -112,7 +112,7 @@ def search(item,texto):
 
 
 def scraper(item):
-    logger.info("mitvspain.alltorrent scraper")
+    logger.info("pelisalacarta.alltorrent scraper")
     itemlist=[]
     
     data = httptools.downloadpage(item.url).data
@@ -159,7 +159,7 @@ def scraper(item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.altorrent findvideos")
+    logger.info("pelisalacarta.altorrent findvideos")
     itemlist = []
     th = Thread(target=get_art(item))
     th.setDaemon(True)
@@ -191,7 +191,7 @@ def findvideos(item):
     return itemlist
 def dd_y_o(item):
     itemlist = []
-    logger.info("mitvspain.altorrent dd_y_o")
+    logger.info("pelisalacarta.altorrent dd_y_o")
     videolist = servertools.find_video_items(data=item.url)
     for video in videolist:
         icon_server = os.path.join( config.get_runtime_path() , "resources" , "images" , "servers" , "server_"+video.server+".png" )
@@ -233,7 +233,7 @@ def fanartv(item, id_tvdb,id, images={}):
 
 
 def get_art(item):
-    logger.info("mitvspain.altorrent get_art")
+    logger.info("pelisalacarta.altorrent get_art")
     id =item.infoLabels['tmdb_id']
     check_fanart=item.infoLabels['fanart']
     if item.contentType!="movie":

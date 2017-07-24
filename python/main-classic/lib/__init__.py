@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
 #------------------------------------------------------------
-# mitvspain
-# 
+# pelisalacarta
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------

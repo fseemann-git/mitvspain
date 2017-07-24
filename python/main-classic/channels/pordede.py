@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para pordede
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import os
@@ -72,7 +72,7 @@ def menuseries(item):
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Novedades"            , url="http://www.pordede.com/series/loadmedia/offset/0/showlist/hot" ))
     itemlist.append( Item(channel=item.channel, action="generos"   , title="Por géneros"          , url="http://www.pordede.com/series" ))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Siguiendo"            , url="http://www.pordede.com/series/following" ))
-    itemlist.append( Item(channel=item.channel, action="siguientes" , title="Siguientes Capítulos" , url="http://www.pordede.com/index2.php" , viewmode="movie"))
+    itemlist.append( Item(channel=item.channel, action="siguientes" , title="Siguientes Capítulos" , url="http://www.pordede.com/main/index" , viewmode="movie"))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Favoritas"            , url="http://www.pordede.com/series/favorite" ))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Pendientes"           , url="http://www.pordede.com/series/pending" ))
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Terminadas"           , url="http://www.pordede.com/series/seen" ))
@@ -220,16 +220,12 @@ def siguientes(item):
     logger.info()
 
     # Descarga la pagina
-    headers = {"X-Requested-With": "XMLHttpRequest"}
-    data = httptools.downloadpage(item.url, headers=headers).data
+    data = httptools.downloadpage(item.url).data
     logger.debug("data="+data)
 
     # Extrae las entradas (carpetas)
-    json_object = jsontools.load_json(data)
-    logger.debug("html2="+json_object["html"])
-    data = json_object["html"]
-    patron = ''
-    patron += '<div class="coverMini     shadow tiptip" title="([^"]+)">[^<]+'
+    bloque = scrapertools.find_single_match(data, '<h2>Siguiendo</h2>(.*?)<div class="box">')
+    patron = '<div class="coverMini     shadow tiptip" title="([^"]+)">[^<]+'
     patron += '<img class="centeredPic centeredPicFalse"  onerror="[^"]+"  src="([^"]+)"[^<]+'
     patron += '<img src="/images/loading-mini.gif" class="loader"/>[^<]+'
     patron += '<div class="extra-info"><span class="year">[^<]+'

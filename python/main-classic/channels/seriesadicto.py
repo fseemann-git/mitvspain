@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para seriesadicto
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import sys
@@ -19,7 +19,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.seriesadicto mainlist")
+    logger.info("pelisalacarta.channels.seriesadicto mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="letras" , title="Todas por orden alfabético" , url="http://seriesadicto.com/" , folder=True ))
@@ -27,7 +27,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.channels.seriesadicto search")
+    logger.info("pelisalacarta.channels.seriesadicto search")
     texto = texto.replace(" ", "+")
     item.url="http://seriesadicto.com/buscar/"+texto
 
@@ -41,7 +41,7 @@ def search(item,texto):
         return []
 
 def letras(item):
-    logger.info("mitvspain.channels.seriesadicto letras")
+    logger.info("pelisalacarta.channels.seriesadicto letras")
     itemlist = []
 
     # Descarga la página
@@ -64,7 +64,7 @@ def letras(item):
     return itemlist
 
 def series(item):
-    logger.info("mitvspain.channels.seriesadicto series")
+    logger.info("pelisalacarta.channels.seriesadicto series")
     itemlist = []
 
     '''
@@ -96,7 +96,7 @@ def series(item):
     return itemlist
 
 def episodios(item):
-    logger.info("mitvspain.channels.seriesadicto episodios")
+    logger.info("pelisalacarta.channels.seriesadicto episodios")
     itemlist = []
 
     '''
@@ -164,7 +164,7 @@ def codigo_a_idioma(codigo):
     return idioma
 
 def findvideos(item):
-    logger.info("mitvspain.channels.seriesadicto findvideos")
+    logger.info("pelisalacarta.channels.seriesadicto findvideos")
     itemlist=[]
 
     '''
@@ -197,7 +197,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.seriesadicto extract_url")
+    logger.info("pelisalacarta.channels.seriesadicto extract_url")
 
     itemlist = servertools.find_video_items(data=item.url)
 

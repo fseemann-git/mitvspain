@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para uptobox
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -13,7 +13,7 @@ from core import scrapertools
 
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.uptobox test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.uptobox test_video_exists(page_url='%s')" % page_url)
 
     data = scrapertools.cache_page(page_url)
 
@@ -28,7 +28,7 @@ def test_video_exists( page_url ):
 
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.uptobox get_video_url(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.uptobox get_video_url(page_url='%s')" % page_url)
     #Si el enlace es directo de upstream
     if "uptobox" not in page_url:
         data = scrapertools.cache_page(page_url)
@@ -51,7 +51,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
 
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.uptobox %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.servers.uptobox %s - %s" % (video_url[0],video_url[1]))
     return video_urls
 
 
@@ -99,7 +99,7 @@ def find_videos(data):
     # http://uptostream.com/q7asuktfr84x
     # http://uptostream.com/iframe/q7asuktfr84x
     patronvideos  = '(?:uptobox|uptostream).com(?:/iframe/|/)([a-z0-9]+)'
-    logger.info("mitvspain.servers.uptobox find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.uptobox find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

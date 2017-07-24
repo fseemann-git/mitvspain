@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para PeliculasGratis
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import string
 import os
@@ -86,7 +86,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 
 def mainlist(item):
-    logger.info("mitvspain.peliculasgratis mainlist")
+    logger.info("pelisalacarta.peliculasgratis mainlist")
     itemlist=[]
     itemlist.append( item.clone(title="[COLOR lightskyblue][B]Películas[/B][/COLOR]", action="scraper",url=host,thumbnail="http://imgur.com/fN2p6qH.png", fanart="http://imgur.com/b8OuBR2.jpg",contentType= "movie"))
     itemlist.append( itemlist[-1].clone(title="[COLOR lightskyblue][B]   Más vistas[/B][/COLOR]", action="scraper",url="http://peliculasgratis.biz/catalogue?order=most_viewed",thumbnail="http://imgur.com/fN2p6qH.png", fanart="http://imgur.com/b8OuBR2.jpg",contentType= "movie"))
@@ -100,7 +100,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.peliculasgratis search")
+    logger.info("pelisalacarta.peliculasgratis search")
     texto = texto.replace(" ","+")
     item.url = "http://peliculasgratis.biz/search/%s" % texto
     
@@ -116,7 +116,7 @@ def search(item,texto):
 
 
 def scraper(item):
-    logger.info("mitvspain.peliculasgratis scraper")
+    logger.info("pelisalacarta.peliculasgratis scraper")
     itemlist = []
     
     # Descarga la página
@@ -180,7 +180,7 @@ def scraper(item):
 
 
 def fanart(item):
-    logger.info("mitvspain.peliculasgratis fanart")
+    logger.info("pelisalacarta.peliculasgratis fanart")
     itemlist = []
     url = item.url
     data = httptools.downloadpage(item.url).data
@@ -472,7 +472,7 @@ def fanart(item):
     return itemlist
 
 def findvideos_series(item):
-    logger.info("mitvspain.peliculasgratis findvideos_series")
+    logger.info("pelisalacarta.peliculasgratis findvideos_series")
     itemlist = []
     fanart=""
     check_temp=[]
@@ -542,7 +542,7 @@ def findvideos_series(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.peliculasgratis findvideos")
+    logger.info("pelisalacarta.peliculasgratis findvideos")
     itemlist = []
     data = httptools.downloadpage(item.url).data
     
@@ -639,7 +639,7 @@ def play(item):
     
     return itemlist
 def info(item):
-    logger.info("mitvspain.peliculasgratis info")
+    logger.info("pelisalacarta.peliculasgratis info")
     itemlist = []
     url=item.url
     rating_tmdba_tvdb=item.extra.split("|")[0]
@@ -736,7 +736,7 @@ def info(item):
     infoplus.start(item_info, peliculas)
 
 def info_capitulos(item,images={}):
-    logger.info("mitvspain.peliculasgratis info_capitulos")
+    logger.info("pelisalacarta.peliculasgratis info_capitulos")
     url= "https://api.themoviedb.org/3/tv/"+item.extra.split("|")[3]+"/season/"+item.extra.split("|")[9]+"/episode/"+item.extra.split("|")[10]+"?api_key="+api_key+"&language=es"
     if "/0" in url:
         url = url.replace("/0","/")

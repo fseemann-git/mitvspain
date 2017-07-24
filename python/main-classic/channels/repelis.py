@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 #-----------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para Repelis - Por Kampanita-2015 
 # ( con ayuda de neno1978, DrZ3r0, y robalo )
 # 4/9/2015
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #-----------------------------------------------------------------
 import re
 import urlparse
@@ -34,9 +34,10 @@ def mainlist(item):
     itemlist.append( Item(channel=item.channel, action="menudesta", title="Destacadas",  url="http://www.repelis.tv/pag/1" , thumbnail="http://img.irtve.es/v/1074982/", fanart=mifan) )
     itemlist.append( Item(channel=item.channel, action="todaspelis", title="Proximos estrenos", url="http://www.repelis.tv/archivos/proximos-estrenos/pag/1", thumbnail="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTpsRC-GTYzCqhor2gIDfAB61XeymwgXWSVBHoRAKs2c5HAn29f&reload=on", fanart=mifan))
     itemlist.append( Item(channel=item.channel, action="todaspelis", title="Todas las Peliculas",  url="http://www.repelis.tv/pag/1" , thumbnail="https://freaksociety.files.wordpress.com/2012/02/logos-cine.jpg", fanart=mifan) )
-    if config.get_setting("enableadultmode") == "true": itemlist.append( Item(channel=item.channel, action="todaspelis", title="Eroticas +18",  url="http://www.repelis.tv/genero/eroticas/pag/1" , thumbnail="http://www.topkamisetas.com/catalogo/images/TB0005.gif", fanart="http://www.topkamisetas.com/catalogo/images/TB0005.gif") )
-    #Quito la busqueda por aÃ±o si no esta enabled el adultmode, porque no hay manera de filtrar los enlaces eroticos72
-    if config.get_setting("enableadultmode") == "true": itemlist.append( Item(channel=item.channel, action="poranyo", title="Por Año", url="http://www.repelis.tv/anio/2016", thumbnail="http://t3.gstatic.com/images?q=tbn:ANd9GcSkxiYXdBcI0cvBLsb_nNlz_dWXHRl2Q-ER9dPnP1gNUudhrqlR", fanart=mifan))
+    if config.get_setting("adult_mode") != "0":
+        itemlist.append( Item(channel=item.channel, action="todaspelis", title="Eroticas +18",  url="http://www.repelis.tv/genero/eroticas/pag/1" , thumbnail="http://www.topkamisetas.com/catalogo/images/TB0005.gif", fanart="http://www.topkamisetas.com/catalogo/images/TB0005.gif") )
+        #Quito la busqueda por aÃ±o si no esta enabled el adultmode, porque no hay manera de filtrar los enlaces eroticos72
+        itemlist.append( Item(channel=item.channel, action="poranyo", title="Por Año", url="http://www.repelis.tv/anio/2016", thumbnail="http://t3.gstatic.com/images?q=tbn:ANd9GcSkxiYXdBcI0cvBLsb_nNlz_dWXHRl2Q-ER9dPnP1gNUudhrqlR", fanart=mifan))
     #Por categoria si que filtra la categoria de eroticos
     itemlist.append( Item(channel=item.channel, action="porcateg", title="Por Categoria", url="http://www.repelis.tv/genero/accion/pag/1", thumbnail="http://www.logopro.it/blog/wp-content/uploads/2013/07/categoria-sigaretta-elettronica.png", fanart=mifan))
     itemlist.append( Item(channel=item.channel, action="search", title="Buscar...", url="http://www.repelis.tv/search/?s=", thumbnail="http://thumbs.dreamstime.com/x/buscar-pistas-13159747.jpg", fanart=mifan))
@@ -377,7 +378,7 @@ def porcateg(item):
         logger.info("[repelis] "+url)
         #si no esta permitidas categoria adultos, la filtramos
         erotica = ""
-        if config.get_setting("enableadultmode") == "false":
+        if config.get_setting("adult_mode") == "0":
             patron = '.*?/erotic.*?'
             try:
                 erotica = scrapertools.get_match(scrapedurl,patron)

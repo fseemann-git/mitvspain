@@ -1,26 +1,26 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Updater process
 # --------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ import versiontools
 
 # Método antiguo, muestra un popup con la versión
 def checkforupdates():
-    logger.info("mitvspain.core.updater checkforupdates")
+    logger.info("pelisalacarta.core.updater checkforupdates")
 
     # Valores por defecto
     numero_version_publicada = 0
@@ -52,14 +52,14 @@ def checkforupdates():
             tag_version_publicada = latest_package["tag"]
             break
 
-    logger.info("mitvspain.core.updater checkforupdates version remota="+str(numero_version_publicada))
+    logger.info("pelisalacarta.core.updater checkforupdates version remota="+str(numero_version_publicada))
 
     # Lee la versión local
     numero_version_local = versiontools.get_current_plugin_version()
-    logger.info("mitvspain.core.updater checkforupdates version local="+str(numero_version_local))
+    logger.info("pelisalacarta.core.updater checkforupdates version local="+str(numero_version_local))
 
     hayqueactualizar = numero_version_publicada > numero_version_local
-    logger.info("mitvspain.core.updater checkforupdates -> hayqueactualizar="+repr(hayqueactualizar))
+    logger.info("pelisalacarta.core.updater checkforupdates -> hayqueactualizar="+repr(hayqueactualizar))
 
     # Si hay actualización disponible, devuelve la Nueva versión para que cada plataforma se encargue de mostrar los avisos
     if hayqueactualizar:
@@ -69,7 +69,7 @@ def checkforupdates():
 
 # Método nuevo, devuelve el nº de actualizaciones disponibles además de indicar si hay nueva versión del plugin
 def get_available_updates():
-    logger.info("mitvspain.core.updater checkforupdates")
+    logger.info("pelisalacarta.core.updater checkforupdates")
 
     # Cuantas actualizaciones hay?
     number_of_updates = 0
@@ -97,7 +97,7 @@ def get_available_updates():
     return new_published_version_tag,number_of_updates
 
 def update(item):
-    logger.info("mitvspain.core.updater update")
+    logger.info("pelisalacarta.core.updater update")
 
     # Valores por defecto
     published_version_url = ""
@@ -120,7 +120,7 @@ def update(item):
     download_and_install(remotefilename,localfilename)
 
 def download_and_install(remote_file_name,local_file_name):
-    logger.info("mitvspain.core.updater download_and_install from "+remote_file_name+" to "+local_file_name)
+    logger.info("pelisalacarta.core.updater download_and_install from "+remote_file_name+" to "+local_file_name)
 
     if os.path.exists(local_file_name):
         os.remove(local_file_name)
@@ -130,25 +130,25 @@ def download_and_install(remote_file_name,local_file_name):
     from core import downloadtools
     downloadtools.downloadfile(remote_file_name, local_file_name, continuar=False)
     fin = time.clock()
-    logger.info("mitvspain.core.updater Descargado en %d segundos " % (fin-inicio+1))
+    logger.info("pelisalacarta.core.updater Descargado en %d segundos " % (fin-inicio+1))
     
-    logger.info("mitvspain.core.updater descomprime fichero...")
+    logger.info("pelisalacarta.core.updater descomprime fichero...")
     import ziptools
     unzipper = ziptools.ziptools()
 
     # Lo descomprime en "addons" (un nivel por encima del plugin)
     installation_target = os.path.join(config.get_runtime_path(),"..")
-    logger.info("mitvspain.core.updater installation_target=%s" % installation_target)
+    logger.info("pelisalacarta.core.updater installation_target=%s" % installation_target)
 
     unzipper.extract(local_file_name,installation_target)
     
     # Borra el zip descargado
-    logger.info("mitvspain.core.updater borra fichero...")
+    logger.info("pelisalacarta.core.updater borra fichero...")
     os.remove(local_file_name)
-    logger.info("mitvspain.core.updater ...fichero borrado")
+    logger.info("pelisalacarta.core.updater ...fichero borrado")
 
 def update_channel(channel_name):
-    logger.info("mitvspain.core.updater update_channel "+channel_name)
+    logger.info("pelisalacarta.core.updater update_channel "+channel_name)
     
     import channeltools
     remote_channel_url , remote_version_url = channeltools.get_channel_remote_url(channel_name)
@@ -157,37 +157,37 @@ def update_channel(channel_name):
     # Version remota
     try:
         data = scrapertools.cachePage( remote_version_url )
-        logger.info("mitvspain.core.updater update_channel remote_data="+data)
+        logger.info("pelisalacarta.core.updater update_channel remote_data="+data)
         remote_version = int( scrapertools.find_single_match(data,'<version>([^<]+)</version>') )
     except:
         remote_version = 0
 
-    logger.info("mitvspain.core.updater update_channel remote_version=%d" % remote_version)
+    logger.info("pelisalacarta.core.updater update_channel remote_version=%d" % remote_version)
 
     # Version local
     if os.path.exists( local_version_path ):
         infile = open( local_version_path )
         data = infile.read()
         infile.close();
-        #logger.info("mitvspain.core.updater local_data="+data)
+        #logger.info("pelisalacarta.core.updater local_data="+data)
 
         local_version = int( scrapertools.find_single_match(data,'<version>([^<]+)</version>') )
     else:
         local_version = 0
 
-    logger.info("mitvspain.core.updater local_version=%d" % local_version)
+    logger.info("pelisalacarta.core.updater local_version=%d" % local_version)
 
     # Comprueba si ha cambiado
     updated = remote_version > local_version
 
     if updated:
-        logger.info("mitvspain.core.updater update_channel downloading...")
+        logger.info("pelisalacarta.core.updater update_channel downloading...")
         download_channel(channel_name)
 
     return updated
 
 def download_channel(channel_name):
-    logger.info("mitvspain.core.updater download_channel "+channel_name)
+    logger.info("pelisalacarta.core.updater download_channel "+channel_name)
 
     import channeltools
     remote_channel_url , remote_version_url = channeltools.get_channel_remote_url(channel_name)
@@ -200,7 +200,7 @@ def download_channel(channel_name):
         outfile.write(updated_channel_data)
         outfile.flush()
         outfile.close()
-        logger.info("mitvspain.core.updater Grabado a " + local_channel_path)
+        logger.info("pelisalacarta.core.updater Grabado a " + local_channel_path)
     except:
         import traceback
         logger.info(traceback.format_exc())
@@ -212,7 +212,7 @@ def download_channel(channel_name):
         outfile.write(updated_version_data)
         outfile.flush()
         outfile.close()
-        logger.info("mitvspain.core.updater Grabado a " + local_version_path)
+        logger.info("pelisalacarta.core.updater Grabado a " + local_version_path)
     except:
         import traceback
         logger.info(traceback.format_exc())

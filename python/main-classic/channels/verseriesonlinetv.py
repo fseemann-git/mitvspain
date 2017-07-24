@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
-# 
+# pelisalacarta - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import os
 import re
@@ -68,7 +68,7 @@ def browser(url):
 
 
 def mainlist(item):
-    logger.info("mitvspain.bricocine mainlist")
+    logger.info("pelisalacarta.bricocine mainlist")
 
     itemlist = []
     import xbmc
@@ -84,7 +84,7 @@ def mainlist(item):
 
 
 def search(item,texto):
-    logger.info("mitvspain.verseriesonlinetv search")
+    logger.info("pelisalacarta.verseriesonlinetv search")
     texto = texto.replace(" ","+")
     item.url = "http://www.verseriesonline.tv/series?s=" + texto
    
@@ -99,7 +99,7 @@ def search(item,texto):
 
 
 def scraper(item):
-    logger.info("mitvspain.verseriesonlinetv scraper")
+    logger.info("pelisalacarta.verseriesonlinetv scraper")
     itemlist = []
     ###Borra customkeys
     
@@ -148,7 +148,7 @@ def scraper(item):
 
 def fanart(item):
     #Vamos a sacar todos los fanarts y arts posibles
-    logger.info("mitvspain.verseriesonlinetv fanart")
+    logger.info("pelisalacarta.verseriesonlinetv fanart")
     itemlist = []
     url = item.url
     data = dhe(httptools.downloadpage(item.url).data)
@@ -501,7 +501,7 @@ def fanart(item):
 
     return itemlist
 def temporadas(item):
-    logger.info("mitvspain.verseriesonlinetv temporadas")
+    logger.info("pelisalacarta.verseriesonlinetv temporadas")
     
     itemlist = []
     
@@ -549,7 +549,7 @@ def temporadas(item):
     return itemlist
 
 def capitulos(item):
-    logger.info("mitvspain.verseriesonlinetv capitulos")
+    logger.info("pelisalacarta.verseriesonlinetv capitulos")
     
     itemlist = []
     
@@ -573,7 +573,7 @@ def capitulos(item):
 
     return itemlist
 def findvideos(item):
-    logger.info("mitvspain.verseriesonlinetv findvideos")
+    logger.info("pelisalacarta.verseriesonlinetv findvideos")
     itemlist = []
     
     data = httptools.downloadpage(item.url).data
@@ -603,7 +603,7 @@ def findvideos(item):
     
     return itemlist
 def play(item):
-    logger.info("mitvspain.verseriesonlinetv play")
+    logger.info("pelisalacarta.verseriesonlinetv play")
     import xbmc
     xbmc.executebuiltin('Action(reloadkeymaps)')
 
@@ -623,7 +623,7 @@ def play(item):
 
 
 def info(item):
-    logger.info("mitvspain.pasateatorrent info")
+    logger.info("pelisalacarta.pasateatorrent info")
     itemlist = []
     url=item.url
     id = item.extra
@@ -798,7 +798,7 @@ def info(item):
 
 
 def info_capitulos(item):
-    logger.info("mitvspain.pasateatorrent trailer")
+    logger.info("pelisalacarta.pasateatorrent trailer")
     
     url= "https://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+item.extra.split("|")[2]+"/episode/"+item.extra.split("|")[3]+"?api_key="+api_key+"&language=es"
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para streame
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -11,7 +11,7 @@ from core import logger
 from core import scrapertools
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.streame test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.streame test_video_exists(page_url='%s')" % page_url)
     
     data = scrapertools.cache_page( page_url )
     if ("File was deleted" or "Not Found") in data: return False, "[Streame] El archivo no existe o ha sido borrado"
@@ -19,7 +19,7 @@ def test_video_exists( page_url ):
     return True,""
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.streame url="+page_url)
+    logger.info("pelisalacarta.servers.streame url="+page_url)
     
     data = scrapertools.cache_page( page_url )
     media_urls = scrapertools.find_multiple_matches(data,'\{file:"([^"]+)",label:"([^"]+)"\}')
@@ -28,7 +28,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
         video_urls.append( [ scrapertools.get_filename_from_url(media_url)[-4:]+" ("+label+") [streame]",media_url])
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.streame %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.servers.streame %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -39,7 +39,7 @@ def find_videos(data):
 
     # http://streame.net/jdfscsa5uoy4
     patronvideos  = "streame.net/(?:embed-|)([a-z0-9]+)"
-    logger.info("mitvspain.servers.streame find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.streame find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

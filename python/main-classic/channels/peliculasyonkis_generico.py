@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para peliculasyonkis
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # Adaptado por Boludiko basado en el canal seriesyonkis V9 Por Truenon y Jesus
 # v11
 #------------------------------------------------------------

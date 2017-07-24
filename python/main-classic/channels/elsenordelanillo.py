@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para elsenordelanillo
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -18,7 +18,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.elsenordelanillo mainlist")
+    logger.info("pelisalacarta.channels.elsenordelanillo mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Novedades" , url="http://www.xn--elseordelanillo-1qb.com/pelisdelanillo/" , viewmode="movie"))
@@ -29,7 +29,7 @@ def mainlist(item):
     return itemlist
 
 def anyos(item):
-    logger.info("mitvspain.channels.elsenordelanillo anyos")
+    logger.info("pelisalacarta.channels.elsenordelanillo anyos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -53,7 +53,7 @@ def anyos(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.elsenordelanillo letras")
+    logger.info("pelisalacarta.channels.elsenordelanillo letras")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -78,7 +78,7 @@ def letras(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.elsenordelanillo generos")
+    logger.info("pelisalacarta.channels.elsenordelanillo generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -101,7 +101,7 @@ def generos(item):
     return itemlist
 
 def peliculas(item):
-    logger.info("mitvspain.channels.elsenordelanillo peliculas")
+    logger.info("pelisalacarta.channels.elsenordelanillo peliculas")
     itemlist = []
 
     # Descarga la pagina
@@ -174,7 +174,7 @@ def peliculas(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.elsenordelanillo findvideos")
+    logger.info("pelisalacarta.channels.elsenordelanillo findvideos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -191,7 +191,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.elsenordelanillo play url="+item.url)
+    logger.info("pelisalacarta.channels.elsenordelanillo play url="+item.url)
 
     itemlist = servertools.find_video_items(data=item.url)
 

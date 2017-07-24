@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para seriesflv
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -488,7 +488,7 @@ def findvideos(item):
 
 
 def play(item):
-    logger.info("mitvspain.channels.seriesflv play url="+item.url)
+    logger.info("pelisalacarta.channels.seriesflv play url="+item.url)
 
     data = httptools.downloadpage(item.url, add_referer=True).data
 

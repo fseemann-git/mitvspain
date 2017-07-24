@@ -28,7 +28,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     video_urls.append(['eroshare', url])
 
     #for video_url in video_urls:
-    #    logger.info("mitvspain.servers.eroshare %s - %s" % (video_url[0],video_url[1]))
+    #    logger.info("pelisalacarta.servers.eroshare %s - %s" % (video_url[0],video_url[1]))
     
     return video_urls
 

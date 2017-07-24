@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # XBMC Library Tools
 # ------------------------------------------------------------
@@ -38,7 +38,7 @@ from platformcode import platformtools
 
 addon_name = sys.argv[0].strip()
 if not addon_name or addon_name.startswith("default.py"):
-    addon_name = "plugin://plugin.video.mitvspain/"
+    addon_name = "plugin://plugin.video.pelisalacarta/"
 
 if config.get_setting("folder_movies") != "":
     FOLDER_MOVIES = config.get_setting("folder_movies")
@@ -112,7 +112,7 @@ def sync_trakt(silent=True):
         logger.info("Sincronizacion con Trakt iniciada")
 
         if notificacion:
-            platformtools.dialog_notification("mitvspain",
+            platformtools.dialog_notification("pelisalacarta",
                                               "Sincronizacion con Trakt iniciada",
                                               icon=0,
                                               time=2000)
@@ -337,7 +337,7 @@ def clean(mostrar_dialogo=False):
 
 
 def search_library_path():
-    sql = 'SELECT strPath FROM path WHERE strPath LIKE "special://%/plugin.video.mitvspain/library/" AND idParentPath ISNULL'
+    sql = 'SELECT strPath FROM path WHERE strPath LIKE "special://%/plugin.video.pelisalacarta/library/" AND idParentPath ISNULL'
     nun_records, records = execute_sql_kodi(sql)
     if nun_records >= 1:
         logger.debug(records[0][0])
@@ -713,8 +713,8 @@ def add_sources(path):
 def ask_set_content():
     # Si es la primera vez que se utiliza la biblioteca preguntar si queremos autoconfigurar
     if config.get_setting("library_ask_set_content") == "true" and config.get_setting("library_set_content") == "false":
-        heading = "mitvspain Auto-configuración"
-        linea1 = "¿Desea que mitvspain auto-configure la biblioteca de Kodi?"
+        heading = "Pelisalacarta Auto-configuración"
+        linea1 = "¿Desea que Pelisalacarta auto-configure la biblioteca de Kodi?"
         linea2 = "Si pulsa 'no' y luego desea dicha integración deberá hacerlo manualmente."
         if platformtools.dialog_yesno(heading, linea1, linea2):
             config.set_setting("library_set_content", "true")

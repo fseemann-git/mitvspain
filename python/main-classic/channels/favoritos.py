@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain 4
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain 4.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain 4 is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain 4 is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Lista de vídeos favoritos
 # ------------------------------------------------------------
@@ -242,7 +242,7 @@ def check_bookmark(readpath):
     if itemlist:
         favourites_list = read_favourites()
         for item in itemlist:
-            data = "ActivateWindow(10025,&quot;plugin://plugin.video.mitvspain/?" + item.tourl() + "&quot;,return)"
+            data = "ActivateWindow(10025,&quot;plugin://plugin.video.pelisalacarta/?" + item.tourl() + "&quot;,return)"
             favourites_list.append((item.title, item.thumbnail, data))
         if save_favourites(favourites_list):
             logger.debug("Conversion de txt a xml correcta")

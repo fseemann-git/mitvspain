@@ -1,26 +1,26 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Server management
 #------------------------------------------------------------
@@ -34,7 +34,7 @@ from core import scrapertools
 
 # Funciónn genérica para encontrar ídeos en una página
 def find_video_items(item=None, data=None, channel=""):
-    logger.info("mitvspain.core.servertools find_video_items")
+    logger.info("pelisalacarta.core.servertools find_video_items")
 
     # Descarga la página
     if data is None:
@@ -64,36 +64,36 @@ def find_video_items(item=None, data=None, channel=""):
     return itemlist
 
 def guess_server_thumbnail(title):
-    logger.info("mitvspain.core.servertools guess_server_thumbnail title="+title)
+    logger.info("pelisalacarta.core.servertools guess_server_thumbnail title="+title)
 
     lowcase_title = title.lower()
 
     if "netu" in lowcase_title:
-        logger.info("mitvspain.core.servertools guess_server_thumbnail caso especial netutv")
+        logger.info("pelisalacarta.core.servertools guess_server_thumbnail caso especial netutv")
         return "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/servers/server_netutv.png"
 
     if "ul.to" in lowcase_title:
-        logger.info("mitvspain.core.servertools guess_server_thumbnail caso especial ul.to")
+        logger.info("pelisalacarta.core.servertools guess_server_thumbnail caso especial ul.to")
         return "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/servers/server_uploadedto.png"
 
     if "waaw" in lowcase_title:
-        logger.info("mitvspain.core.servertools guess_server_thumbnail caso especial waaw")
+        logger.info("pelisalacarta.core.servertools guess_server_thumbnail caso especial waaw")
         return "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/servers/server_waaw.png"
 
     if "streamin" in lowcase_title:
-        logger.info("mitvspain.core.servertools guess_server_thumbnail caso especial streamin")
+        logger.info("pelisalacarta.core.servertools guess_server_thumbnail caso especial streamin")
         return "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/servers/server_streaminto.png"
 
     servers = get_servers_list()
     for serverid in servers:
         if serverid in lowcase_title:
-            logger.info("mitvspain.core.servertools guess_server_thumbnail encontrado "+serverid)
+            logger.info("pelisalacarta.core.servertools guess_server_thumbnail encontrado "+serverid)
             return "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/servers/server_"+serverid+".png"
 
     return ""
 
 def findvideosbyserver(data, serverid):
-    logger.info("mitvspain.core.servertools findvideosbyserver")
+    logger.info("pelisalacarta.core.servertools findvideosbyserver")
     encontrados = set()
     devuelve = []
     try:
@@ -111,7 +111,7 @@ def findvideosbyserver(data, serverid):
     return devuelve
 
 def findvideos(data, skip=False):
-    logger.info("mitvspain.core.servertools findvideos") # en #"+data+"#")
+    logger.info("pelisalacarta.core.servertools findvideos") # en #"+data+"#")
     encontrados = set()
     devuelve = []
 
@@ -165,7 +165,7 @@ def get_server_from_url(url):
     return devuelve
 
 def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=False):
-    logger.info("mitvspain.core.servertools resolve_video_urls_for_playing, server="+server+", url="+url)
+    logger.info("pelisalacarta.core.servertools resolve_video_urls_for_playing, server="+server+", url="+url)
     video_urls = []
     torrent = False
 
@@ -173,7 +173,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
 
     # Si el vídeo es "directo", no hay que buscar más
     if server=="directo" or server=="local":
-        logger.info("mitvspain.core.servertools server=directo, la url es la buena")
+        logger.info("pelisalacarta.core.servertools server=directo, la url es la buena")
 
         try:
             import urlparse
@@ -194,7 +194,7 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
             # Muestra un diágo de progreso
             if muestra_dialogo:
                 from platformcode import platformtools
-                progreso = platformtools.dialog_progress( "mitvspain" , "Conectando con "+server)
+                progreso = platformtools.dialog_progress( "pelisalacarta" , "Conectando con "+server)
             server_parameters = get_server_parameters(server)
 
             #Cuenta las opciones disponibles, para calcular el porcentaje
@@ -202,34 +202,34 @@ def resolve_video_urls_for_playing(server,url,video_password="",muestra_dialogo=
             if server_parameters["free"] == "true":
               opciones.append("free")
             opciones.extend([premium for premium in server_parameters["premium"] if config.get_setting(premium+"premium")=="true"])
-            logger.info("mitvspain.core.servertools opciones disponibles para " + server + ": " + str(len(opciones)) + " "+str(opciones))
+            logger.info("pelisalacarta.core.servertools opciones disponibles para " + server + ": " + str(len(opciones)) + " "+str(opciones))
 
             # Sustituye el código por otro "Plex compatible"
             #exec "from servers import "+server+" as server_connector"
             servers_module = __import__("servers."+server)
             server_connector = getattr(servers_module,server)
 
-            logger.info("mitvspain.core.servertools servidor de "+server+" importado")
+            logger.info("pelisalacarta.core.servertools servidor de "+server+" importado")
 
             # Si tiene una función para ver si el vídeo existe, lo comprueba ahora
             if hasattr(server_connector, 'test_video_exists'):
-                logger.info("mitvspain.core.servertools invocando a "+server+".test_video_exists")
+                logger.info("pelisalacarta.core.servertools invocando a "+server+".test_video_exists")
                 puedes,motivo = server_connector.test_video_exists( page_url=url )
 
                 # Si la funcion dice que no existe, fin
                 if not puedes:
-                    logger.info("mitvspain.core.servertools test_video_exists dice que el video no existe")
+                    logger.info("pelisalacarta.core.servertools test_video_exists dice que el video no existe")
                     if muestra_dialogo: progreso.close()
                     return video_urls,puedes,motivo
                 else:
-                    logger.info("mitvspain.core.servertools test_video_exists dice que el video SI existe")
+                    logger.info("pelisalacarta.core.servertools test_video_exists dice que el video SI existe")
 
             # Obtiene enlaces free
             if server_parameters["free"]=="true":
                 if muestra_dialogo:
                   progreso.update((100 / len(opciones)) * opciones.index("free")  , "Conectando con "+server)
 
-                logger.info("mitvspain.core.servertools invocando a "+server+".get_video_url")
+                logger.info("pelisalacarta.core.servertools invocando a "+server+".get_video_url")
                 video_urls = server_connector.get_video_url( page_url=url , video_password=video_password )
 
                 # Si no se encuentran vídeos en modo free, es porque el vídeo no existe
@@ -332,7 +332,7 @@ def get_server_parameters(server):
       return {}
 
 def get_servers_list():
-  logger.info("mitvspain.core.servertools get_servers_list")
+  logger.info("pelisalacarta.core.servertools get_servers_list")
   ServersPath = os.path.join(config.get_runtime_path(),"servers")
   ServerList={}
   for server in os.listdir(ServersPath):

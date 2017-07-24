@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para mocosoftx
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import urllib
@@ -72,7 +72,7 @@ def login():
     return True
 
 def mainlist(item):
-    logger.info("mitvspain.channels.mocosoftx mainlist")
+    logger.info("pelisalacarta.channels.mocosoftx mainlist")
     itemlist = []
 
     if config.get_setting("mocosoftxuser","mocosoftx")=="":
@@ -91,7 +91,7 @@ def settingCanal(item):
     return platformtools.show_channel_settings()
 
 def foro(item):
-    logger.info("mitvspain.channels.mocosoftx foro")
+    logger.info("pelisalacarta.channels.mocosoftx foro")
     itemlist = []
 
     # Descarga la página
@@ -148,12 +148,12 @@ def foro(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.mocosoftx findvideos")
+    logger.info("pelisalacarta.channels.mocosoftx findvideos")
     itemlist=[]
 
     # Busca el thumbnail y el argumento
     data = scrapertools.cache_page(item.url)
-    logger.info("mitvspain.channels.mocosoftx data="+data)
+    logger.info("pelisalacarta.channels.mocosoftx data="+data)
 
     try:
         thumbnail = scrapertools.get_match(data,'<div class="post">.*?<img src="([^"]+)"')

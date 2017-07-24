@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <server>
 	<active>true</active>
-	<version>2</version>
+	<version>3</version>
 	<changes>
+        <change>
+            <date>09/05/2017</date>
+            <autor>Cmos</autor>
+            <description>Ampliado regex para detección de enlaces</description>
+        </change>
         <change>
             <date>29/04/2017</date>
             <autor>Cmos</autor>

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para trailers de ecartelera
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -16,7 +16,7 @@ from core.item import Item
 DEBUG = config.get_setting("debug")
 
 def mainlist(item):
-    logger.info("mitvspain.channels.ecarteleratrailers mainlist")
+    logger.info("pelisalacarta.channels.ecarteleratrailers mainlist")
     itemlist=[]
 
     if item.url=="":
@@ -71,7 +71,7 @@ def mainlist(item):
 
 # Reproducir un vídeo
 def play(item):
-    logger.info("mitvspain.channels.ecarteleratrailers play")
+    logger.info("pelisalacarta.channels.ecarteleratrailers play")
     itemlist=[]
     # Descarga la página
     data = scrapertools.cachePage(item.url)
@@ -83,7 +83,7 @@ def play(item):
 
     if len(matches)>0:
         url = urlparse.urljoin(item.url,matches[0])
-        logger.info("mitvspain.channels.ecarteleratrailers url="+url)
+        logger.info("pelisalacarta.channels.ecarteleratrailers url="+url)
         itemlist.append( Item(channel=item.channel, action="play" , title=item.title , url=url, thumbnail=item.thumbnail, plot=item.plot, server="directo", folder=False))
 
     return itemlist

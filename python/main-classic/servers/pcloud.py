@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para pCloud
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -12,7 +12,7 @@ from core import scrapertools
 
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.pCloud test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.pCloud test_video_exists(page_url='%s')" % page_url)
     
     data = scrapertools.cache_page( page_url )
     if "Invalid link" in data: return False, "[pCloud] El archivo no existe o ha sido borrado"
@@ -21,7 +21,7 @@ def test_video_exists( page_url ):
 
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.pCloud url="+page_url)
+    logger.info("pelisalacarta.servers.pCloud url="+page_url)
     
     data = scrapertools.cache_page(page_url)
     media_url = scrapertools.find_single_match(data,'"downloadlink":.*?"([^"]+)"')
@@ -31,7 +31,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
     video_urls.append( [ scrapertools.get_filename_from_url(media_url)[-4:]+" [pCloud]", media_url])
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.pCloud %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.servers.pCloud %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -43,7 +43,7 @@ def find_videos(data):
 
     # https://my.pcloud.com/publink/show?code=XZhKu7Z49dTa1sEfLX9Tjgk8tESFGfXTjk
     patronvideos  = "(my.pcloud.com/publink/show\?code=[A-z0-9]+)"
-    logger.info("mitvspain.servers.pCloud find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.pCloud find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

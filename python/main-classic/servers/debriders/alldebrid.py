@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para AllDebrid
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -14,7 +14,7 @@ from core import scrapertools
 
 # Returns an array of possible video url's from the page_url
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.alldebrid get_video_url( page_url='%s' , user='%s' , password='%s', video_password=%s)"
+    logger.info("pelisalacarta.servers.alldebrid get_video_url( page_url='%s' , user='%s' , password='%s', video_password=%s)"
                 % (page_url , user , "**************************"[0:len(password)] , video_password) )
     page_url = correct_url(page_url)
 

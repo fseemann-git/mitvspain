@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - WIIMC Plugin
+# pelisalacarta - WIIMC Plugin
 # Canal para mitube (por GASMURO)
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 from core import jsontools as json

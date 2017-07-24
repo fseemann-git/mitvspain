@@ -60,8 +60,7 @@ def temporadas(item):
     templist = []
     data = httptools.downloadpage(item.url).data
     url_base = item.url
-    patron = '<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href=.*? aria-expanded="false" ' \
-             'aria-controls=.*?>([^<]+)<\/a>'
+    patron = '<li class="item\d+"><a href="#">(.*?)<\/a>'
     matches = re.compile(patron, re.DOTALL).findall(data)
     temp = 1
     if 'Temporada' in str(matches):
@@ -96,18 +95,17 @@ def temporadas(item):
 
 
 def episodios(item):
-    logger.debug('mitvspain.channels.seodiv episodios')
+    logger.info()
     itemlist = []
     templist = temporadas(item)
     for tempitem in templist:
-        logger.debug(tempitem)
         itemlist += episodiosxtemp(tempitem)
 
     return itemlist
 
 
 def episodiosxtemp(item):
-    logger.debug("mitvspain.channels.seodiv episodiosxtemp")
+    logger.info()
     itemlist = []
     data = httptools.downloadpage(item.url).data
     tempo = item.title
@@ -155,7 +153,6 @@ def findvideos(item):
     logger.info()
     itemlist = []
     data = httptools.downloadpage(item.url).data
-    logger.debug(data)
     video_items = servertools.find_video_items(item)
 
     for videoitem in video_items:

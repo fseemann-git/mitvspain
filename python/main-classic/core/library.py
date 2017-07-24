@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # Common Library Tools
 # ------------------------------------------------------------
@@ -47,7 +47,7 @@ if not FOLDER_MOVIES or not FOLDER_TVSHOWS or not LIBRARY_PATH \
         or not filetools.exists(MOVIES_PATH) or not filetools.exists(TVSHOWS_PATH):
     config.verify_directories_created()
 
-addon_name = "plugin://plugin.video.mitvspain/"
+addon_name = "plugin://plugin.video.pelisalacarta/"
 
 
 def read_nfo(path_nfo, item=None):
@@ -140,7 +140,7 @@ def save_library_movie(item):
     _id = item.infoLabels['code'][0]
 
     # progress dialog
-    p_dialog = platformtools.dialog_progress('mitvspain', 'Añadiendo película...')
+    p_dialog = platformtools.dialog_progress('pelisalacarta', 'Añadiendo película...')
 
     if config.get_setting("original_title_folder", "biblioteca") == 1 and item.infoLabels['originaltitle']:
         base_name = item.infoLabels['originaltitle']
@@ -376,7 +376,7 @@ def save_library_episodes(path, episodelist, serie, silent=False, overwrite=True
     # Silent es para no mostrar progreso (para library_service)
     if not silent:
         # progress dialog
-        p_dialog = platformtools.dialog_progress('mitvspain', 'Añadiendo episodios...')
+        p_dialog = platformtools.dialog_progress('pelisalacarta', 'Añadiendo episodios...')
         p_dialog.update(0, 'Añadiendo episodio...')
 
     new_episodelist =[]

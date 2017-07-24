@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para playwire
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 
@@ -12,7 +12,7 @@ from core import jsontools
 import xml.etree.ElementTree as ET
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.playwire test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.playwire test_video_exists(page_url='%s')" % page_url)
     
     data = scrapertools.cachePage( page_url )
     if ("File was deleted" or "Not Found") in data: return False, "[playwire] El archivo no existe o ha sido borrado"
@@ -20,7 +20,7 @@ def test_video_exists( page_url ):
     return True,""
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.playwire url="+page_url)
+    logger.info("pelisalacarta.servers.playwire url="+page_url)
     
     data = scrapertools.cachePage(page_url)
     data = jsontools.load_json(data)
@@ -44,7 +44,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
 
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.playwire %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.servers.playwire %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -56,7 +56,7 @@ def find_videos(data):
     # http://config.playwire.com/18542/videos/v2/3154852/zeus.json
     # http://cdn.playwire.com/54884/embed/12487.html
     patronvideos  = '(?:cdn|config).playwire.com(?:/v2|)/(\d+)/(?:embed|videos/v2|config)/(\d+)'
-    logger.info("mitvspain.servers.playwire find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.playwire find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

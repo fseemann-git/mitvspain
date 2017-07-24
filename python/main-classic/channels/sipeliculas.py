@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
 # Canal SiPeliculas.com by EpNiebla
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import urlparse,urllib2,urllib,re
 import os, sys
@@ -16,7 +16,7 @@ from core import servertools
 host = 'http://www.sipeliculas.com'
 
 def mainlist(item):
-    logger.info("mitvspain.channels.sipeliculas mainlist")
+    logger.info("pelisalacarta.channels.sipeliculas mainlist")
 
     itemlist = []
     itemlist.append( item.clone (title = "Novedades",    action = "lista",  url = host + "/cartelera/"))
@@ -30,7 +30,7 @@ def mainlist(item):
     return itemlist
 	
 def alfabetica(item):
-  logger.info("mitvspain.channels.sipeliculas alfabeticass")
+  logger.info("pelisalacarta.channels.sipeliculas alfabeticass")
   itemlist = []
   for letra in "1abcdefghijklmnopqrstuvwxyz":
     itemlist.append(item.clone(title=letra.upper(), url=item.url+letra, action ="lista"))
@@ -38,7 +38,7 @@ def alfabetica(item):
   return itemlist
 	
 def menuseccion(item):
-    logger.info("mitvspain.channels.sipeliculas menuseccion")
+    logger.info("pelisalacarta.channels.sipeliculas menuseccion")
     itemlist = []
     seccion = item.extra
     data = httptools.downloadpage(item.url).data
@@ -88,7 +88,7 @@ def search(item,texto):
         return []    
 
 def findvideos(item):
-    logger.info ("mitvspain.channels.sipeliculas findvideos")
+    logger.info ("pelisalacarta.channels.sipeliculas findvideos")
     itemlist=[]
     data = httptools.downloadpage(item.url).data
     #data = re.sub(r"'|\n|\r|\t|&nbsp;|<br>", "", data)
@@ -112,7 +112,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.sipeliculas play")
+    logger.info("pelisalacarta.channels.sipeliculas play")
     itemlist=[]
 
     video = httptools.downloadpage(host+'/ajax.public.php','acc=ver_opc&f='+item.extra).data

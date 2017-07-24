@@ -208,8 +208,7 @@ def temporadas(item):
     patron = "<button class='classnamer' onclick='javascript: mostrarcapitulos.*?blank'>([^<]+)</button>"
     
     matches = re.compile(patron,re.DOTALL).findall(data)
-    
-    serieid = scrapertools.find_single_match(data,"<link rel='shortlink' href='http:\/\/mundoflv.com\/\?p=([^']+)' \/>")
+    serieid = scrapertools.find_single_match(data, 'data-nonce="(.*?)"')
     item.thumbnail = item.thumbvid
     infoLabels=item.infoLabels
     for scrapedtitle in matches:

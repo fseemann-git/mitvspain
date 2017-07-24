@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para quierodibujosanimados
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -17,13 +17,13 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.quierodibujosanimados mainlist")
+    logger.info("pelisalacarta.channels.quierodibujosanimados mainlist")
 
     #itemlist.append( Item(channel=item.channel , action="novedades"  , title="Novedades" , url="http://www.quierodibujosanimados.com/"))
     return series( Item(channel=item.channel , action="series"     , title="Series"    , url="http://www.quierodibujosanimados.com/"))
 
 def series(item):
-    logger.info("mitvspain.channels.quierodibujosanimados series")
+    logger.info("pelisalacarta.channels.quierodibujosanimados series")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -40,16 +40,16 @@ def series(item):
         plot = ""
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/fanart/quierodibujosanimados.jpg"))        
+        itemlist.append( Item(channel=item.channel, action="episodios" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg"))        
 
     next_page_url = scrapertools.find_single_match(data,'</span[^<]+<a href="([^"]+)">')
     if next_page_url!="":
-        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/fanart/quierodibujosanimados.jpg") )
+        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg") )
 
     return itemlist
 
 def episodios(item):
-    logger.info("mitvspain.channels.quierodibujosanimados episodios")
+    logger.info("pelisalacarta.channels.quierodibujosanimados episodios")
 
     '''
     <li>
@@ -103,10 +103,10 @@ def episodios(item):
         plot = ""
         if (DEBUG): logger.info("title=["+title+"], url=["+url+"], thumbnail=["+thumbnail+"]")
 
-        itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/fanart/quierodibujosanimados.jpg"))
+        itemlist.append( Item(channel=item.channel, action="findvideos" , title=title , url=url, thumbnail=thumbnail, plot=plot, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg"))
 
     next_page_url = scrapertools.find_single_match(data,'</span[^<]+<a href="([^"]+)">')
     if next_page_url!="":
-        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/fanart/quierodibujosanimados.jpg") )
+        itemlist.append( Item(channel=item.channel, action="episodios", title=">> Página siguiente" , url=urlparse.urljoin(item.url,next_page_url) , folder=True, fanart="http://pelisalacarta.mimediacenter.info/fanart/quierodibujosanimados.jpg") )
 
     return itemlist

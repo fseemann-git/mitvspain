@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para mp4upload
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -12,20 +12,20 @@ from core import scrapertools
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("mitvspain.servers.mp4upload get_video_url(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.mp4upload get_video_url(page_url='%s')" % page_url)
 
     data = scrapertools.cache_page(page_url)
-    logger.info("mitvspain.servers.mp4upload data=" + data)
+    logger.info("pelisalacarta.servers.mp4upload data=" + data)
     media_url = scrapertools.find_single_match(data, '"file": "(.+?)"')
-    logger.info("mitvspain.servers.mp4upload media_url=" + media_url)
+    logger.info("pelisalacarta.servers.mp4upload media_url=" + media_url)
     media_url = media_url.replace("?start=0", "")
-    logger.info("mitvspain.servers.mp4upload media_url=" + media_url)
+    logger.info("pelisalacarta.servers.mp4upload media_url=" + media_url)
 
     video_urls = list()
     video_urls.append([scrapertools.get_filename_from_url(media_url)[-4:] + " [mp4upload]", media_url])
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.mp4upload %s - %s" % (video_url[0], video_url[1]))
+        logger.info("pelisalacarta.servers.mp4upload %s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
 
@@ -38,7 +38,7 @@ def find_videos(data):
 
     # http://www.mp4upload.com/embed-g4vrsasad9iu.html
     patronvideos = 'mp4upload.com/embed-([A-Za-z0-9]+)'
-    logger.info("mitvspain.servers.mp4upload find_videos #" + patronvideos + "#")
+    logger.info("pelisalacarta.servers.mp4upload find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:

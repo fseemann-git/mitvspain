@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
-# 
+# pelisalacarta - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import sys
@@ -15,7 +15,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.submityourflicks mainlist")
+    logger.info("pelisalacarta.channels.submityourflicks mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos"    , title="Útimos videos" , url="http://www.submityourflicks.com/", viewmode="movie"))
     itemlist.append( Item(channel=item.channel, action="search"    , title="Buscar", url="http://www.submityourflicks.com/index.php?mode=search&q=%s&submit=Search"))
@@ -24,7 +24,7 @@ def mainlist(item):
 
 
 def search(item,texto):
-    logger.info("mitvspain.channels.submityourflicks search")
+    logger.info("pelisalacarta.channels.submityourflicks search")
     tecleado = texto.replace( " ", "+" )
     item.url = item.url % tecleado
     try:
@@ -38,7 +38,7 @@ def search(item,texto):
         
 
 def videos(item):
-    logger.info("mitvspain.channels.submityourflicks videos")
+    logger.info("pelisalacarta.channels.submityourflicks videos")
     itemlist = [] 
 
     '''
@@ -78,7 +78,7 @@ def videos(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.submityourflicks play")
+    logger.info("pelisalacarta.channels.submityourflicks play")
 
     data = scrapertools.cache_page(item.url)
 

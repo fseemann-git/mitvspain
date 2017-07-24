@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para peliculasmx
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -19,7 +19,7 @@ DEBUG = config.get_setting("debug")
     
 
 def mainlist(item):
-    logger.info("mitvspain.channels.peliculasmx mainlist")
+    logger.info("pelisalacarta.channels.peliculasmx mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, title="Últimas añadidas", action="peliculas" , url="http://www.peliculasmx.net/"))
@@ -28,7 +28,7 @@ def mainlist(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.peliculasmx generos")
+    logger.info("pelisalacarta.channels.peliculasmx generos")
     itemlist = []
 
     # Descarga la página
@@ -54,7 +54,7 @@ def generos(item):
 
 
 def peliculas(item):
-    logger.info("mitvspain.channels.peliculasmx peliculas")
+    logger.info("pelisalacarta.channels.peliculasmx peliculas")
     extra = item.extra
     itemlist = []
     
@@ -91,7 +91,7 @@ def peliculas(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.channels.peliculasmx search")
+    logger.info("pelisalacarta.channels.peliculasmx search")
     itemlist = []
 
     texto = texto.replace(" ","+")

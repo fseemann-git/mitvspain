@@ -12,9 +12,9 @@
 	<bannermenu>https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/bannermenu/mundoflv.png</bannermenu>
 	
 	<update_url></update_url>
-	<version>9</version>
-	<date>28/01/2017</date>
-	<changes>Release</changes>
+	<version>10</version>
+	<date>04/05/2017</date>
+	<changes>Fix enlances</changes>
 
 	<categories>
 		<category>latino</category>

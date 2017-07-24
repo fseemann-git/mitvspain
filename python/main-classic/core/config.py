@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # Parámetros de configuración (kodi)
 # ------------------------------------------------------------
@@ -30,7 +30,7 @@ import os, re
 import xbmc
 import xbmcaddon
 
-PLUGIN_NAME = "mitvspain"
+PLUGIN_NAME = "pelisalacarta"
 
 __settings__ = xbmcaddon.Addon(id="plugin.video." + PLUGIN_NAME)
 __language__ = __settings__.getLocalizedString
@@ -107,7 +107,7 @@ def get_setting(name, channel=""):
 
     Devuelve el valor del parametro 'name' en la configuracion global o en la configuracion propia del canal 'channel'.
 
-    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.mitvspain\settings_channels el
+    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta\settings_channels el
     archivo channel_data.json y lee el valor del parametro 'name'. Si el archivo channel_data.json no existe busca en la
      carpeta channels el archivo channel.xml y crea un archivo channel_data.json antes de retornar el valor solicitado.
     Si el parametro 'name' no existe en channel_data.json lo busca en la configuracion global y si ahi tampoco existe
@@ -155,7 +155,7 @@ def set_setting(name, value, channel=""):
     canal 'channel'.
     Devuelve el valor cambiado o None si la asignacion no se ha podido completar.
 
-    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.mitvspain\settings_channels el
+    Si se especifica el nombre del canal busca en la ruta \addon_data\plugin.video.pelisalacarta\settings_channels el
     archivo channel_data.json y establece el parametro 'name' al valor indicado por 'value'. Si el archivo
     channel_data.json no existe busca en la carpeta channels el archivo channel.xml y crea un archivo channel_data.json
     antes de modificar el parametro 'name'.

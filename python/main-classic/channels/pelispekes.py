@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para pelispekes
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 
@@ -67,7 +67,7 @@ def mainlist(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.zpeliculas findvideos item="+item.tostring())
+    logger.info("pelisalacarta.channels.zpeliculas findvideos item="+item.tostring())
 
     '''
     <h2>Sinopsis</h2>
@@ -82,6 +82,6 @@ def findvideos(item):
     item.plot = scrapertools.find_single_match(data,'<h2>Sinopsis</h2>(.*?)<div')
     item.plot = scrapertools.htmlclean(item.plot).strip()
     item.contentPlot = item.plot
-    logger.info("mitvspain.channels.zpeliculas findvideos plot="+item.plot)
+    logger.info("pelisalacarta.channels.zpeliculas findvideos plot="+item.plot)
 
     return servertools.find_video_items(item=item,data=data)

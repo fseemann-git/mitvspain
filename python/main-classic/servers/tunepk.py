@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para tune.pk
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 
@@ -11,7 +11,7 @@ from core import scrapertools
 
 # Returns an array of possible video url's from the page_url
 def get_video_url( page_url , premium = False , user="" , password="" , video_password="" ):
-    logger.info("mitvspain.tunepk get_video_url(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.tunepk get_video_url(page_url='%s')" % page_url)
 
     video_urls = []
 
@@ -30,7 +30,7 @@ def get_video_url( page_url , premium = False , user="" , password="" , video_pa
         video_urls.append( video_url )
 
     for video_url in video_urls:
-        logger.info("mitvspain.tunepk %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.tunepk %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -41,7 +41,7 @@ def find_videos(text):
 
     # Código embed
     patronvideos  = 'tune.pk/player/embed_player.php\?vid\=(\d+)'
-    logger.info("mitvspain.tunepk find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.tunepk find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(text)
 
     for match in matches:

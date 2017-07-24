@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para yaske
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re, sys, urllib, urlparse
 
@@ -179,7 +179,7 @@ def menu_buscar_contenido(item):
         thumbnail = ""
         
         if item.extra == 'gender':
-            if scrapedtitle in ['Proximos', 'Series', 'Noticia'] or (scrapedtitle == 'Adultos' and adult_mode == "false"):
+            if scrapedtitle in ['Proximos', 'Series', 'Noticia'] or (scrapedtitle == 'Adultos' and adult_mode == "0"):
                 continue
 
             url = HOST + "/genero/" + scrapedurl

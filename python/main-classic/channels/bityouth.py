@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para bityouth
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import os
 import re
@@ -67,7 +67,7 @@ def browser(url):
 
 
 def mainlist(item):
-    logger.info("mitvspain.bityouth mainlist")
+    logger.info("pelisalacarta.bityouth mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, title="[COLOR skyblue][B]Generos[/B][/COLOR]"      , action="generos", url="http://bityouth.com", thumbnail="http://s6.postimg.org/ybey4gxu9/bityougenerosthum3.png", fanart="http://s18.postimg.org/l4judlx09/bityougenerosfan.jpg"))
     itemlist.append( Item(channel=item.channel, title="[COLOR skyblue][B]Puntuacion[/B][/COLOR]"      , action="scraper", url="http://bityouth.com/more_elements/0/?o=pd", thumbnail="http://s6.postimg.org/n1qtn9i6p/bityoupuntothum4.png", fanart="http://s6.postimg.org/qrh9oof9t/bityoupuntofan.jpg"))
@@ -134,7 +134,7 @@ def mainlist(item):
 
 
 def search(item,texto):
-    logger.info("mitvspain.bityouth search")
+    logger.info("pelisalacarta.bityouth search")
     
     itemlist = []
 
@@ -194,7 +194,7 @@ def search(item,texto):
         
     return itemlist
 def generos(item):
-    logger.info("mitvspain.bityouth search")
+    logger.info("pelisalacarta.bityouth search")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -270,7 +270,7 @@ def generos(item):
 
 
 def scraper(item):
-    logger.info("mitvspain.bityouth search")
+    logger.info("pelisalacarta.bityouth search")
     itemlist = []
     import xbmc
     if xbmc.Player().isPlaying():
@@ -363,7 +363,7 @@ def fanart(item):
     
     
     #Vamos a sacar todos los fanarts y arts posibles
-    logger.info("mitvspain.bityouth fanart")
+    logger.info("pelisalacarta.bityouth fanart")
     itemlist = []
     url = item.url
     data = scrapertools.cachePage(url)
@@ -1077,7 +1077,7 @@ def fanart(item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.bityouth search")
+    logger.info("pelisalacarta.bityouth search")
     itemlist = []
     import xbmc
     SEARCHDESTFILE= os.path.join(xbmc.translatePath('special://userdata/keymaps'), "search.txt")
@@ -1163,7 +1163,7 @@ def findvideos(item):
 
 
 def episodios(item):
-    logger.info("mitvspain.bityouth episodios")
+    logger.info("pelisalacarta.bityouth episodios")
     itemlist = []
     import xbmc
     if not xbmc.Player().isPlaying():
@@ -1280,7 +1280,7 @@ def episodios(item):
 
 
 def findvideos_pelis(item):
-    logger.info("mitvspain.bityouth findvideos_pelis")
+    logger.info("pelisalacarta.bityouth findvideos_pelis")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -1321,7 +1321,7 @@ def findvideos_pelis(item):
     return itemlist
 
 def trailer(item):
-    logger.info("mitvspain.bityouth trailer")
+    logger.info("pelisalacarta.bityouth trailer")
     itemlist = []
     import xbmc
     xbmc.executebuiltin('Action(reloadkeymaps)')
@@ -1351,7 +1351,7 @@ def trailer(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.bityouth play")
+    logger.info("pelisalacarta.bityouth play")
     itemlist = []
     
     if item.server == "youtube":
@@ -1376,7 +1376,7 @@ def play(item):
     return itemlist
 
 def info(item):
-    logger.info("mitvspain.sinluces trailer")
+    logger.info("pelisalacarta.sinluces trailer")
     url=item.url
     if "_serie_de_tv" in item.url:
         import xbmc
@@ -1516,7 +1516,7 @@ class TextBox1( xbmcgui.WindowDialog ):
 
 
 def info_capitulos(item):
-    logger.info("mitvspain.Bityouth info_capitulos")
+    logger.info("pelisalacarta.Bityouth info_capitulos")
     import xbmc
     APPCOMMANDDESTFILE = os.path.join(xbmc.translatePath('special://userdata/keymaps'), "customapp.xml")
     try:

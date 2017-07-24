@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para xhamster
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # Por boludiko
 #------------------------------------------------------------
 import re
@@ -17,7 +17,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.xhamster mainlist")
+    logger.info("pelisalacarta.channels.xhamster mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="videos"      , title="Útimos vídeos" , url="http://es.xhamster.com/", viewmode="movie"))
     itemlist.append( Item(channel=item.channel, action="categorias"    , title="Categorías"))
@@ -28,7 +28,7 @@ def mainlist(item):
 # REALMENTE PASA LA DIRECCION DE BUSQUEDA
 
 def search(item,texto):
-    logger.info("mitvspain.channels.xhamster search")
+    logger.info("pelisalacarta.channels.xhamster search")
     tecleado = texto.replace( " ", "+" )
     item.url = item.url % tecleado
     item.extra = "buscar"
@@ -43,7 +43,7 @@ def search(item,texto):
 # SECCION ENCARGADA DE BUSCAR
 
 def videos(item):
-    logger.info("mitvspain.channels.xhamster videos")
+    logger.info("pelisalacarta.channels.xhamster videos")
     data = scrapertools.cache_page(item.url)
     itemlist = []
 
@@ -75,7 +75,7 @@ def videos(item):
 # SECCION ENCARGADA DE VOLCAR EL LISTADO DE CATEGORIAS CON EL LINK CORRESPONDIENTE A CADA PAGINA
     
 def categorias(item):
-    logger.info("mitvspain.channels.xhamster categorias")
+    logger.info("pelisalacarta.channels.xhamster categorias")
     itemlist = []
 
     itemlist.append( Item(channel=item.channel, action="lista" , title="Heterosexual", url="http://es.xhamster.com/channels.php"))
@@ -84,7 +84,7 @@ def categorias(item):
     return itemlist
 
 def votados(item):
-    logger.info("mitvspain.channels.xhamster categorias")
+    logger.info("pelisalacarta.channels.xhamster categorias")
     itemlist = []
 
     itemlist.append( Item(channel=item.channel, action="videos" , title="Día", url="http://es.xhamster.com/rankings/daily-top-videos.html", viewmode="movie"))
@@ -94,7 +94,7 @@ def votados(item):
     return itemlist
 
 def lista(item):
-    logger.info("mitvspain.channels.xhamster lista")
+    logger.info("pelisalacarta.channels.xhamster lista")
     itemlist = []
     data = scrapertools.downloadpageGzip(item.url)
     #data = data.replace("\n","")
@@ -120,7 +120,7 @@ def lista(item):
 
 # OBTIENE LOS ENLACES SEGUN LOS PATRONES DEL VIDEO Y LOS UNE CON EL SERVIDOR
 def detail(item):
-    logger.info("mitvspain.channels.xhamster play")
+    logger.info("pelisalacarta.channels.xhamster play")
     itemlist = []
 
     data = scrapertools.cachePage(item.url)

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para bigfile
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -11,12 +11,12 @@ from core import logger
 
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.bigfile test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.bigfile test_video_exists(page_url='%s')" % page_url)
     
     return True,""
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.bigfile get_video_url(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.bigfile get_video_url(page_url='%s')" % page_url)
     video_urls = []
     return video_urls
 
@@ -27,7 +27,7 @@ def find_videos(data):
 
     # https://www.bigfile.to/file/cKMCXrm7gZqv
     patronvideos  = 'bigfile.to/((?:list/|file/)[\w]+)'
-    logger.info("mitvspain.servers.bigfile find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.bigfile find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

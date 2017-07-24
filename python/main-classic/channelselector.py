@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain
-# Copyright 2017 mitvspain@gmail.com
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of MiTvSpain.
+# This file is part of pelisalacarta 4.
 #
-# MiTvSpain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# MiTvSpain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MiTvSpain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 
 import glob
@@ -245,12 +246,12 @@ def get_thumbnail_path(preferred_thumb=""):
         if thumbnail_type == "":
             thumbnail_type = "2"
         if thumbnail_type == "0":
-            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/posters/"
+            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/posters/"
         elif thumbnail_type == "1":
-            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/banners/"
+            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/banners/"
         elif thumbnail_type == "2":
-            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/squares/"
+            web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/squares/"
     else:
-        web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/master/" + preferred_thumb + "/"
+        web_path = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/" + preferred_thumb + "/"
 
     return web_path

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para Real_Debrid
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -23,7 +23,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:47.0) Gecko/20
 
 # Returns an array of possible video url's from the page_url
 def get_video_url(page_url, premium=False, video_password=""):
-    logger.info("mitvspain.servers.realdebrid get_video_url( page_url='%s' , video_password=%s)"
+    logger.info("pelisalacarta.servers.realdebrid get_video_url( page_url='%s' , video_password=%s)"
                 % (page_url, video_password))
     
     # Se comprueba si existe un token guardado y sino se ejecuta el proceso de autentificación
@@ -92,7 +92,7 @@ def get_enlaces(data):
 
 
 def authentication():
-    logger.info("mitvspain.servers.realdebrid authentication")
+    logger.info("pelisalacarta.servers.realdebrid authentication")
     try:
         client_id = "YTWNFBIJEEBP6"
         

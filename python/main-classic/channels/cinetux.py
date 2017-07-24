@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para cinetux
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import urlparse
@@ -28,7 +28,7 @@ perfil = [['0xFFFFE6CC', '0xFFFFCE9C', '0xFF994D00'],
           ['0xFF58D3F7', '0xFF2E9AFE', '0xFF2E64FE']]
 color1, color2, color3 = perfil[__perfil__]
 
-fanart = "https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/fanart/cinetux.jpg"
+fanart = "http://pelisalacarta.mimediacenter.info/fanart/cinetux.jpg"
 viewmode_options = {0: 'movie_with_plot', 1: 'movie', 2: 'list'}
 viewmode = viewmode_options[config.get_setting('viewmode', 'cinetux')]
 
@@ -216,7 +216,7 @@ def generos(item):
     for scrapedurl, scrapedtitle in matches:
         scrapedtitle = scrapertools.htmlclean(scrapedtitle).strip()
         scrapedtitle = unicode(scrapedtitle, "utf8").capitalize().encode("utf8")
-        if scrapedtitle == "Erotico" and not config.get_setting("adult_mode"):
+        if scrapedtitle == "Erotico" and config.get_setting("adult_mode") == '0':
             continue
 
         itemlist.append(item.clone(action="peliculas", title=scrapedtitle, url=scrapedurl))

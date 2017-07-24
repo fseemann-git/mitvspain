@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para backin.net
 # by be4t5
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -13,7 +13,7 @@ from core import scrapertools
 
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.cnubis page_url="+page_url)
+    logger.info("pelisalacarta.servers.cnubis page_url="+page_url)
     video_urls = []
  
     data = scrapertools.cache_page(page_url)
@@ -24,7 +24,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
     video_urls.append( [ "."+ media_url[1] + " [cnubis]", media_url[0].replace("https","http") ] )
 
     for video_url in video_urls:
-       logger.info("mitvspain.servers.cnubis %s - %s" % (video_url[0],video_url[1]))
+       logger.info("pelisalacarta.servers.cnubis %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -37,7 +37,7 @@ def find_videos(text):
     # http://cnubis.com/plugins/mediaplayer/site/_2embed.php?u=2aZD
     # http://cnubis.com/plugins/mediaplayer/embed/_2embed.php?u=U6w
     patronvideos  = 'cnubis.com/plugins/mediaplayer/(.*?/[^.]+.php\?u\=[A-Za-z0-9]+)'
-    logger.info("mitvspain.servers.cnubis find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.cnubis find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(text)
 
     for match in matches:

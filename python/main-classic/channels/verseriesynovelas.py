@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para verseriesynovelas
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 
@@ -43,13 +43,13 @@ def login(check_login=True):
         post = "log=%s&pwd=%s&redirect_to=http://www.verseriesynovelas.tv/wp-admin/&action=login" % (user, password)
         data = httptools.downloadpage("http://www.verseriesynovelas.tv/iniciar-sesion", post=post).data
         if "La contraseña que has introducido" in data:
-            logger.info("mitvspain.channels.verseriesynovelas Error en el login")
+            logger.info("pelisalacarta.channels.verseriesynovelas Error en el login")
             return False, "Contraseña errónea. Comprueba tus credenciales"
         elif "Nombre de usuario no válido" in data:
-            logger.info("mitvspain.channels.verseriesynovelas Error en el login")
+            logger.info("pelisalacarta.channels.verseriesynovelas Error en el login")
             return False, "Nombre de usuario no válido. Comprueba tus credenciales"            
         else:
-            logger.info("mitvspain.channels.verseriesynovelas Login correcto")
+            logger.info("pelisalacarta.channels.verseriesynovelas Login correcto")
             return True, ""
     except:
         import traceback

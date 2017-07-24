@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #:-----------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para enlaces a torrent y magnet
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 from core import logger
 import re

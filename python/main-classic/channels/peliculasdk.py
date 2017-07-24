@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para peliculasdk
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import sys
@@ -52,7 +52,7 @@ def bbcode_kodi2html(text):
     return text
 
 def mainlist(item):
-    logger.info("mitvspain.peliculasdk mainlist")
+    logger.info("pelisalacarta.peliculasdk mainlist")
     itemlist = []
     title ="Estrenos"
     title = title.replace(title,bbcode_kodi2html("[COLOR orange]"+title+"[/COLOR]"))
@@ -74,7 +74,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.peliculasdk search")
+    logger.info("pelisalacarta.peliculasdk search")
     texto = texto.replace(" ","+")
     
     item.url = "http://www.peliculasdk.com/index.php?s=%s&x=0&y=0" % (texto)
@@ -89,7 +89,7 @@ def search(item,texto):
         return []
 
 def buscador(item):
-    logger.info("mitvspain.peliculasdk buscador")
+    logger.info("pelisalacarta.peliculasdk buscador")
     itemlist = []
     
     # Descarga la página
@@ -142,7 +142,7 @@ def buscador(item):
 
 
 def peliculas(item):
-    logger.info("mitvspain.peliculasdk peliculas")
+    logger.info("pelisalacarta.peliculasdk peliculas")
     itemlist = []
     
     # Descarga la página
@@ -194,7 +194,7 @@ def peliculas(item):
     return itemlist
 
 def fanart(item):
-    logger.info("mitvspain.peliculasdk fanart")
+    logger.info("pelisalacarta.peliculasdk fanart")
     itemlist = []
     url = item.url
     data = scrapertools.cachePage(url)
@@ -446,7 +446,7 @@ def fanart(item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.peliculasdk findvideos")
+    logger.info("pelisalacarta.peliculasdk findvideos")
     
     itemlist = []
     data = scrapertools.cache_page(item.url)
@@ -532,7 +532,7 @@ def findvideos(item):
 
 
 def play(item):
-    logger.info("mitvspain.peliculasdk play")
+    logger.info("pelisalacarta.peliculasdk play")
     
     itemlist = servertools.find_video_items(data=item.url)
     data = scrapertools.cache_page(item.url)
@@ -556,7 +556,7 @@ def play(item):
 
 
 def info(item):
-    logger.info("mitvspain.peliculasdk info")
+    logger.info("pelisalacarta.peliculasdk info")
     itemlist = []
     url=item.url
     id = item.extra

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para PelisDanko
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -22,7 +22,7 @@ art = "http://pelisdanko.com/img/background.jpg"
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.pelisdanko mainlist")
+    logger.info("pelisalacarta.channels.pelisdanko mainlist")
 
     itemlist = []
     itemlist.append(item.clone(action="novedades", title="Novedades", url=host + "/novedades",
@@ -51,7 +51,7 @@ def configuracion(item):
 
 
 def search(item, texto):
-    logger.info("mitvspain.channels.pelisdanko search")
+    logger.info("pelisalacarta.channels.pelisdanko search")
     texto = texto.replace(" ", "+")
     item.url = "http://pelisdanko.com/busqueda?terms=%s" % texto
     try:
@@ -65,7 +65,7 @@ def search(item, texto):
 
 
 def newest(categoria):
-    logger.info("mitvspain.channels.pelisdanko newest")
+    logger.info("pelisalacarta.channels.pelisdanko newest")
     itemlist = []
     item = Item()
     try:
@@ -87,7 +87,7 @@ def newest(categoria):
 
 
 def novedades(item):
-    logger.info("mitvspain.channels.pelisdanko novedades")
+    logger.info("pelisalacarta.channels.pelisdanko novedades")
     itemlist = []
 
     # Descarga la pagina
@@ -122,7 +122,7 @@ def novedades(item):
 
 
 def actualizadas(item):
-    logger.info("mitvspain.channels.pelisdanko actualizadas")
+    logger.info("pelisalacarta.channels.pelisdanko actualizadas")
     itemlist = []
 
     # Descarga la pagina
@@ -162,7 +162,7 @@ def actualizadas(item):
 
 
 def indices(item):
-    logger.info("mitvspain.channels.pelisdanko indices")
+    logger.info("pelisalacarta.channels.pelisdanko indices")
     itemlist = []
 
     item.text_color = "orchid"
@@ -176,7 +176,7 @@ def indices(item):
 
 
 def indice_list(item):
-    logger.info("mitvspain.channels.pelisdanko indice_list")
+    logger.info("pelisalacarta.channels.pelisdanko indice_list")
     itemlist = []
     # Descarga la pagina
     data = scrapertools.downloadpage(item.url)
@@ -191,7 +191,7 @@ def indice_list(item):
 
 
 def enlaces(item):
-    logger.info("mitvspain.channels.pelisdanko enlaces")
+    logger.info("pelisalacarta.channels.pelisdanko enlaces")
     item.extra = ""
     item.text_color = ""
     itemlist = []
@@ -235,7 +235,7 @@ def enlaces(item):
 
 
 def bloque_enlaces(data, filtro_idioma, dict_idiomas, itemlist, type, item):
-    logger.info("mitvspain.channels.pelisdanko bloque_enlaces")
+    logger.info("pelisalacarta.channels.pelisdanko bloque_enlaces")
     bloque = scrapertools.find_single_match(data, '<div role="tabpanel" class="tab-pane fade" id="tab-' +
                                             type + '">(.*?)</table>')
     patron = '<tr class="rip hover".*?data-slug="([^"]+)".*?src="http://pelisdanko.com/img/flags/(.*?).png"' \
@@ -271,7 +271,7 @@ def bloque_enlaces(data, filtro_idioma, dict_idiomas, itemlist, type, item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.channels.pelisdanko findvideos")
+    logger.info("pelisalacarta.channels.pelisdanko findvideos")
     itemlist = []
 
     if item.url[-2:] == "ss":

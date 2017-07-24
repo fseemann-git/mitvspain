@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para flashx
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import base64
@@ -127,7 +127,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
                 filetools.write(subtitle, data)
             except:
                 import traceback
-                logger.info("mitvspain.servers.flashx Error al descargar el subtítulo: "+traceback.format_exc())
+                logger.info("pelisalacarta.servers.flashx Error al descargar el subtítulo: "+traceback.format_exc())
             
     for media_url, label in media_urls:
         if not media_url.endswith("png") and not media_url.endswith(".srt"):

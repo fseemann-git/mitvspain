@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para peliculaseroticas
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import urlparse
@@ -16,7 +16,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.peliculaseroticas mainlist")
+    logger.info("pelisalacarta.channels.peliculaseroticas mainlist")
 
     if item.url=="":
         item.url = "http://www.peliculaseroticas.net/"

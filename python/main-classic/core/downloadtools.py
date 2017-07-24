@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Download Tools - Original based from code of VideoMonkey XBMC Plugin
 # ---------------------------------------------------------------------------------
@@ -429,11 +429,11 @@ def limpia_nombre_excepto_2(s):
 
 def getfilefromtitle(url, title):
     # Imprime en el log lo que va a descartar
-    logger.info("mitvspain.core.downloadtools getfilefromtitle: title=" + title)
-    logger.info("mitvspain.core.downloadtools getfilefromtitle: url=" + url)
-    # logger.info("mitvspain.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
+    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: title=" + title)
+    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: url=" + url)
+    # logger.info("pelisalacarta.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
     plataforma = config.get_system_platform()
-    logger.info("mitvspain.core.downloadtools getfilefromtitle: plataforma=" + plataforma)
+    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: plataforma=" + plataforma)
 
     # nombrefichero = xbmc.makeLegalFilename(title + url[-4:])
     import scrapertools
@@ -442,20 +442,20 @@ def getfilefromtitle(url, title):
         nombrefichero = limpia_nombre_excepto_1(nombrefichero)
     else:
         nombrefichero = title + scrapertools.get_filename_from_url(url)[-4:]
-        logger.info("mitvspain.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
+        logger.info("pelisalacarta.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
         if "videobb" in url or "videozer" in url or "putlocker" in url:
             nombrefichero = title + ".flv"
         if "videobam" in url:
             nombrefichero = title + "." + url.rsplit(".", 1)[1][0:3]
 
-        logger.info("mitvspain.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
+        logger.info("pelisalacarta.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
 
         nombrefichero = limpia_nombre_caracteres_especiales(nombrefichero)
 
-    logger.info("mitvspain.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
+    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: nombrefichero=%s" % nombrefichero)
 
     fullpath = os.path.join(config.get_setting("downloadpath"), nombrefichero)
-    logger.info("mitvspain.core.downloadtools getfilefromtitle: fullpath=%s" % fullpath)
+    logger.info("pelisalacarta.core.downloadtools getfilefromtitle: fullpath=%s" % fullpath)
 
     if config.is_xbmc() and fullpath.startswith("special://"):
         import xbmc
@@ -470,7 +470,7 @@ def downloadtitle(url, title):
 
 
 def downloadbest(video_urls, title, continuar=False):
-    logger.info("mitvspain.core.downloadtools downloadbest")
+    logger.info("pelisalacarta.core.downloadtools downloadbest")
 
     # Le da la vuelta, para poner el de más calidad primero ( list() es para que haga una copia )
     invertida = list(video_urls)
@@ -480,7 +480,7 @@ def downloadbest(video_urls, title, continuar=False):
         # videotitle = elemento[0]
         url = elemento[1]
         logger.info(
-            "mitvspain.core.downloadtools Descargando opción " + title + " " + url.encode('ascii', 'ignore'))
+            "pelisalacarta.core.downloadtools Descargando opción " + title + " " + url.encode('ascii', 'ignore'))
 
         # Calcula el fichero donde debe grabar
         try:
@@ -524,8 +524,8 @@ def downloadbest(video_urls, title, continuar=False):
 
 
 def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False, resumir=True):
-    logger.info("mitvspain.core.downloadtools downloadfile: url=" + url)
-    logger.info("mitvspain.core.downloadtools downloadfile: nombrefichero=" + nombrefichero)
+    logger.info("pelisalacarta.core.downloadtools downloadfile: url=" + url)
+    logger.info("pelisalacarta.core.downloadtools downloadfile: nombrefichero=" + nombrefichero)
 
     if headers is None:
         headers = []
@@ -547,7 +547,7 @@ def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False
             nombrefichero = xbmc.makeLegalFilename(nombrefichero)
         except:
             pass
-        logger.info("mitvspain.core.downloadtools downloadfile: nombrefichero=" + nombrefichero)
+        logger.info("pelisalacarta.core.downloadtools downloadfile: nombrefichero=" + nombrefichero)
 
         # El fichero existe y se quiere continuar
         if os.path.exists(nombrefichero) and continuar:
@@ -559,7 +559,7 @@ def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False
             f = open(nombrefichero, 'r+b')
             if resumir:
                 exist_size = os.path.getsize(nombrefichero)
-                logger.info("mitvspain.core.downloadtools downloadfile: el fichero existe, size=%d" % exist_size)
+                logger.info("pelisalacarta.core.downloadtools downloadfile: el fichero existe, size=%d" % exist_size)
                 grabado = exist_size
                 f.seek(exist_size)
             else:
@@ -568,13 +568,13 @@ def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False
 
         # el fichero ya existe y no se quiere continuar, se aborta
         elif os.path.exists(nombrefichero) and not continuar:
-            logger.info("mitvspain.core.downloadtools downloadfile: el fichero existe, no se descarga de nuevo")
+            logger.info("pelisalacarta.core.downloadtools downloadfile: el fichero existe, no se descarga de nuevo")
             return -3
 
         # el fichero no existe
         else:
             exist_size = 0
-            logger.info("mitvspain.core.downloadtools downloadfile: el fichero no existe")
+            logger.info("pelisalacarta.core.downloadtools downloadfile: el fichero no existe")
 
             # try:
             #    import xbmcvfs
@@ -599,13 +599,13 @@ def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False
                 additional_headers = [additional_headers]
 
             for additional_header in additional_headers:
-                logger.info("mitvspain.core.downloadtools additional_header: " + additional_header)
+                logger.info("pelisalacarta.core.downloadtools additional_header: " + additional_header)
                 name = re.findall("(.*?)=.*?", additional_header)[0]
                 value = urllib.unquote_plus(re.findall(".*?=(.*?)$", additional_header)[0])
                 headers.append([name, value])
 
             url = url.split("|")[0]
-            logger.info("mitvspain.core.downloadtools downloadfile: url=" + url)
+            logger.info("pelisalacarta.core.downloadtools downloadfile: url=" + url)
 
         # Timeout del socket a 60 segundos
         socket.setdefaulttimeout(60)
@@ -613,7 +613,7 @@ def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False
         h = urllib2.HTTPHandler(debuglevel=0)
         request = urllib2.Request(url)
         for header in headers:
-            logger.info("mitvspain.core.downloadtools Header=" + header[0] + ": " + header[1])
+            logger.info("pelisalacarta.core.downloadtools Header=" + header[0] + ": " + header[1])
             request.add_header(header[0], header[1])
 
         if exist_size > 0:
@@ -624,7 +624,7 @@ def downloadfile(url, nombrefichero, headers=None, silent=False, continuar=False
         try:
             connexion = opener.open(request)
         except urllib2.HTTPError, e:
-            logger.info("mitvspain.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" %
+            logger.info("pelisalacarta.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" %
                         (e.code, e.msg, url))
             # print e.code
             # print e.msg
@@ -793,7 +793,7 @@ def downloadfileRTMP(url,nombrefichero,silent):
   try:
     rtmpdump_args = [rtmpdump_cmd] + rtmpdump_args + ["-o", nombrefichero]
     from os import spawnv, P_NOWAIT
-    logger.info("mitvspain.core.downloadtools Iniciando descarga del fichero: %s" % " ".join(rtmpdump_args))
+    logger.info("tvalacarta.core.downloadtools Iniciando descarga del fichero: %s" % " ".join(rtmpdump_args))
     rtmpdump_exit = spawnv(P_NOWAIT, rtmpdump_cmd, rtmpdump_args)
     if not silent:
       from platformcode import platformtools
@@ -805,18 +805,18 @@ def downloadfileRTMP(url,nombrefichero,silent):
 
 
 def downloadfileGzipped(url, pathfichero):
-    logger.info("mitvspain.core.downloadtools downloadfileGzipped: url=" + url)
+    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: url=" + url)
     nombrefichero = pathfichero
-    logger.info("mitvspain.core.downloadtools downloadfileGzipped: nombrefichero=" + nombrefichero)
+    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: nombrefichero=" + nombrefichero)
 
     import xbmc
     nombrefichero = xbmc.makeLegalFilename(nombrefichero)
-    logger.info("mitvspain.core.downloadtools downloadfileGzipped: nombrefichero=" + nombrefichero)
+    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: nombrefichero=" + nombrefichero)
     patron = "(http://[^/]+)/.+"
     matches = re.compile(patron, re.DOTALL).findall(url)
 
     if len(matches):
-        logger.info("mitvspain.core.downloadtools URL principal :" + matches[0])
+        logger.info("pelisalacarta.core.downloadtools URL principal :" + matches[0])
         url1 = matches[0]
     else:
         url1 = url
@@ -852,7 +852,7 @@ def downloadfileGzipped(url, pathfichero):
     try:
         connexion = opener.open(request)
     except urllib2.HTTPError, e:
-        logger.info("mitvspain.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" %
+        logger.info("pelisalacarta.core.downloadtools downloadfile: error %d (%s) al abrir la url %s" %
                     (e.code, e.msg, url))
         # print e.code
         # print e.msg
@@ -885,7 +885,7 @@ def downloadfileGzipped(url, pathfichero):
     # despues
     f = open(nombrefichero, 'w')
 
-    logger.info("mitvspain.core.downloadtools downloadfileGzipped: fichero nuevo abierto")
+    logger.info("pelisalacarta.core.downloadtools downloadfileGzipped: fichero nuevo abierto")
 
     grabado = 0
     logger.info("Content-Length=%s" % totalfichero)
@@ -983,10 +983,10 @@ def downloadfileGzipped(url, pathfichero):
 
 def GetTitleFromFile(title):
     # Imprime en el log lo que va a descartar
-    logger.info("mitvspain.core.downloadtools GetTitleFromFile: titulo=" + title)
-    # logger.info("mitvspain.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
+    logger.info("pelisalacarta.core.downloadtools GetTitleFromFile: titulo=" + title)
+    # logger.info("pelisalacarta.core.downloadtools downloadtitle: title="+urllib.quote_plus( title ))
     plataforma = config.get_system_platform()
-    logger.info("mitvspain.core.downloadtools GetTitleFromFile: plataforma=" + plataforma)
+    logger.info("pelisalacarta.core.downloadtools GetTitleFromFile: plataforma=" + plataforma)
 
     # nombrefichero = xbmc.makeLegalFilename(title + url[-4:])
     if plataforma == "xbox":
@@ -1005,7 +1005,7 @@ def sec_to_hms(seconds):
 
 def downloadIfNotModifiedSince(url, timestamp):
     logger.info(
-        "mitvspain.core.downloadtools downloadIfNotModifiedSince(" + url + "," + time.ctime(timestamp) + ")")
+        "pelisalacarta.core.downloadtools downloadIfNotModifiedSince(" + url + "," + time.ctime(timestamp) + ")")
 
     # Convierte la fecha a GMT
     fecha_formateada = time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime(timestamp))
@@ -1050,7 +1050,7 @@ def downloadIfNotModifiedSince(url, timestamp):
 
 
 def download_all_episodes(item, channel, first_episode="", preferred_server="vidspot", filter_language=""):
-    logger.info("mitvspain.core.downloadtools download_all_episodes, show=" + item.show)
+    logger.info("pelisalacarta.core.downloadtools download_all_episodes, show=" + item.show)
     show_title = item.show
 
     # Obtiene el listado desde el que se llamó
@@ -1080,9 +1080,9 @@ def download_all_episodes(item, channel, first_episode="", preferred_server="vid
 
     for episode_item in episode_itemlist:
         try:
-            logger.info("mitvspain.core.downloadtools download_all_episodes, episode=" + episode_item.title)
+            logger.info("pelisalacarta.core.downloadtools download_all_episodes, episode=" + episode_item.title)
             episode_title = scrapertools.get_match(episode_item.title, "(\d+x\d+)")
-            logger.info("mitvspain.core.downloadtools download_all_episodes, episode=" + episode_title)
+            logger.info("pelisalacarta.core.downloadtools download_all_episodes, episode=" + episode_title)
         except:
             import traceback
             logger.info(traceback.format_exc())
@@ -1141,7 +1141,7 @@ def download_all_episodes(item, channel, first_episode="", preferred_server="vid
                             new_mirror_itemlist_4 + new_mirror_itemlist_5 + new_mirror_itemlist_6)
 
         for mirror_item in mirrors_itemlist:
-            logger.info("mitvspain.core.downloadtools download_all_episodes, mirror=" + mirror_item.title)
+            logger.info("pelisalacarta.core.downloadtools download_all_episodes, mirror=" + mirror_item.title)
 
             if "(Español)" in mirror_item.title:
                 idioma = "(Español)"
@@ -1159,12 +1159,12 @@ def download_all_episodes(item, channel, first_episode="", preferred_server="vid
                 idioma = "(Desconocido)"
                 codigo_idioma = "desconocido"
 
-            logger.info("mitvspain.core.downloadtools filter_language=#" + filter_language + "#, codigo_idioma=#" +
+            logger.info("pelisalacarta.core.downloadtools filter_language=#" + filter_language + "#, codigo_idioma=#" +
                         codigo_idioma + "#")
             if filter_language == "" or (filter_language != "" and filter_language == codigo_idioma):
-                logger.info("mitvspain.core.downloadtools download_all_episodes, downloading mirror")
+                logger.info("pelisalacarta.core.downloadtools download_all_episodes, downloading mirror")
             else:
-                logger.info("mitvspain.core.downloadtools language " + codigo_idioma + " filtered, skipping")
+                logger.info("pelisalacarta.core.downloadtools language " + codigo_idioma + " filtered, skipping")
                 continue
 
             if hasattr(channel, 'play'):
@@ -1183,14 +1183,14 @@ def download_all_episodes(item, channel, first_episode="", preferred_server="vid
 
                 # Lo añade a la lista de descargas
                 if puedes:
-                    logger.info("mitvspain.core.downloadtools download_all_episodes, downloading mirror started...")
+                    logger.info("pelisalacarta.core.downloadtools download_all_episodes, downloading mirror started...")
                     # El vídeo de más calidad es el último
                     # mediaurl = video_urls[len(video_urls) - 1][1]
                     devuelve = downloadbest(video_urls, show_title + " " + episode_title + " " + idioma +
                                             " [" + video_item.server + "]", continuar=False)
 
                     if devuelve == 0:
-                        logger.info("mitvspain.core.downloadtools download_all_episodes, download ok")
+                        logger.info("pelisalacarta.core.downloadtools download_all_episodes, download ok")
                         descargado = True
                         break
                     elif devuelve == -1:
@@ -1201,16 +1201,16 @@ def download_all_episodes(item, channel, first_episode="", preferred_server="vid
                             pass
                         return
                     else:
-                        logger.info("mitvspain.core.downloadtools download_all_episodes, download error, "
+                        logger.info("pelisalacarta.core.downloadtools download_all_episodes, download error, "
                                     "try another mirror")
                         continue
 
                 else:
-                    logger.info("mitvspain.core.downloadtools download_all_episodes, downloading mirror not "
+                    logger.info("pelisalacarta.core.downloadtools download_all_episodes, downloading mirror not "
                                 "available... trying next")
 
         if not descargado:
-            logger.info("mitvspain.core.downloadtools download_all_episodes, EPISODIO NO DESCARGADO " +
+            logger.info("pelisalacarta.core.downloadtools download_all_episodes, EPISODIO NO DESCARGADO " +
                         episode_title)
 
 

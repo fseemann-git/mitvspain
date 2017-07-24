@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
-# 
+# pelisalacarta - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -935,7 +935,7 @@ class related(xbmcgui.WindowDialog):
 
 
 def busqueda_global(item, infoLabels, org_title=False):
-    logger.info("mitvspain.channels.buscador search")
+    logger.info("pelisalacarta.channels.buscador search")
     if item.contentType != "movie":
         cat = ["serie"]
     else:

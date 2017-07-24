@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
-# 
+# pelisalacarta - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import os
 import re
@@ -58,7 +58,7 @@ def browser(url):
 
 
 def mainlist(item):
-    logger.info("mitvspain.bricocine mainlist")
+    logger.info("pelisalacarta.bricocine mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, title="[COLOR sandybrown][B]Pelis MicroHD[/B][/COLOR]"      , action="peliculas", url="http://www.bricocine.com/c/hd-microhd/", thumbnail="http://s6.postimg.org/5vgi38jf5/HD_brico10.jpg", fanart="http://s16.postimg.org/6g9tc2nyt/brico_pelifan.jpg"))
@@ -129,7 +129,7 @@ def mainlist(item):
 
 
 def search(item, texto):
-    logger.info("mitvspain.bricocine search")
+    logger.info("pelisalacarta.bricocine search")
     texto = texto.replace(" ", "+")
     item.url = "http://www.bricocine.com/index.php/?s=%s" % texto
 
@@ -144,7 +144,7 @@ def search(item, texto):
 
 
 def peliculas(item, texto=""):
-    logger.info("mitvspain.bricocine peliculas")
+    logger.info("pelisalacarta.bricocine peliculas")
     itemlist = []
 
     # Borra customkeys
@@ -318,7 +318,7 @@ def peliculas(item, texto=""):
 
 def fanart(item):
     #Vamos a sacar todos los fanarts y arts posibles
-    logger.info("mitvspain.bricocine fanart")
+    logger.info("pelisalacarta.bricocine fanart")
     itemlist = []
     url = item.url
     data = get_page( item.url )
@@ -1074,7 +1074,7 @@ def fanart(item):
     xbmc.executebuiltin('Action(reloadkeymaps)')
     return itemlist
 def findvideos(item):
-    logger.info("mitvspain.bricocine findvideos")
+    logger.info("pelisalacarta.bricocine findvideos")
     
     itemlist = []
     ###Ubicacion Customkey
@@ -1452,7 +1452,7 @@ def findvideos(item):
     return itemlist
 
 def episodios(item):
-    logger.info("mitvspain.bricocine episodios")
+    logger.info("pelisalacarta.bricocine episodios")
     itemlist = []
     ###Borra Customkey si no hay música
     import xbmc
@@ -1608,7 +1608,7 @@ def episodios(item):
 
     return itemlist
 def play(item):
-    logger.info("mitvspain.bricocine play")
+    logger.info("pelisalacarta.bricocine play")
     itemlist = []
     ###Opción para trailers
     if "youtube" in item.url:
@@ -1625,7 +1625,7 @@ def play(item):
 
 
 def findvideos_peli(item):
-    logger.info("mitvspain.bricocine findvideos_peli")
+    logger.info("pelisalacarta.bricocine findvideos_peli")
     
     itemlist = []
     data = get_page( item.url )
@@ -1756,7 +1756,7 @@ def findvideos_peli(item):
     return itemlist
 def trailer(item):
     
-    logger.info("mitvspain.bricocine trailer")
+    logger.info("pelisalacarta.bricocine trailer")
     ###Crea archivo control trailer.txt para evitar la recarga de la música cuando se vuelve de trailer
     import xbmc
     TESTPYDESTFILE = os.path.join(xbmc.translatePath('special://userdata/keymaps'), "test.py")
@@ -1791,7 +1791,7 @@ def trailer(item):
 
 def info(item):
     
-    logger.info("mitvspain.bricocine info")
+    logger.info("pelisalacarta.bricocine info")
     url=item.url
     data = get_page( url )
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data)
@@ -1986,7 +1986,7 @@ class TextBox1( xbmcgui.WindowDialog ):
 
 def info_capitulos(item):
 
-    logger.info("mitvspain.bricocine trailer")
+    logger.info("pelisalacarta.bricocine trailer")
     import xbmc
     APPCOMMANDDESTFILE = os.path.join(xbmc.translatePath('special://userdata/keymaps'), "customapp.xml")
     try:

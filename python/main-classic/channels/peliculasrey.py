@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para peliculasrey
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -19,7 +19,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.peliculasrey mainlist")
+    logger.info("pelisalacarta.channels.peliculasrey mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="PorFecha" , title="Año de Lanzamiento", url="http://www.peliculasrey.com" ))
@@ -32,7 +32,7 @@ def mainlist(item):
     return itemlist
     
 def PorFecha(item):
-    logger.info("mitvspain.channels.peliculasrey generos")
+    logger.info("pelisalacarta.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -55,7 +55,7 @@ def PorFecha(item):
     return itemlist
 
 def Idiomas(item):
-    logger.info("mitvspain.channels.peliculasrey generos")
+    logger.info("pelisalacarta.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -78,7 +78,7 @@ def Idiomas(item):
     return itemlist
 
 def calidades(item):
-    logger.info("mitvspain.channels.peliculasrey generos")
+    logger.info("pelisalacarta.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -101,7 +101,7 @@ def calidades(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.peliculasrey generos")
+    logger.info("pelisalacarta.channels.peliculasrey generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -126,7 +126,7 @@ def generos(item):
 
 def search(item,texto):
     
-    logger.info("mitvspain.channels.peliculasrey search")
+    logger.info("pelisalacarta.channels.peliculasrey search")
     texto = texto.replace(" ", "+")
     item.url = "http://www.peliculasrey.com/?s=" + texto
     
@@ -143,7 +143,7 @@ def search(item,texto):
 
     
 def peliculas(item):
-    logger.info("mitvspain.channels.peliculasrey peliculas")
+    logger.info("pelisalacarta.channels.peliculasrey peliculas")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -168,7 +168,7 @@ def peliculas(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.peliculasrey findvideos")
+    logger.info("pelisalacarta.channels.peliculasrey findvideos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -196,7 +196,7 @@ def findvideos(item):
 
 
 def play(item):
-    logger.info("mitvspain.channels.peliculasrey play url="+item.url)
+    logger.info("pelisalacarta.channels.peliculasrey play url="+item.url)
 
     itemlist = servertools.find_video_items(data=item.url)
 

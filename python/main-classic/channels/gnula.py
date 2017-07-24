@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para Shurweb
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import urlparse
@@ -18,7 +18,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.gnula mainlist")
+    logger.info("pelisalacarta.channels.gnula mainlist")
     itemlist = []
     itemlist.append( Item(channel=item.channel, title="Estrenos"      , action="peliculas"    , url="http://gnula.nu/peliculas-online/lista-de-peliculas-online-parte-1/", viewmode="movie"))
     itemlist.append( Item(channel=item.channel, title="Generos"       , action="generos"   , url="http://gnula.nu/generos/lista-de-generos/"))
@@ -27,7 +27,7 @@ def mainlist(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.gnula generos")
+    logger.info("pelisalacarta.channels.gnula generos")
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
@@ -52,7 +52,7 @@ def generos(item):
     return itemlist
 
 def peliculas(item):
-    logger.info("mitvspain.channels.gnula peliculas")
+    logger.info("pelisalacarta.channels.gnula peliculas")
 
     '''
     <a class="Ntooltip" href="http://gnula.nu/comedia-romantica/ver-with-this-ring-2015-online/">With This Ring<span><br/>
@@ -84,7 +84,7 @@ def peliculas(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.zpeliculas gnula item="+item.tostring())
+    logger.info("pelisalacarta.channels.zpeliculas gnula item="+item.tostring())
 
     # Descarga la página para obtener el argumento
     data = scrapertools.cachePage(item.url)
@@ -97,6 +97,6 @@ def findvideos(item):
         item.thumbnail = newthumbnail
         item.contentThumbnail = newthumbnail
 
-    logger.info("[mitvspain.channels.zpeliculas findvideos plot="+item.plot)
+    logger.info("[pelisalacarta.channels.zpeliculas findvideos plot="+item.plot)
 
     return servertools.find_video_items(item=item,data=data)

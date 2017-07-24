@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain
-# Copyright 2017 mitvspain@gmail.com
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of MiTvSpain.
+# This file is part of pelisalacarta 4.
 #
-# MiTvSpain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# MiTvSpain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MiTvSpain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # Service for updating new episodes on library series
 # ------------------------------------------------------------
@@ -244,7 +245,7 @@ def check_for_update(overwrite=True):
             config.set_setting("updatelibrary_last_check", hoy.strftime('%Y-%m-%d'), "biblioteca")
 
             heading = 'Actualizando biblioteca....'
-            p_dialog = platformtools.dialog_progress_bg('mitvspain', heading)
+            p_dialog = platformtools.dialog_progress_bg('pelisalacarta', heading)
             p_dialog.update(0, '')
             show_list = []
 
@@ -332,7 +333,7 @@ def check_for_update(overwrite=True):
             p_dialog.close()
 
         else:
-            logger.info("No actualiza la biblioteca, está desactivado en la configuración de MiTvSpain")
+            logger.info("No actualiza la biblioteca, está desactivado en la configuración de pelisalacarta")
 
     except Exception as ex:
         logger.error("Se ha producido un error al actualizar las series")

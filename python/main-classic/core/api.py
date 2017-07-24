@@ -1,28 +1,28 @@
 #------------------------------------------------------------
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain
-# Copyright 2016 mitvspain@gmail.com
+# pelisalacarta 4
+# Copyright 2016 tvalacarta@gmail.com
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 #------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 #------------------------------------------------------------
-# Client for api.mitvspain.info
+# Client for api.tvalacarta.info
 #------------------------------------------------------------
 
 import os
@@ -36,7 +36,7 @@ import scrapertools
 import urllib
 from item import Item
 
-MAIN_URL = "http://api.mitvspain.info/v2"
+MAIN_URL = "http://api.tvalacarta.info/v2"
 API_KEY = "nzgJy84P9w54H2w"
 DEFAULT_HEADERS = [ ["User-Agent",config.PLUGIN_NAME+" "+config.get_platform()] ]
 
@@ -46,7 +46,7 @@ DEFAULT_HEADERS = [ ["User-Agent",config.PLUGIN_NAME+" "+config.get_platform()] 
 
 # Make a remote call using post, ensuring api key is here
 def remote_call(url,parameters={},require_session=True):
-    logger.info("mitvspain.core.api.remote_call url="+url+", parameters="+repr(parameters))
+    logger.info("pelisalacarta.core.api.remote_call url="+url+", parameters="+repr(parameters))
 
     if not url.startswith("http"):
         url = MAIN_URL + "/" + url
@@ -70,13 +70,13 @@ def remote_call(url,parameters={},require_session=True):
 # ---------------------------------------------------------------------------------------------------------
 
 def plugins_get_all_packages():
-    logger.info("mitvspain.core.api.plugins.get_all_packages")
+    logger.info("pelisalacarta.core.api.plugins.get_all_packages")
 
     parameters = { "plugin" : config.PLUGIN_NAME , "platform" : config.get_platform() }
     return remote_call( "plugins/get_all_packages.php" , parameters )
 
 def plugins_get_latest_packages():
-    logger.info("mitvspain.core.api.plugins.get_latest_packages")
+    logger.info("pelisalacarta.core.api.plugins.get_latest_packages")
 
     parameters = { "plugin" : config.PLUGIN_NAME , "platform" : config.get_platform() }
     return remote_call( "plugins/get_latest_packages.php" , parameters )

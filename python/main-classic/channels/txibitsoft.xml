@@ -6,7 +6,7 @@
 	<adult>false</adult>
 	<language>es</language>
     
-    <version>15</version>
+    <version>16</version>
     <changes>
          
             <change>
@@ -18,6 +18,11 @@
                     <date>04/04/2017</date>
 			        <autor>Neno1978</autor>
                     <description>Migración a Httptools.Algunas mejoras código</description>
+            </change>
+            <change> 
+                    <date>08/05/2017</date>
+			        <autor>Neno1978</autor>
+                    <description>Workaround en error certificado ssl en algunos OS. Mejoras secciones de peliculas</description>
             </change>
             
     </changes>        

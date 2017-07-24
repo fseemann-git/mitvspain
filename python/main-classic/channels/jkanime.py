@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para jkanime
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -18,7 +18,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.jkanime mainlist")
+    logger.info("pelisalacarta.channels.jkanime mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="ultimos_capitulos" , title="Últimos Capitulos"           , url="http://jkanime.net/" ))
@@ -30,7 +30,7 @@ def mainlist(item):
     return itemlist
 
 def ultimos_capitulos(item):
-    logger.info("mitvspain.channels.jkanime ultimos capitulos")
+    logger.info("pelisalacarta.channels.jkanime ultimos capitulos")
     itemlist = []
     data = scrapertools.cache_page(item.url)
     data = scrapertools.get_match(data,'<ul class="ratedul">.+?</ul>')
@@ -54,7 +54,7 @@ def ultimos_capitulos(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.channels.jkanime search")
+    logger.info("pelisalacarta.channels.jkanime search")
     if item.url=="":
         item.url="http://jkanime.net/buscar/%s/"
     texto = texto.replace(" ","+")
@@ -69,7 +69,7 @@ def search(item,texto):
         return []
 
 def ultimos(item):
-    logger.info("mitvspain.channels.jkanime ultimos")
+    logger.info("pelisalacarta.channels.jkanime ultimos")
     itemlist = []
     data = scrapertools.cache_page(item.url)
     data = scrapertools.get_match(data,'<ul class="latestul">(.*?)</ul>')
@@ -89,7 +89,7 @@ def ultimos(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.jkanime generos")
+    logger.info("pelisalacarta.channels.jkanime generos")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -110,7 +110,7 @@ def generos(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.jkanime letras")
+    logger.info("pelisalacarta.channels.jkanime letras")
     itemlist = []
     
     data = scrapertools.cache_page(item.url)
@@ -131,7 +131,7 @@ def letras(item):
     return itemlist
 
 def series(item):
-    logger.info("mitvspain.channels.jkanime series")
+    logger.info("pelisalacarta.channels.jkanime series")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -196,7 +196,7 @@ def getPagesAndEpisodes(data):
     return 1, 0
 
 def episodios(item):
-    logger.info("mitvspain.channels.jkanime episodios")
+    logger.info("pelisalacarta.channels.jkanime episodios")
     itemlist = []
 
     # Descarga la pagina

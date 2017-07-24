@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para idowatch
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -36,7 +36,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     video_urls.append([scrapertools.get_filename_from_url(mediaurl)[-4:] + " [idowatch]", mediaurl])
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.idowatch %s - %s" % (video_url[0], video_url[1]))
+        logger.info("pelisalacarta.servers.idowatch %s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
 

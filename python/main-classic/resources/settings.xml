@@ -65,36 +65,36 @@
         <setting type="sep"/>
         <setting id="personalchannel" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/sample.png"/>
-        <setting id="personalchannelurl" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
+        <setting id="personalchannellogo" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
+        <setting id="personalchannelurl" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
         <setting id="personalchannelpage" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel2" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname2" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo2" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
-        <setting id="personalchannelurl2" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
+        <setting id="personalchannellogo2" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
+        <setting id="personalchannelurl2" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
         <setting id="personalchannelpage2" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel3" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname3" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo3" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
-        <setting id="personalchannelurl3" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
+        <setting id="personalchannellogo3" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
+        <setting id="personalchannelurl3" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
         <setting id="personalchannelpage3" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel4" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname4" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo4" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
-        <setting id="personalchannelurl4" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
+        <setting id="personalchannellogo4" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
+        <setting id="personalchannelurl4" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
         <setting id="personalchannelpage4" type="text" label="30047" enable="eq(-4,true)" default="100"/>
 
         <setting type="sep"/>
         <setting id="personalchannel5" type="bool" label="30013" default="false"/>
         <setting id="personalchannelname5" type="text" label="30048" enable="eq(-1,true)" default="Ejemplo de canal personal"/>
-        <setting id="personalchannellogo5" type="text" label="30049" enable="eq(-2,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/sample.png"/>
-        <setting id="personalchannelurl5" type="text" label="30045" enable="eq(-3,true)" default="https://raw.githubusercontent.com/MiTvSpain/mitvspain/master/samplefeed.rss"/>
+        <setting id="personalchannellogo5" type="text" label="30049" enable="eq(-2,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/sample.png"/>
+        <setting id="personalchannelurl5" type="text" label="30045" enable="eq(-3,true)" default="http://pelisalacarta.mimediacenter.info/personalchannel/samplefeed.rss"/>
         <setting id="personalchannelpage5" type="text" label="30047" enable="eq(-4,true)" default="100"/>
     </category>
 
@@ -119,7 +119,7 @@
         <setting label="Biblioteca" type="lsep"/>
         <setting id="folder_tvshows" type="text" label="Nombre de carpeta para 'Series'" default="SERIES"/>
         <setting id="folder_movies" type="text" label="Nombre de carpeta para 'Peliculas'" default="CINE"/>
-        <setting id="library_set_content" type="bool" label="Autoconfigurar biblioteca de XBMC/Kodi para contenido de mitvspain" default="false"/>
+        <setting id="library_set_content" type="bool" label="Autoconfigurar biblioteca de XBMC/Kodi para contenido de pelisalacarta" default="false"/>
         <setting id="library_ask_set_content" type="bool" label="" default="true" visible="false"/>
     </category>
 

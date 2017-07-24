@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # XBMC Launcher (xbmc / kodi / boxee)
 # ------------------------------------------------------------
@@ -214,7 +214,7 @@ def run():
 
                     # If not, shows user an error message
                     else:
-                        platformtools.dialog_ok("mitvspain", "No hay nada para reproducir")
+                        platformtools.dialog_ok("pelisalacarta", "No hay nada para reproducir")
 
                 # If player don't have a "play" function, not uses the standard play from platformtools
                 else:
@@ -302,13 +302,13 @@ def run():
             logger.info("Razon del error, codigo: %s | Razon: %s" %
                         (str(e.reason[0]), str(e.reason[1])))
             texto = config.get_localized_string(30050)  # "No se puede conectar con el sitio web"
-            platformtools.dialog_ok("mitvspain", texto)
+            platformtools.dialog_ok("pelisalacarta", texto)
 
         # Grab server response errors
         elif hasattr(e, 'code'):
             logger.info("Codigo de error HTTP : %d" % e.code)
             # "El sitio web no funciona correctamente (error http %d)"
-            platformtools.dialog_ok("mitvspain", config.get_localized_string(30051) % e.code)
+            platformtools.dialog_ok("pelisalacarta", config.get_localized_string(30051) % e.code)
 
     except:
         import traceback
@@ -331,11 +331,11 @@ def run():
             platformtools.dialog_ok(
                 "Error inesperado en el canal " + canal,
                 "Puede deberse a un fallo de conexión, la web del canal "
-                "ha cambiado su estructura, o un error interno de mitvspain.",
+                "ha cambiado su estructura, o un error interno de pelisalacarta.",
                 "Para saber más detalles, consulta el log.", log_message)
         else:
             platformtools.dialog_ok(
-                "Se ha producido un error en mitvspain",
+                "Se ha producido un error en pelisalacarta",
                 "Comprueba el log para ver mas detalles del error.",
                 log_message)
 
@@ -506,7 +506,7 @@ def play_from_library(item):
         Los .strm al reproducirlos desde kodi, este espera que sea un archivo "reproducible" asi que no puede contener
         más items, como mucho se puede colocar un dialogo de seleccion.
         Esto lo solucionamos "engañando a kodi" y haciendole creer que se ha reproducido algo, asi despues mediante
-        "Container.Update()" cargamos el strm como si un item desde dentro de mitvspain se tratara, quitando todas
+        "Container.Update()" cargamos el strm como si un item desde dentro de pelisalacarta se tratara, quitando todas
         las limitaciones y permitiendo reproducir mediante la funcion general sin tener que crear nuevos métodos para
         la biblioteca.
         @type item: item
@@ -538,7 +538,7 @@ def play_from_library(item):
     else:
         # Ventana emergente
         from channels import biblioteca
-        p_dialog = platformtools.dialog_progress_bg('mitvspain', 'Cargando...')
+        p_dialog = platformtools.dialog_progress_bg('pelisalacarta', 'Cargando...')
         p_dialog.update(0, '')
 
         itemlist = biblioteca.findvideos(item)

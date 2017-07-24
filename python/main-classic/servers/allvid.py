@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para allvid
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
 
+from core import httptools
 from core import logger
 from core import scrapertools
 from lib import jsunpack
@@ -15,8 +16,11 @@ from lib import jsunpack
 def test_video_exists(page_url):
     logger.info("(page_url='%s')" % page_url)
 
-    data = scrapertools.cache_page(page_url)
-    if ("File was deleted" or "Not Found") in data: return False, "[Allvid] El archivo no existe o ha sido borrado"
+    data = httptools.downloadpage(page_url).data
+    redirect_url = scrapertools.find_single_match(data, '<iframe src="([^"]+)')
+    data = httptools.downloadpage(redirect_url).data    
+    if "File was deleted" in data or "Not Found" in data or "video is no longer available" in data:
+        return False, "[Allvid] El archivo no existe o ha sido borrado"
 
     return True, ""
 
@@ -24,9 +28,9 @@ def test_video_exists(page_url):
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
     logger.info("url=" + page_url)
 
-    data = scrapertools.cache_page(page_url)
+    data = httptools.downloadpage(page_url).data
     redirect_url = scrapertools.find_single_match(data, '<iframe src="([^"]+)')
-    data = scrapertools.cache_page(redirect_url)
+    data = httptools.downloadpage(redirect_url).data
     matches = scrapertools.find_single_match(data,
                                              "<script type='text/javascript'>(eval\(function\(p,a,c,k,e,d.*?)</script>")
     matchjs = jsunpack.unpack(matches).replace("\\", "")

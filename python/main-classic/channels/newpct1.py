@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para newpct1
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 
@@ -43,7 +43,7 @@ def search(item,texto):
         return itemlist
 
 
-    # Se captura la excepciÃ³n, para no interrumpir al buscador global si un canal falla
+    # Se captura la excepción, para no interrumpir al buscador global si un canal falla
     except:
         import sys
         for line in sys.exc_info():
@@ -57,7 +57,7 @@ def submenu(item):
     data = re.sub(r"\n|\r|\t|\s{2}|(<!--.*?-->)","",httptools.downloadpage(item.url).data)
     data = unicode( data, "iso-8859-1" , errors="replace" ).encode("utf-8")
 
-    patron = '<li><a href="http://www.newpct1.com/'+item.extra+'/">.*?<ul>(.*?)</ul>'
+    patron = '<nav id="myjquerymenu" class="jquerycssmenu">.+?Juegos'
     data = scrapertools.get_match(data,patron)
 
     patron = '<a href="([^"]+)".*?>([^>]+)</a>'
@@ -123,6 +123,7 @@ def listado(item):
         if "1.com/series" in url: 
             action = "completo"
             extra="serie"
+            context = "tvshow"
             
             title=scrapertools.find_single_match(title,'([^-]+)')
             title= title.replace("Ver online","",1).replace("Descarga Serie HD","",1).replace("Ver en linea","",1).strip() 
@@ -145,26 +146,26 @@ def listado(item):
                 
             url += '&idioma=&ordenar=Nombre&inon=Descendente'  
             '''
+            show = title
         else:    
             title= title.replace("Descargar","",1).strip()
             if title.endswith("gratis"): title= title[:-7]
+            show = ""
+            context = "movie"
         
-        show = title
-        if item.extra!="buscar-list":
-            title = title + ' ' + calidad
-
-        context = ""
         context_title = scrapertools.find_single_match(url, "http://www.newpct1.com/(.*?)/(.*?)/")
         if context_title:
             try:
-                context = context_title[0].replace("pelicula","movie").replace("descargar","movie").replace("series","tvshow")
                 context_title = context_title[1].replace("-"," ")
                 if re.search( '\d{4}', context_title[-4:]):
                     context_title = context_title[:-4]
                 elif re.search( '\(\d{4}\)', context_title[-6:]):
                     context_title = context_title[:-6]
             except:
-                context_title = show
+                context_title = title
+
+        if item.extra!="buscar-list":
+            title = title + ' ' + calidad
             
         itemlist.append( Item(channel=item.channel, action=action, title=title, url=url, thumbnail=thumbnail, extra=extra, show=show,
                               contentTitle=context_title, contentType=context, context=["buscar_trailer"]) )
@@ -233,18 +234,18 @@ def completo(item):
     salir = False
     while not salir:
 
-        # Saca la URL de la siguiente pÃ¡gina    
+        # Saca la URL de la siguiente página    
         ultimo_item = items_programas[ len(items_programas)-1 ]
        
-        # PÃ¡ginas intermedias
+        # Páginas intermedias
         if ultimo_item.action==ultimo_action:
-            # Quita el elemento de "PÃ¡gina siguiente" 
+            # Quita el elemento de "Página siguiente" 
             ultimo_item = items_programas.pop()
 
-            # AÃ±ade las entradas de la pÃ¡gina a la lista completa
+            # Añade las entradas de la página a la lista completa
             itemlist.extend( items_programas )
     
-            # Carga la siguiente pÃ¡gina
+            # Carga la siguiente página
             ultimo_item.extra = item_extra
             ultimo_item.show = item_show
             ultimo_item.title = item_title
@@ -254,14 +255,14 @@ def completo(item):
             else:
                 items_programas = listado(ultimo_item)
                 
-        # Ãšltima pÃ¡gina
+        # Última página
         else:
-            # AÃ±ade a la lista completa y sale
+            # Añade a la lista completa y sale
             itemlist.extend( items_programas )
             salir = True          
       
     if (config.get_library_support() and len(itemlist)>0 and item.extra.startswith("serie")) :
-        itemlist.append( Item(channel=item.channel, title="AÃ±adir esta serie a la biblioteca", url=item.url, action="add_serie_to_library", extra="completo###serie_add" , show= item.show))
+        itemlist.append( Item(channel=item.channel, title="Añadir esta serie a la biblioteca", url=item.url, action="add_serie_to_library", extra="completo###serie_add" , show= item.show))
     logger.debug("items="+ str(len(itemlist)))
     return itemlist
    
@@ -279,7 +280,7 @@ def get_episodios(item):
     fichas = scrapertools.get_match(data,patron)
     #logger.info("[newpct1.py] matches=" + str(len(fichas)))
     
-    #<li><a href="http://www.newpct1.com/serie/forever/capitulo-101/" title="Serie Forever 1x01"><img src="http://www.newpct1.com/pictures/c/minis/1880_forever.jpg" alt="Serie Forever 1x01"></a> <div class="info"> <a href="http://www.newpct1.com/serie/forever/capitulo-101/" title="Serie Forever 1x01"><h2 style="padding:0;">Serie <strong style="color:red;background:none;">Forever - Temporada 1 </strong> - Temporada<span style="color:red;background:none;">[ 1 ]</span>Capitulo<span style="color:red;background:none;">[ 01 ]</span><span style="color:red;background:none;padding:0px;">Espaï¿½ol Castellano</span> Calidad <span style="color:red;background:none;">[ HDTV ]</span></h2></a> <span>27-10-2014</span> <span>450 MB</span> <span class="color"><ahref="http://www.newpct1.com/serie/forever/capitulo-101/" title="Serie Forever 1x01"> Descargar</a> </div></li>
+    #<li><a href="http://www.newpct1.com/serie/forever/capitulo-101/" title="Serie Forever 1x01"><img src="http://www.newpct1.com/pictures/c/minis/1880_forever.jpg" alt="Serie Forever 1x01"></a> <div class="info"> <a href="http://www.newpct1.com/serie/forever/capitulo-101/" title="Serie Forever 1x01"><h2 style="padding:0;">Serie <strong style="color:red;background:none;">Forever - Temporada 1 </strong> - Temporada<span style="color:red;background:none;">[ 1 ]</span>Capitulo<span style="color:red;background:none;">[ 01 ]</span><span style="color:red;background:none;padding:0px;">Espa ol Castellano</span> Calidad <span style="color:red;background:none;">[ HDTV ]</span></h2></a> <span>27-10-2014</span> <span>450 MB</span> <span class="color"><ahref="http://www.newpct1.com/serie/forever/capitulo-101/" title="Serie Forever 1x01"> Descargar</a> </div></li>
     #logger.info("[newpct1.py] get_episodios: " + fichas)
     patron  = '<li[^>]*><a href="([^"]+).*?' #url
     patron += '<img src="([^"]+)".*?' #thumbnail
@@ -293,7 +294,7 @@ def get_episodios(item):
             if '</span>' in scrapedinfo:
                 #logger.info("[newpct1.py] get_episodios: scrapedinfo="+scrapedinfo)
                 try:
-                    #<h2 style="padding:0;">Serie <strong style="color:red;background:none;">The Big Bang Theory - Temporada 6 </strong> - Temporada<span style="color:red;background:none;">[ 6 ]</span>Capitulo<span style="color:red;background:none;">[ 03 ]</span><span style="color:red;background:none;padding:0px;">EspaÃ±ol Castellano</span> Calidad <span style="color:red;background:none;">[ HDTV ]</span></h2>
+                    #<h2 style="padding:0;">Serie <strong style="color:red;background:none;">The Big Bang Theory - Temporada 6 </strong> - Temporada<span style="color:red;background:none;">[ 6 ]</span>Capitulo<span style="color:red;background:none;">[ 03 ]</span><span style="color:red;background:none;padding:0px;">Español Castellano</span> Calidad <span style="color:red;background:none;">[ HDTV ]</span></h2>
                     patron = '<span style=".*?">\[\s*(.*?)\]</span>.*?' #temporada
                     patron += '<span style=".*?">\[\s*(.*?)\].*?' #capitulo
                     patron += ';([^/]+)' #idioma
@@ -301,7 +302,7 @@ def get_episodios(item):
                     (temporada, capitulo, idioma) = info_extra[0]
 
                 except:
-                    # <h2 style="padding:0;">Serie <strong style="color:red;background:none;">The Affair  Temporada 3 Capitulo 5</strong> - <span style="color:red;background:none;padding:0px;">EspaÃ±ol Castellano</span> Calidad <span style="color:red;background:none;">[ HDTV ]</span></h2>
+                    # <h2 style="padding:0;">Serie <strong style="color:red;background:none;">The Affair  Temporada 3 Capitulo 5</strong> - <span style="color:red;background:none;padding:0px;">Español Castellano</span> Calidad <span style="color:red;background:none;">[ HDTV ]</span></h2>
                     patron = '<strong style=".*?">([^<]+).*?'  # temporada y capitulo
                     patron += '<span style=".*?">([^<]+)'
 
@@ -328,8 +329,8 @@ def get_episodios(item):
                 else:
                     title = item.title + " (Del %sx%s al %sx%s) %s" % (temporada, cap1, temporada, cap2, idioma)
             else:
-                #<h2 style="padding:0;">The Big Bang Theory - Temporada 6 [HDTV][Cap.602][EspaÃ±ol Castellano]</h2>
-                #<h2 style="padding:0;">The Beast - Temporada 1 [HDTV] [CapÃ­tulo 13] [EspaÃ±ol]</h2
+                #<h2 style="padding:0;">The Big Bang Theory - Temporada 6 [HDTV][Cap.602][Español Castellano]</h2>
+                #<h2 style="padding:0;">The Beast - Temporada 1 [HDTV] [Capítulo 13] [Español]</h2
                 #<h2 style="padding:0;">The Beast - Temp.1 [DVD-DVB][Cap.103][Spanish]</h2>             
                 try:
                     temp ,cap = scrapertools.get_season_and_episode(scrapedinfo).split('x')
@@ -351,7 +352,7 @@ def get_episodios(item):
             #logger.info("[newpct1.py] get_episodios: fanart= " +item.fanart)
             itemlist.append( Item(channel=item.channel, action="findvideos", title=title, url=url, thumbnail=item.thumbnail, show=item.show, fanart=item.fanart) )
         except:
-            logger.error("ERROR al aÃ±adir un episodio")
+            logger.error("ERROR al añadir un episodio")
     if "pagination" in data:
         patron = '<ul class="pagination">(.*?)</ul>'
         paginacion = scrapertools.get_match(data,patron)
@@ -360,7 +361,7 @@ def get_episodios(item):
             url_next_page  = scrapertools.get_match(paginacion,'<a href="([^>]+)>Next</a>')[:-1]
             url_next_page= url_next_page.replace(" ","%20")
             #logger.info("[newpct1.py] get_episodios: url_next_page= " + url_next_page)
-            itemlist.append( Item(channel=item.channel, action="get_episodios" , title=">> PÃ¡gina siguiente" , url=url_next_page))
+            itemlist.append( Item(channel=item.channel, action="get_episodios" , title=">> Página siguiente" , url=url_next_page))
 
     return itemlist
 
@@ -380,12 +381,12 @@ def findvideos(item):
     logger.info()
     itemlist=[]   
           
-    ## Cualquiera de las tres opciones son vÃ¡lidas
+    ## Cualquiera de las tres opciones son válidas
     #item.url = item.url.replace("1.com/","1.com/ver-online/")
     #item.url = item.url.replace("1.com/","1.com/descarga-directa/")
     item.url = item.url.replace("1.com/","1.com/descarga-torrent/")
 
-    # Descarga la pÃ¡gina
+    # Descarga la página
     data = re.sub(r"\n|\r|\t|\s{2}|(<!--.*?-->)","",httptools.downloadpage(item.url).data)
     data = unicode( data, "iso-8859-1" , errors="replace" ).encode("utf-8")
     
@@ -402,7 +403,7 @@ def findvideos(item):
     if url!="":
         itemlist.append( Item(channel=item.channel, action="play", server="torrent", title=title+" [torrent]", fulltitle=title, url=url , thumbnail=caratula, plot=item.plot, folder=False) )
 
-    # escraped ver vÃ­deos, descargar vÃ­deos un link, mÃºltiples liks
+    # escraped ver vídeos, descargar vídeos un link, múltiples liks
     data = data.replace("'",'"')
     data = data.replace('javascript:;" onClick="popup("http://www.newpct1.com/pct1/library/include/ajax/get_modallinks.php?links=',"")
     data = data.replace("http://tumejorserie.com/descargar/url_encript.php?link=","")
@@ -427,10 +428,7 @@ def findvideos(item):
     for logo, servidor, idioma, calidad, enlace, titulo in enlaces_ver:
         servidor = servidor.replace("streamin","streaminto")
         titulo = titulo+" ["+servidor+"]"
-        mostrar_server= True
-        if config.get_setting("hidepremium")=="true":
-            mostrar_server= servertools.is_server_enabled (servidor)
-        if mostrar_server:
+        if servertools.is_server_enabled(servidor):
             try:
                 servers_module = __import__("servers."+servidor)
                 server_module = getattr(servers_module,servidor)
@@ -448,10 +446,7 @@ def findvideos(item):
         for enlace in partes:
             parte_titulo = titulo+" (%s/%s)" % (p,len(partes)) + " ["+servidor+"]"
             p+= 1
-            mostrar_server= True
-            if config.get_setting("hidepremium")=="true":
-                mostrar_server= servertools.is_server_enabled (servidor)
-            if mostrar_server:
+            if servertools.is_server_enabled(servidor):
                 try:
                     servers_module = __import__("servers."+servidor)
                     server_module = getattr(servers_module,servidor)

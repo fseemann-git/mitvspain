@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para vseries
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -23,7 +23,7 @@ DEFAULT_HEADERS.append( ["User-Agent","Mozilla/5.0 (Macintosh; U; Intel Mac OS X
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.vseries mainlist")
+    logger.info("pelisalacarta.channels.vseries mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="menuseries"    , title="Series"            , url="" ))
@@ -33,7 +33,7 @@ def mainlist(item):
     return itemlist
 
 def menuseries(item):
-    logger.info("mitvspain.channels.vseries menuseries")
+    logger.info("pelisalacarta.channels.vseries menuseries")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="novedades" , title="Últimos episodios" , url="http://vserie.com/series" , viewmode="movie"))
@@ -42,7 +42,7 @@ def menuseries(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.channels.vseries search")
+    logger.info("pelisalacarta.channels.vseries search")
 
     try:
         if config.get_setting("zampaseriesaccount")=="true":
@@ -91,7 +91,7 @@ def search(item,texto):
         return []
 
 def novedades(item):
-    logger.info("mitvspain.channels.vseries novedades")
+    logger.info("pelisalacarta.channels.vseries novedades")
 
     if config.get_setting("zampaseriesaccount")=="true":
         login()
@@ -117,7 +117,7 @@ def novedades(item):
     return itemlist
 
 def series(item,data=""):
-    logger.info("mitvspain.channels.vseries series")
+    logger.info("pelisalacarta.channels.vseries series")
 
 
     if config.get_setting("zampaseriesaccount")=="true":
@@ -164,7 +164,7 @@ def series(item,data=""):
     return itemlist
 
 def peliculas(item,data=""):
-    logger.info("mitvspain.channels.vseries peliculas")
+    logger.info("pelisalacarta.channels.vseries peliculas")
 
 
     if config.get_setting("zampaseriesaccount")=="true":
@@ -212,7 +212,7 @@ def peliculas(item,data=""):
     return itemlist
 
 def episodios(item):
-    logger.info("mitvspain.channels.vseries episodios")
+    logger.info("pelisalacarta.channels.vseries episodios")
 
 
     if config.get_setting("zampaseriesaccount")=="true":
@@ -239,7 +239,7 @@ def episodios(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.vseries findvideos")
+    logger.info("pelisalacarta.channels.vseries findvideos")
 
 
     if config.get_setting("zampaseriesaccount")=="true":
@@ -276,7 +276,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.vseries play url="+item.url)
+    logger.info("pelisalacarta.channels.vseries play url="+item.url)
 
     if config.get_setting("zampaseriesaccount")=="true":
         login()

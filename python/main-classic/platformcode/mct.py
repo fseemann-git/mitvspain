@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
-# MCT - Mini Cliente Torrent para mitvspain
+# MCT - Mini Cliente Torrent para pelisalacarta
 #------------------------------------------------------------
 
 import os
@@ -79,7 +79,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
             url = decode_adfly(data)
         except:
             ddd = xbmcgui.Dialog()
-            ddd.ok( "mitvspain-MCT: Sin soporte adf.ly", "El script no tiene soporte para el acortador de urls adf.ly.", "", "url: " + url )
+            ddd.ok( "pelisalacarta-MCT: Sin soporte adf.ly", "El script no tiene soporte para el acortador de urls adf.ly.", "", "url: " + url )
             return
 
     # -- Necesario para algunas webs ----------------------------
@@ -181,7 +181,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
         }
         h = lt.add_magnet_uri(ses, torrent_file, params)
         dp = xbmcgui.DialogProgress()
-        dp.create('mitvspain-MCT')
+        dp.create('pelisalacarta-MCT')
         while not h.has_metadata():
             message, porcent, msg_file, s, download = getProgress(h, "Creando torrent desde magnet")
             dp.update(porcent, message, msg_file)
@@ -268,7 +268,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
 
     # -- Crear diálogo de progreso para el primer bucle ---------
     dp = xbmcgui.DialogProgress()
-    dp.create('mitvspain-MCT')
+    dp.create('pelisalacarta-MCT')
 
     _pieces_info = {}
 
@@ -398,7 +398,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
                     # -- Crear diálogo si no existe -------------
                     if not player.statusDialogoProgress:
                         dp = xbmcgui.DialogProgress()
-                        dp.create('mitvspain-MCT')
+                        dp.create('pelisalacarta-MCT')
                         player.setDialogoProgress()
 
                     # -- Diálogos de estado en el visionado -----
@@ -445,7 +445,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
             if info.num_files() == 1:
                 # -- Diálogo continuar o terminar ---------------
                 d = xbmcgui.Dialog()
-                ok = d.yesno('mitvspain-MCT', 'XBMC-Kodi Cerró el vídeo.', '¿Continuar con la sesión?')
+                ok = d.yesno('pelisalacarta-MCT', 'XBMC-Kodi Cerró el vídeo.', '¿Continuar con la sesión?')
             else: ok = False
             # -- SI ---------------------------------------------
             if ok:
@@ -466,7 +466,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
                                                     porcent4first_pieces, porcent4last_pieces, allocate)
                     is_view=None
                     dp = xbmcgui.DialogProgress()
-                    dp.create('mitvspain-MCT')
+                    dp.create('pelisalacarta-MCT')
 
         # -- Mostar progeso antes del visionado -----------------
         if is_view != "Ok" :
@@ -489,7 +489,7 @@ def play(url, xlistitem={}, is_view=None, subtitle=""):
                                                 porcent4first_pieces, porcent4last_pieces, allocate)
                 is_view=None
                 dp = xbmcgui.DialogProgress()
-                dp.create('mitvspain-MCT')
+                dp.create('pelisalacarta-MCT')
 
     # -- Kodi - Error? - No debería llegar aquí -----------------
     if is_view == "Ok" and not xbmc.Player().isPlaying():
@@ -610,7 +610,7 @@ def get_video_files_sizes( info ):
 
     if len(opciones) > 1:
         d = xbmcgui.Dialog()
-        seleccion = d.select("mitvspain-MCT: Lista de vídeos", opciones.values())
+        seleccion = d.select("pelisalacarta-MCT: Lista de vídeos", opciones.values())
     else: seleccion = 0
 
     index = opciones.keys()[seleccion]
@@ -638,7 +638,7 @@ def remove_files( download, torrent_file, video_file, ses, h ):
 
     if dialog_view:
         d = xbmcgui.Dialog()
-        ok = d.yesno('mitvspain-MCT', 'Borrar las descargas del video', video_file)
+        ok = d.yesno('pelisalacarta-MCT', 'Borrar las descargas del video', video_file)
 
         # -- SI -------------------------------------------------
         if ok:

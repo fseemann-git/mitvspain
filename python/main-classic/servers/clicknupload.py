@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para clicknupload
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -12,7 +12,7 @@ from core import logger
 from core import scrapertools
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.clicknupload test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.clicknupload test_video_exists(page_url='%s')" % page_url)
     
     data = scrapertools.cache_page( page_url )
     if "File Not Found" in data: return False, "[Clicknupload] El archivo no existe o ha sido borrado"
@@ -20,7 +20,7 @@ def test_video_exists( page_url ):
     return True,""
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.clicknupload url="+page_url)
+    logger.info("pelisalacarta.servers.clicknupload url="+page_url)
     
     data = scrapertools.cache_page( page_url )
     data = data.replace("\n","").replace("\t","")
@@ -49,7 +49,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
     media_url = media.rsplit('/', 1)[0] +"/"+url_strip
     video_urls.append( [ scrapertools.get_filename_from_url(media_url)[-4:]+" [clicknupload]",media_url])
     for video_url in video_urls:
-        logger.info("mitvspain.servers.clicknupload %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.servers.clicknupload %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -60,7 +60,7 @@ def find_videos(data):
 
     # http://clicknupload.me/jdfscsa5uoy4
     patronvideos  = "clicknupload.(?:me|com)/([a-z0-9]+)"
-    logger.info("mitvspain.servers.clicknupload find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.clicknupload find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

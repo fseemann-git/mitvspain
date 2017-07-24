@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
-# 
+# pelisalacarta - XBMC Plugin
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -15,7 +15,7 @@ from core import scrapertools
 from core import servertools
 from core.item import Item
 
-HOST = 'http://seriesdanko.com/'
+HOST = 'http://seriesdanko.to/'
 IDIOMAS = {'es': 'Español', 'la': 'Latino', 'vos': 'VOS', 'vo': 'VO'}
 list_idiomas = IDIOMAS.values()
 CALIDADES = ['SD', 'MicroHD', 'HD/MKV']
@@ -110,7 +110,7 @@ def listado_alfabetico(item):
 
     for letra in '0ABCDEFGHIJKLMNOPQRSTUVWXYZ':
         itemlist.append(Item(channel=item.channel, action="series_por_letra", title=letra,
-                             url=urlparse.urljoin(HOST, "series.php?id={letra}".format(letra=letra))))
+                             url=urlparse.urljoin(HOST, "series.php?id=%s" % letra)))
 
     return itemlist
 
@@ -128,7 +128,7 @@ def series_por_letra(item):
 
 
 def search(item, texto):
-    logger.info("texto={0}".format(texto))
+    logger.info("texto=%s" % texto)
 
     itemlist = []
 
@@ -222,8 +222,7 @@ def parse_videos(item, tipo, data):
     for language, date, server, link, quality in links:
         if quality == "":
             quality = "SD"
-        title = "{tipo} en {server} [{idioma}] [{quality}] ({fecha})".\
-            format(tipo=tipo, server=server, idioma=IDIOMAS.get(language, "OVOS"), quality=quality, fecha=date)
+        title = "%s en %s [%s] [%s] (%s)" % (tipo, server, IDIOMAS.get(language, "OVOS"), quality, date)
 
         itemlist.append(Item(channel=item.channel, title=title, url=urlparse.urljoin(HOST, link), action="play",
                              show=item.show, language=IDIOMAS.get(language, "OVOS"), quality=quality,
@@ -238,7 +237,7 @@ def parse_videos(item, tipo, data):
 
 
 def play(item):
-    logger.info("play url={0}".format(item.url))
+    logger.info("play url=%s" % item.url)
 
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;|<Br>|<BR>|<br>|<br/>|<br />|-\s", "", data)
@@ -249,7 +248,7 @@ def play(item):
     itemlist = servertools.find_video_items(data=url)
     titulo = scrapertools.find_single_match(item.fulltitle, "^(.*?)\s\[.+?$")
     if titulo:
-        titulo += " [{language}]".format(language=item.language)
+        titulo += " [%s]" % item.language
 
     for videoitem in itemlist:
         if titulo:

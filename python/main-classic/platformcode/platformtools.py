@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # platformtools
 # ------------------------------------------------------------
@@ -480,7 +480,7 @@ def is_playing():
 
 
 def play_video(item, strm=False):
-    logger.info("mitvspain.platformcode.platformtools play_video")
+    logger.info("pelisalacarta.platformcode.platformtools play_video")
     # logger.debug(item.tostring('\n'))
 
     if item.channel == 'descargas':
@@ -777,7 +777,7 @@ def get_dialogo_opciones(item, default_action, strm):
                 dialog_ok("No puedes ver ese vídeo porque...", motivo, item.url)
         else:
             dialog_ok("No puedes ver ese vídeo porque...", "El servidor donde está alojado no está",
-                      "soportado en mitvspain todavía", item.url)
+                      "soportado en pelisalacarta todavía", item.url)
 
         if item.channel == "favoritos":
             # "Quitar de favoritos"
@@ -882,7 +882,7 @@ def get_video_seleccionado(item, seleccion, video_urls):
         view = True
 
     # Si no hay mediaurl es porque el vídeo no está :)
-    logger.info("mitvspain.platformcode.platformstools mediaurl=" + mediaurl)
+    logger.info("pelisalacarta.platformcode.platformstools mediaurl=" + mediaurl)
     if mediaurl == "":
         if item.server == "unknown":
             alert_unsopported_server()
@@ -931,19 +931,19 @@ def set_player(item, xlistitem, mediaurl, view, strm):
 
             # Reproduce
             playersettings = config.get_setting('player_type')
-            logger.info("mitvspain.platformcode.platformstools playersettings=" + playersettings)
+            logger.info("pelisalacarta.platformcode.platformstools playersettings=" + playersettings)
 
             if config.get_system_platform() == "xbox":
                 player_type = xbmc.PLAYER_CORE_AUTO
                 if playersettings == "0":
                     player_type = xbmc.PLAYER_CORE_AUTO
-                    logger.info("mitvspain.platformcode.platformstools PLAYER_CORE_AUTO")
+                    logger.info("pelisalacarta.platformcode.platformstools PLAYER_CORE_AUTO")
                 elif playersettings == "1":
                     player_type = xbmc.PLAYER_CORE_MPLAYER
-                    logger.info("mitvspain.platformcode.platformstools PLAYER_CORE_MPLAYER")
+                    logger.info("pelisalacarta.platformcode.platformstools PLAYER_CORE_MPLAYER")
                 elif playersettings == "2":
                     player_type = xbmc.PLAYER_CORE_DVDPLAYER
-                    logger.info("mitvspain.platformcode.platformstools PLAYER_CORE_DVDPLAYER")
+                    logger.info("pelisalacarta.platformcode.platformstools PLAYER_CORE_DVDPLAYER")
 
                 xbmc_player = xbmc.Player(player_type)
             else:
@@ -1017,10 +1017,10 @@ def play_torrent(item, xlistitem, mediaurl):
 
         # Iniciamos el cliente:
         c = Client(url=mediaurl, is_playing_fnc=xbmc.Player().isPlaying, wait_time=None, timeout=10,
-                   temp_path=os.path.join(clientTmpPath, "mitvspain-torrent"), print_status=debug)
+                   temp_path=os.path.join(clientTmpPath, "pelisalacarta-torrent"), print_status=debug)
 
         # Mostramos el progreso
-        progreso = dialog_progress("mitvspain - Torrent", "Iniciando...")
+        progreso = dialog_progress("Pelisalacarta - Torrent", "Iniciando...")
 
         # Mientras el progreso no sea cancelado ni el cliente cerrado
         while not c.closed:
@@ -1051,21 +1051,21 @@ def play_torrent(item, xlistitem, mediaurl):
                 if progreso.iscanceled():
                   progreso.close()
                   if s.buffer == 100:
-                    if dialog_yesno("mitvspain - Torrent", "¿Deseas iniciar la reproduccion?"):
+                    if dialog_yesno("Pelisalacarta - Torrent", "¿Deseas iniciar la reproduccion?"):
                       played = False
-                      progreso = dialog_progress("mitvspain - Torrent", "")
+                      progreso = dialog_progress("Pelisalacarta - Torrent", "")
                       progreso.update(s.buffer, txt, txt2, txt3)
                     else:
-                      progreso = dialog_progress("mitvspain - Torrent", "")
+                      progreso = dialog_progress("Pelisalacarta - Torrent", "")
                       break
                       
                   else:
-                    if dialog_yesno("mitvspain - Torrent", "¿Deseas cancelar el proceso?"):
-                      progreso = dialog_progress("mitvspain - Torrent", "")
+                    if dialog_yesno("Pelisalacarta - Torrent", "¿Deseas cancelar el proceso?"):
+                      progreso = dialog_progress("Pelisalacarta - Torrent", "")
                       break
                       
                     else:
-                      progreso = dialog_progress("mitvspain - Torrent", "")
+                      progreso = dialog_progress("Pelisalacarta - Torrent", "")
                       progreso.update(s.buffer, txt, txt2, txt3)
 
                    
@@ -1093,7 +1093,7 @@ def play_torrent(item, xlistitem, mediaurl):
                         time.sleep(1)
 
                     # Cuando este cerrado,  Volvemos a mostrar el dialogo
-                    progreso = dialog_progress("mitvspain - Torrent", "")
+                    progreso = dialog_progress("Pelisalacarta - Torrent", "")
                     progreso.update(s.buffer, txt, txt2, txt3)
 
             except:

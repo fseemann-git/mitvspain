@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain
-# Copyright 2015 mitvspain@gmail.com
-
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # --------------------------------------------------------------------------------
 # Logger (kodi)
 # --------------------------------------------------------------------------------
@@ -60,16 +60,16 @@ def get_caller(message=None):
 
     # En boxee en ocasiones no detecta el modulo, de este modo lo hacemos manual
     if module is None:
-        module = ".".join(os.path.splitext(inspect.currentframe().f_back.f_back.f_code.co_filename.split("mitvspain")[1])[0].split(os.path.sep))[1:]
+        module = ".".join(os.path.splitext(inspect.currentframe().f_back.f_back.f_code.co_filename.split("pelisalacarta")[1])[0].split(os.path.sep))[1:]
     else:
         module = module.__name__
 
     function = inspect.currentframe().f_back.f_back.f_code.co_name
 
     if module == "__main__":
-        module = "mitvspain"
+        module = "pelisalacarta"
     else:
-        module = "mitvspain." + module
+        module = "pelisalacarta." + module
     if message:
         if module not in message:
             if function == "<module>":

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para Divxtotal
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import string
 import os
@@ -80,7 +80,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 def mainlist(item):
     
-    logger.info("mitvspain.divxtotal mainlist")
+    logger.info("pelisalacarta.divxtotal mainlist")
     itemlist=[]
     itemlist.append( item.clone(title="[COLOR orange][B]Películas[/B][/COLOR]", action="scraper",url="http://www.divxtotal.com/peliculas/",thumbnail="http://imgur.com/A4zN3OP.png", fanart="http://imgur.com/fdntKsy.jpg",contentType= "movie"))
     itemlist.append( itemlist[-1].clone(title="[COLOR orange][B]Series[/B][/COLOR]", action="scraper",url="http://www.divxtotal.com/series/",thumbnail="http://imgur.com/GPX2wLt.png",contentType="tvshow"))
@@ -89,7 +89,7 @@ def mainlist(item):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.divxtotal search")
+    logger.info("pelisalacarta.divxtotal search")
     texto = texto.replace(" ","+")
     item.url = "http://www.divxtotal.com/?s="+texto
     item.extra="search"
@@ -102,7 +102,7 @@ def search(item,texto):
         return []
 
 def buscador(item):
-    logger.info("mitvspain.divxtotal buscador")
+    logger.info("pelisalacarta.divxtotal buscador")
     itemlist=[]
     data = httptools.downloadpage(item.url).data
     data = re.sub(r"\n|\r|\t|\s{2}|&nbsp;","",data) 
@@ -152,7 +152,7 @@ def buscador(item):
     return itemlist
 
 def scraper(item):
-    logger.info("mitvspain.divxtotal scraper")
+    logger.info("pelisalacarta.divxtotal scraper")
     itemlist=[]
     data = httptools.downloadpage(item.url).data
     
@@ -216,7 +216,7 @@ def scraper(item):
 
 
 def findtemporadas(item):
-    logger.info("mitvspain.divxtotal findtempordas")
+    logger.info("pelisalacarta.divxtotal findtempordas")
     itemlist = []
     
     if item.extra=="search":
@@ -284,7 +284,7 @@ def findtemporadas(item):
     return itemlist
 
 def epis(item):
-    logger.info("mitvspain.divxtotal epis") 
+    logger.info("pelisalacarta.divxtotal epis") 
     itemlist = []
     if item.extra=="serie_add":
        item.url=item.datalibrary
@@ -302,7 +302,7 @@ def epis(item):
            item.title = item.title + " -- \""+ title +"\""
     return itemlist
 def findvideos(item):
-    logger.info("mitvspain.divxtotal findvideos")
+    logger.info("pelisalacarta.divxtotal findvideos")
     itemlist = []
     data = httptools.downloadpage(item.url).data
      
@@ -363,7 +363,7 @@ def findvideos(item):
 
 
 def info_capitulos(item,images={}):
-    logger.info("mitvspain.divxtotal info_capitulos")
+    logger.info("pelisalacarta.divxtotal info_capitulos")
     try:
         url="http://thetvdb.com/api/1D62F2F90030C444/series/"+str(item.InfoLabels['tvdb_id'])+"/default/"+str(item.InfoLabels['season'])+"/"+str(item.InfoLabels['episode'])+"/es.xml"
         if "/0" in url:
@@ -665,7 +665,7 @@ def filmaffinity(item,infoLabels):
 
 
 def get_art(item):
-    logger.info("mitvspain.divxtotal get_art")
+    logger.info("pelisalacarta.divxtotal get_art")
     id =item.infoLabels['tmdb_id']
     check_fanart=item.infoLabels['fanart']
     if item.contentType!="movie":

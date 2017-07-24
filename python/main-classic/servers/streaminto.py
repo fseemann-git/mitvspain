@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para streaminto
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -24,7 +24,7 @@ def test_video_exists(page_url):
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("mitvspain.servers.streaminto url=" + page_url)
+    logger.info("pelisalacarta.servers.streaminto url=" + page_url)
 
     data = re.sub(r'\n|\t|\s+', '', scrapertools.cache_page(page_url))
 
@@ -45,7 +45,7 @@ def get_video_url(page_url, premium=False, user="", password="", video_password=
     video_urls.append([scrapertools.get_filename_from_url(media_url)[-4:] + " [streaminto]", media_url])
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.streaminto %s - %s" % (video_url[0], video_url[1]))
+        logger.info("pelisalacarta.servers.streaminto %s - %s" % (video_url[0], video_url[1]))
 
     return video_urls
 
@@ -70,7 +70,7 @@ def find_videos(data):
 
     # http://streamin.to/z3nnqbspjyne
     patronvideos = 'streamin.to/([a-z0-9A-Z]+)'
-    logger.info("mitvspain.servers.streaminto find_videos #" + patronvideos + "#")
+    logger.info("pelisalacarta.servers.streaminto find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:
@@ -85,7 +85,7 @@ def find_videos(data):
 
     # http://streamin.to/embed-z3nnqbspjyne.html
     patronvideos = 'streamin.to/embed-([a-z0-9A-Z]+)'
-    logger.info("mitvspain.servers.streaminto find_videos #" + patronvideos + "#")
+    logger.info("pelisalacarta.servers.streaminto find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
 
     for match in matches:

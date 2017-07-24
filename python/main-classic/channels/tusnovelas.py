@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para tusnovelas.com
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import urlparse
@@ -17,7 +17,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.tusnovelas mainlist")
+    logger.info("pelisalacarta.channels.tusnovelas mainlist")
     
     itemlist = []
 
@@ -29,7 +29,7 @@ def mainlist(item):
     return itemlist
 
 def series_top(item):
-    logger.info("mitvspain.channels.tusnovelas series_top")
+    logger.info("pelisalacarta.channels.tusnovelas series_top")
     itemlist = []
 
     # Descarga la página
@@ -51,7 +51,7 @@ def series_top(item):
     return itemlist
 
 def series_emision(item):
-    logger.info("mitvspain.channels.tusnovelas series_emision")
+    logger.info("pelisalacarta.channels.tusnovelas series_emision")
     itemlist = []
 
     # Descarga la página
@@ -73,7 +73,7 @@ def series_emision(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.tusnovelas letras")
+    logger.info("pelisalacarta.channels.tusnovelas letras")
     itemlist = []
 
     # Descarga la página
@@ -95,7 +95,7 @@ def letras(item):
     return itemlist
 
 def series(item):
-    logger.info("mitvspain.channels.tusnovelas series")
+    logger.info("pelisalacarta.channels.tusnovelas series")
     itemlist = []
 
     # Descarga la página
@@ -143,7 +143,7 @@ def series(item):
     return itemlist
 
 def episodios(item):
-    logger.info("mitvspain.channels.tusnovelas episodios")
+    logger.info("pelisalacarta.channels.tusnovelas episodios")
     itemlist = []
 
     # Descarga la página
@@ -163,7 +163,7 @@ def episodios(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.tusnovelas findvideos")
+    logger.info("pelisalacarta.channels.tusnovelas findvideos")
     data = scrapertools.cache_page(item.url)
     itemlist=[]
 

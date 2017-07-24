@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para seriecanal
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import sys
@@ -30,7 +30,7 @@ URL_BASE = "http://www.seriecanal.com/"
 
 
 def login():
-    logger.info("mitvspain.channels.seriecanal login")
+    logger.info("pelisalacarta.channels.seriecanal login")
     data = scrapertools.downloadpage(URL_BASE)
     if "Cerrar Sesion" in data:
         return True, ""
@@ -50,7 +50,7 @@ def login():
     
     
 def mainlist(item):
-    logger.info("mitvspain.channels.seriecanal mainlist")
+    logger.info("pelisalacarta.channels.seriecanal mainlist")
     itemlist = []
     item.text_color = color1
     
@@ -76,7 +76,7 @@ def configuracion(item):
 
     
 def search(item, texto):
-    logger.info("mitvspain.channels.seriecanal search")
+    logger.info("pelisalacarta.channels.seriecanal search")
     item.url = "http://www.seriecanal.com/index.php?page=portada&do=category&method=post&category_id=0&order=" \
                "C_Create&view=thumb&pgs=1&p2=1"
     try:
@@ -92,7 +92,7 @@ def search(item, texto):
 
 
 def genero(item):
-    logger.info("mitvspain.channels.seriecanal genero")
+    logger.info("pelisalacarta.channels.seriecanal genero")
     itemlist = []
     data = scrapertools.downloadpage(URL_BASE)
     data = scrapertools.find_single_match(data, '<ul class="tag-cloud">(.*?)</ul>')
@@ -107,7 +107,7 @@ def genero(item):
 
 
 def alfabetico(item):
-    logger.info("mitvspain.channels.seriecanal alfabetico")
+    logger.info("pelisalacarta.channels.seriecanal alfabetico")
     itemlist = []
     data = scrapertools.downloadpage(URL_BASE)
     data = scrapertools.find_single_match(data, '<ul class="pagination pagination-sm" style="margin:5px 0;">(.*?)</ul>')
@@ -120,7 +120,7 @@ def alfabetico(item):
 
 
 def series(item):
-    logger.info("mitvspain.channels.seriecanal series")
+    logger.info("pelisalacarta.channels.seriecanal series")
     itemlist = []
     item.infoLabels = {}
     item.text_color = color2
@@ -169,7 +169,7 @@ def series(item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.channels.seriecanal findvideos")
+    logger.info("pelisalacarta.channels.seriecanal findvideos")
     itemlist = []
     item.text_color = color3
 
@@ -243,7 +243,7 @@ def findvideos(item):
 
 
 def play(item):
-    logger.info("mitvspain.channels.seriecanal play")
+    logger.info("pelisalacarta.channels.seriecanal play")
     itemlist = []
 
     if item.extra == "torrent":

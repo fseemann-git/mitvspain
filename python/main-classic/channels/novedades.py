@@ -1,26 +1,26 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain 4
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain 4.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain 4 is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain 4 is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # Channel for recent videos on several channels
 #------------------------------------------------------------
@@ -148,7 +148,7 @@ def get_list_canales():
             continue
 
         # No incluir si es un canal para adultos, y el modo adulto está desactivado
-        if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "false":
+        if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "0":
             continue
 
         # No incluir si el canal es en un idioma filtrado
@@ -269,12 +269,12 @@ def get_newest(channel_id, categoria):
         if not puede:
             return
 
-        logger.info("mitvspain.channels.novedades running channel "+modulo.__name__+" "+modulo.__file__)
+        logger.info("pelisalacarta.channels.novedades running channel "+modulo.__name__+" "+modulo.__file__)
         list_result = modulo.newest(categoria)
-        logger.info("mitvspain.channels.novedades.get_newest canal= %s %d resultados" %(channel_id, len(list_result)))
+        logger.info("pelisalacarta.channels.novedades.get_newest canal= %s %d resultados" %(channel_id, len(list_result)))
 
         for item in list_result:
-            #logger.info("mitvspain.channels.novedades.get_newest   item="+item.tostring())
+            #logger.info("pelisalacarta.channels.novedades.get_newest   item="+item.tostring())
             item.channel = channel_id
             list_newest.append(item)
 
@@ -471,7 +471,7 @@ def settingCanal(item):
             continue
 
         # No incluir si es un canal para adultos, y el modo adulto está desactivado
-        if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "false":
+        if channel_parameters["adult"] == "true" and config.get_setting("adult_mode") == "0":
             continue
 
         # No incluir si el canal es en un idioma filtrado

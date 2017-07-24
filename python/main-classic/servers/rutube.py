@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para rutube
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -13,7 +13,7 @@ from core import screpertools
 
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.rutube test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.rutube test_video_exists(page_url='%s')" % page_url)
     
     data = scrapertools.cachePage( page_url )
     if ("File was deleted" or "Not Found") in data: return False, "[rutube] El archivo no existe o ha sido borrado"
@@ -21,7 +21,7 @@ def test_video_exists( page_url ):
     return True,""
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.rutube url="+page_url)
+    logger.info("pelisalacarta.servers.rutube url="+page_url)
     
     data = scrapertools.cachePage(page_url)
     if "embed" in page_url:
@@ -39,7 +39,7 @@ def get_video_url( page_url , premium = False , user="" , password="", video_pas
 
 
     for video_url in video_urls:
-        logger.info("mitvspain.servers.rutube %s - %s" % (video_url[0],video_url[1]))
+        logger.info("pelisalacarta.servers.rutube %s - %s" % (video_url[0],video_url[1]))
 
     return video_urls
 
@@ -51,7 +51,7 @@ def find_videos(data):
     # http://rutube.ru/video/dbfe808a8828dfcfb8c6b2ed6457eef/
     # http://rutube.ru/play/embed/78451
     patronvideos  = 'rutube.ru\/(?:video\/([\da-zA-Z]{32})|play\/embed\/([\d]+))'
-    logger.info("mitvspain.servers.rutube find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.rutube find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(data)
 
     for match in matches:

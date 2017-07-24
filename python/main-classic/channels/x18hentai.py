@@ -38,7 +38,7 @@ def mainlist(item):
 
 def todas(item):
 
-    logger.info("mitvspain.channels.x18hentai todas")
+    logger.info("pelisalacarta.channels.x18hentai todas")
     itemlist = []
     data = httptools.downloadpage(item.url, headers = headers).data
     patron ='<h3><a href="([^"]+)" title="([^"]+)">.*?<\/a><\/h3>.*?'
@@ -73,7 +73,7 @@ def search(item,texto):
         return []
         
 def categorias(item):
-    logger.info("mitvspain.channels.x18hentai categoias")
+    logger.info("pelisalacarta.channels.x18hentai categoias")
     itemlist = []
     data = httptools.downloadpage(item.url, headers = headers).data
     patron ="<a href='([^']+)' class='tag-link-.*? tag-link-position-.*?' title='.*?' style='font-size: 11px;'>([^<]+)<\/a>" 

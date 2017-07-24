@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para Catalogo tmdb/imdb/filmaffinity/trakt/myanimelist
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -489,7 +489,7 @@ def detalles(item):
 
     title = item.contentType.replace("movie", "película").replace("tvshow", "serie")
     # Búsqueda por títulos idioma elegido y/o versión original y español
-    itemlist.append(item.clone(action="busqueda", title="Buscar %s en mitvspain: %s" % (title, item.contentTitle)))
+    itemlist.append(item.clone(action="busqueda", title="Buscar %s en pelisalacarta: %s" % (title, item.contentTitle)))
     if item.infoLabels['originaltitle'] and item.contentTitle != item.infoLabels['originaltitle']:
         itemlist.append(item.clone(action="busqueda", contentTitle=item.infoLabels['originaltitle'],
                                    title="    Buscar por su nombre original: %s" % item.infoLabels['originaltitle']))
@@ -1437,7 +1437,7 @@ def detalles_fa(item):
         itemlist.append(item.clone(title="--- %s ---" % item.infoLabels['tagline'], text_color="0xFFFF8C00", action=""))
 
     title = item.contentType.replace("movie", "película").replace("tvshow", "serie")
-    itemlist.append(item.clone(action="busqueda", title="Buscar %s en mitvspain: %s" % (title, item.contentTitle)))
+    itemlist.append(item.clone(action="busqueda", title="Buscar %s en pelisalacarta: %s" % (title, item.contentTitle)))
     if item.infoLabels['originaltitle'] and item.contentTitle != item.infoLabels['originaltitle']:
         itemlist.append(item.clone(action="busqueda", contentTitle=item.infoLabels['originaltitle'],
                                    title="    Buscar por su nombre original: %s" % item.infoLabels['originaltitle']))
@@ -2484,7 +2484,7 @@ def detalles_mal(item):
     if not item.thumbnail:
         item.thumbnail = scrapertools.find_single_match(data, '/pics">.*?<img src="([^"]+)"')
 
-    itemlist.append(item.clone(action="busqueda", title="Buscar en mitvspain: %s" % title_mal, contentTitle=title_mal,
+    itemlist.append(item.clone(action="busqueda", title="Buscar en pelisalacarta: %s" % title_mal, contentTitle=title_mal,
                                extra=item.extra.replace("tv", "anime")))
     if item.infoLabels["title"] and title_mal != item.infoLabels["title"]:
         itemlist.append(item.clone(action="busqueda", contentTitle=item.infoLabels["title"],
@@ -2672,7 +2672,7 @@ def reco_mal(item):
 def indices_mal(item):
     # Índices por temporadas y generos
     itemlist = []
-    url_base = "https://raw.githubusercontent.com/CmosGit/mitvspain-Cmos/images_mal/anime/%s.jpg"
+    url_base = "https://raw.githubusercontent.com/CmosGit/pelisalacarta-Cmos/images_mal/anime/%s.jpg"
     if "Temporadas" in item.title:
         data = httptools.downloadpage("https://myanimelist.net/anime/season/archive", cookies=False).data
         data = re.sub(r"\n|\r|\t|&nbsp;", "", data)

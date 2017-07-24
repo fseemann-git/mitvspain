@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para tvvip
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 import os
 import re
@@ -33,7 +33,7 @@ header_string = "|User-Agent=Mozilla/5.0 (Windows NT 10.0; WOW64; rv:46.0) Gecko
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.tvvip mainlist")
+    logger.info("pelisalacarta.channels.tvvip mainlist")
     item.viewmode = "movie"
     itemlist = []
 
@@ -69,7 +69,7 @@ def mainlist(item):
 
 
 def search(item, texto):
-    logger.info("mitvspain.channels.tvvip search")
+    logger.info("pelisalacarta.channels.tvvip search")
     texto = texto.replace(" ", "%20")
     if item.title == "Buscar...": item.extra = "local"
     item.url = "http://tv-vip.com/video-prod/s/search?q=%s&n=100" % texto
@@ -85,7 +85,7 @@ def search(item, texto):
 
 
 def busqueda(item, texto):
-    logger.info("mitvspain.channels.tvvip busqueda")
+    logger.info("pelisalacarta.channels.tvvip busqueda")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, host=host, headers=headers)
@@ -160,7 +160,7 @@ def busqueda(item, texto):
 
 
 def submenu(item):
-    logger.info("mitvspain.channels.tvvip submenu")
+    logger.info("pelisalacarta.channels.tvvip submenu")
     itemlist = []
     data = scrapertools.anti_cloudflare("http://tv-vip.com/json/playlist/home/index.json", host=host, headers=headers)
     head = header_string + get_cookie_value()
@@ -200,7 +200,7 @@ def submenu(item):
 
 
 def cat(item):
-    logger.info("mitvspain.channels.tvvip cat")
+    logger.info("pelisalacarta.channels.tvvip cat")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, host=host, headers=headers)
@@ -229,7 +229,7 @@ def cat(item):
 
 
 def entradas(item):
-    logger.info("mitvspain.channels.tvvip entradas")
+    logger.info("pelisalacarta.channels.tvvip entradas")
     itemlist = []
     if item.title == "Nuevos Capítulos":
         context = "5"
@@ -287,7 +287,7 @@ def entradas(item):
 
 
 def entradasconlistas(item):
-    logger.info("mitvspain.channels.tvvip entradasconlistas")
+    logger.info("pelisalacarta.channels.tvvip entradasconlistas")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, host=host, headers=headers)
@@ -387,7 +387,7 @@ def entradasconlistas(item):
 
 
 def series(item):
-    logger.info("mitvspain.channels.tvvip series")
+    logger.info("pelisalacarta.channels.tvvip series")
     itemlist = []
 
     data = scrapertools.anti_cloudflare(item.url, host=host, headers=headers)
@@ -529,7 +529,7 @@ def series(item):
 
 
 def episodios(item):
-    logger.info("mitvspain.channels.tvvip episodios")
+    logger.info("pelisalacarta.channels.tvvip episodios")
     logger.info("categoriaaa es "+item.tostring())
     itemlist = []
     # Redirección para actualización de biblioteca
@@ -596,7 +596,7 @@ def episodios(item):
 
 
 def series_library(item):
-    logger.info("mitvspain.channels.tvvip series_library")
+    logger.info("pelisalacarta.channels.tvvip series_library")
     # Funcion unicamente para añadir/actualizar series a la libreria
     lista_episodios = []
     show = item.show.strip()
@@ -662,7 +662,7 @@ def series_library(item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.channels.tvvip findvideos")
+    logger.info("pelisalacarta.channels.tvvip findvideos")
     itemlist = []
 
     # En caso de llamarse a la función desde una serie de la biblioteca
@@ -703,7 +703,7 @@ def findvideos(item):
 def play(item):
     import time
     import requests
-    logger.info("mitvspain.channels.tvvip play")
+    logger.info("pelisalacarta.channels.tvvip play")
     itemlist = []
 
     cookie = get_cookie_value()
@@ -730,7 +730,7 @@ def play(item):
 
 
 def listas(item):
-    logger.info("mitvspain.channels.tvvip listas")
+    logger.info("pelisalacarta.channels.tvvip listas")
     # Para añadir listas a la biblioteca en carpeta CINE
     itemlist = []
     data = scrapertools.anti_cloudflare(item.url, host=host, headers=headers)

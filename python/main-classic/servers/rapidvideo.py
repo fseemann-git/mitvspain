@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para rapidvideo
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -32,7 +32,7 @@ def find_videos(text):
     devuelve = []
             
     #http://www.rapidvideo.com/e/YK7A0L7FU3A
-    patronvideos = 'rapidvideo.(?:org|com)/(?:\?v=|e/)([A-z0-9]+)'
+    patronvideos = 'rapidvideo.(?:org|com)/(?:\?v=|e/|embed/)([A-z0-9]+)'
     logger.info("#" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(text)
 

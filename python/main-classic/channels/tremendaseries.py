@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para tremendaseries
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 import re
 import sys
@@ -40,7 +40,7 @@ thumbnail_host= parameters['thumbnail']
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.tremendaseries mainlist")
+    logger.info("pelisalacarta.channels.tremendaseries mainlist")
     
     itemlist = []
     itemlist.append(Item(channel=__channel__, action="listadoSeries", title="Novedades", extra= '0',
@@ -52,7 +52,7 @@ def mainlist(item):
    
    
 def search(item, texto):
-    logger.info("mitvspain.channels.tremendaseries search")
+    logger.info("pelisalacarta.channels.tremendaseries search")
 
     item.url = "http://tremendaseries.com/resultados/"
     texto = texto.replace(" ", "-")
@@ -69,7 +69,7 @@ def search(item, texto):
    
 
 def listadoSeries(item):
-    logger.info("mitvspain.channels.tremendaseries listadoSeries")
+    logger.info("pelisalacarta.channels.tremendaseries listadoSeries")
     itemlist = []
     if __modo_grafico__:
       nItemxPage = 28 
@@ -122,7 +122,7 @@ def listadoSeries(item):
     return itemlist
 
 def listadoTemporadas(item):
-    logger.info("mitvspain.channels.tremendaseries listadoTemporadas")
+    logger.info("pelisalacarta.channels.tremendaseries listadoTemporadas")
     itemlist = []
     
     data = re.sub(r"\n|\r|\t|\s{2}|(<!--.*?-->)","",scrapertools.cache_page(item.url))
@@ -160,7 +160,7 @@ def listadoTemporadas(item):
      
     
 def listadoCapitulos(item):
-    logger.info("mitvspain.channels.tremendaseries capitulos")
+    logger.info("pelisalacarta.channels.tremendaseries capitulos")
     itemlist = []
     conEnlaces= False
     
@@ -221,7 +221,7 @@ def listadoCapitulos(item):
 
     
 def findvideos(item):
-    logger.info("mitvspain.channels.tremendaseries findvideos")
+    logger.info("pelisalacarta.channels.tremendaseries findvideos")
     itemlist = []
     list =[]
     
@@ -264,7 +264,7 @@ def findvideos(item):
  
  
 def play(item):
-    logger.info("mitvspain.channels.tremendaseries play")
+    logger.info("pelisalacarta.channels.tremendaseries play")
     print item.url
     
     data= scrapertools.cache_page(item.url)
@@ -272,7 +272,7 @@ def play(item):
     patron = url_base + '(.*?)">'
     data2 = url_base + scrapertools.find_single_match(data,patron)
     data2 = scrapertools.getLocationHeaderFromResponse(data2)
-    logger.info("mitvspain.channels.tremendaseries data2="+data2)
+    logger.info("pelisalacarta.channels.tremendaseries data2="+data2)
 
     itemlist = servertools.find_video_items(data=data2)
     

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.mitvspain"
-    name="mitvspain"
+    name="MiTvSpain"
     version="4.2.0~final"
-    provider-name="ENIGMAS">
+    provider-name="marce">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
     <import addon="script.module.libtorrent" optional="true"/>
@@ -18,7 +18,7 @@
     <platform>all</platform>
     <license>GNU GPL v3</license>
     <email>mitvspain@gmail.com</email>
-    <source>https://github.com/mitvspain/mitvspain</source>
+    <source>https://github.com/MiTvSpain/mitvspain</source>
   </extension>
   <extension point="xbmc.service" library="library_service.py" start="login|startup">
   </extension>

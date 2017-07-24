@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para speedvideo
 # by be4t5
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -13,14 +13,14 @@ from core import scrapertools
 
 
 def test_video_exists( page_url ):
-    logger.info("mitvspain.servers.speedvideo test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.speedvideo test_video_exists(page_url='%s')" % page_url)
 
     
 
     return True,""
 
 def get_video_url( page_url , premium = False , user="" , password="", video_password="" ):
-    logger.info("mitvspain.servers.speedvideo url="+page_url)
+    logger.info("pelisalacarta.servers.speedvideo url="+page_url)
     video_urls = []
 
     data = scrapertools.cachePage(page_url)
@@ -49,7 +49,7 @@ def find_videos(text):
     #http://speedvideo.net/embed-fmbvopi1381q-530x302.html	
     #http://speedvideo.net/hs7djap7jwrw/Tekken.Kazuyas.Revenge.2014.iTALiAN.Subbed.DVDRiP.XViD.NeWZoNe.avi.html
     patronvideos  = 'speedvideo.net/(?:embed-|)([A-Z0-9a-z]+)'
-    logger.info("mitvspain.servers.speedvideo find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.speedvideo find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(text)
 
     for match in matches:
@@ -64,7 +64,7 @@ def find_videos(text):
 
 #Cineblog by be4t5
     patronvideos  = 'cineblog01.../HR/go.php\?id\=([0-9]+)'
-    logger.info("mitvspain.servers.speedvideo find_videos #"+patronvideos+"#")
+    logger.info("pelisalacarta.servers.speedvideo find_videos #"+patronvideos+"#")
     matches = re.compile(patronvideos,re.DOTALL).findall(text)
     page = scrapertools.find_single_match(text,'rel="canonical" href="([^"]+)"')
     from lib import mechanize

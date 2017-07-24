@@ -1,26 +1,26 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain 4
-# Copyright 2017  mitvspain@gmail.com
-# 
+# pelisalacarta 4
+# Copyright 2015 tvalacarta@gmail.com
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #
 # Distributed under the terms of GNU General Public License v3 (GPLv3)
 # http://www.gnu.org/licenses/gpl-3.0.html
 # ------------------------------------------------------------
-# This file is part of mitvspain 4.
+# This file is part of pelisalacarta 4.
 #
-# mitvspain 4 is free software: you can redistribute it and/or modify
+# pelisalacarta 4 is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
 #
-# mitvspain 4 is distributed in the hope that it will be useful,
+# pelisalacarta 4 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with mitvspain 4.  If not, see <http://www.gnu.org/licenses/>.
+# along with pelisalacarta 4.  If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------
 # Configuracion
 # ------------------------------------------------------------
@@ -137,7 +137,7 @@ def get_all_versions(item):
     for entry in api_response["body"]:
 
         if entry["package"]=="plugin":
-            title = "mitvspain "+entry["tag"]+" (Publicada "+entry["date"]+")"
+            title = "pelisalacarta "+entry["tag"]+" (Publicada "+entry["date"]+")"
             local_version_number = versiontools.get_current_plugin_version()
         elif entry["package"]=="channels":
             title = "Canales (Publicada "+entry["date"]+")"
@@ -440,7 +440,7 @@ def conf_tools(item):
 
                         # No incluir si es un canal para adultos, y el modo adulto está desactivado
                         if (channel_parameters["adult"] == "true" and
-                                config.get_setting("adult_mode") == "false"):
+                                config.get_setting("adult_mode") == "0"):
                             continue
 
                         # No incluir si el canal es en un idioma filtrado
@@ -637,7 +637,7 @@ def conf_tools(item):
         return itemlist
 
     else:
-        platformtools.dialog_notification("mitvspain", "Error!")
+        platformtools.dialog_notification("pelisalacarta", "Error!")
         platformtools.itemlist_update(Item(channel=CHANNELNAME, action="submenu_tools"))
 
 
@@ -712,7 +712,7 @@ def overwrite_tools(item):
                                            "¿Desea continuar?")
     if seleccion == 1:
         heading = 'Sobrescribiendo biblioteca....'
-        p_dialog = platformtools.dialog_progress_bg('mitvspain', heading)
+        p_dialog = platformtools.dialog_progress_bg('pelisalacarta', heading)
         p_dialog.update(0, '')
         show_list = []
 

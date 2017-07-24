@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para doramastv
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -20,7 +20,7 @@ DEFAULT_HEADERS.append( ["User-Agent","Mozilla/5.0 (Macintosh; U; Intel Mac OS X
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.doramatv mainlist")
+    logger.info("pelisalacarta.channels.doramatv mainlist")
 	
     itemlist = list([])
     itemlist.append(Item(channel=item.channel, action="pagina_", title="En emision", url=urlparse.urljoin(host, "drama/emision")))
@@ -32,7 +32,7 @@ def mainlist(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.daramatv letras")
+    logger.info("pelisalacarta.channels.daramatv letras")
 
     itemlist = []
     headers = DEFAULT_HEADERS[:]
@@ -54,7 +54,7 @@ def letras(item):
     return itemlist
 	
 def pagina_(item):
-    logger.info("mitvspain.channels.daramatv letras" + item.url)
+    logger.info("pelisalacarta.channels.daramatv letras" + item.url)
     itemlist = []
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -82,7 +82,7 @@ def pagina_(item):
     return itemlist
 	
 def episodios(item):
-    logger.info("mitvspain.channels.doramatv episodios")
+    logger.info("pelisalacarta.channels.doramatv episodios")
     itemlist = []
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -102,7 +102,7 @@ def episodios(item):
     return itemlist
 	
 def findvideos(item):
-    logger.info("mitvspain.channels.doramatv findvideos")
+    logger.info("pelisalacarta.channels.doramatv findvideos")
 
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -131,7 +131,7 @@ def findvideos(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.doramatv generos")
+    logger.info("pelisalacarta.channels.doramatv generos")
     itemlist = []
     headers = DEFAULT_HEADERS[:]
     data = scrapertools.cache_page(item.url,headers=headers)
@@ -154,7 +154,7 @@ def generos(item):
     return itemlist
 	
 def search(item, texto):
-    logger.info("mitvspain.channels.doramatv search")
+    logger.info("pelisalacarta.channels.doramatv search")
     item.url = urlparse.urljoin(host, item.url)
     texto = texto.replace(" ", "+")
     headers = DEFAULT_HEADERS[:]

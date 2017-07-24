@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# mitvspain - XBMC Plugin
-# Canal para biblioteca de mitvspain
-# 
+# pelisalacarta - XBMC Plugin
+# Canal para biblioteca de pelisalacarta
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import os
@@ -370,7 +370,7 @@ def findvideos(item):
             # FILTERTOOLS
             # si el canal tiene filtro se le pasa el nombre que tiene guardado para que filtre correctamente.
             if "list_idiomas" in item_json:
-                # si se viene desde la biblioteca de mitvspain
+                # si se viene desde la biblioteca de pelisalacarta
                 if "library_filter_show" in item:
                     item_json.show = item.library_filter_show.get(nom_canal, "")
 
@@ -475,7 +475,7 @@ def update_serie(item):
     # logger.debug("item:\n" + item.tostring('\n'))
 
     heading = 'Actualizando serie....'
-    p_dialog = platformtools.dialog_progress_bg('mitvspain', heading)
+    p_dialog = platformtools.dialog_progress_bg('pelisalacarta', heading)
     p_dialog.update(0, heading, item.contentSerieName)
 
     import library_service

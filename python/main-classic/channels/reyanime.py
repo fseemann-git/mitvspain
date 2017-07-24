@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para reyanime
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 
 import re
@@ -25,7 +25,7 @@ ANIMEFLV_REQUEST_HEADERS.append(["Accept-Language","es-ES,es;q=0.8,en-US;q=0.5,e
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.reyanime mainlist")
+    logger.info("pelisalacarta.channels.reyanime mainlist")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="series"       , title="En emisión"           , url="http://reyanime.com/ver/emision" , viewmode="movie_with_plot"))
@@ -37,7 +37,7 @@ def mainlist(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.reyanime letras")
+    logger.info("pelisalacarta.channels.reyanime letras")
 
     itemlist = []
     data = scrapertools.cache_page(item.url)
@@ -56,7 +56,7 @@ def letras(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.reyanime generos")
+    logger.info("pelisalacarta.channels.reyanime generos")
 
     itemlist = []
     #itemlist.append( Item(channel=item.channel, action="series" , title="acción" , url="http://reyanime.com/ver/genero/accion", viewmode="movie_with_plot"))
@@ -78,7 +78,7 @@ def generos(item):
     return itemlist
 
 def series(item):
-    logger.info("mitvspain.channels.reyanime series")
+    logger.info("pelisalacarta.channels.reyanime series")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -152,7 +152,7 @@ def series(item):
     return itemlist
 
 def episodios(item):
-    logger.info("mitvspain.channels.reyanime episodios")
+    logger.info("pelisalacarta.channels.reyanime episodios")
     itemlist = []
     
     # Descarga la pagina
@@ -187,7 +187,7 @@ def episodios(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.reyanime findvideos")
+    logger.info("pelisalacarta.channels.reyanime findvideos")
     itemlist = []
 
     # Descarga la página
@@ -213,7 +213,7 @@ def findvideos(item):
     return itemlist
 
 def play(item):
-    logger.info("mitvspain.channels.reyanime play")
+    logger.info("pelisalacarta.channels.reyanime play")
     itemlist=[]
 
     data = scrapertools.cache_page(item.url)

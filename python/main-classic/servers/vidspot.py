@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 # ------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Conector para vidspot
-
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 # ------------------------------------------------------------
 
 import re
@@ -12,7 +12,7 @@ from core import scrapertools
 
 
 def test_video_exists(page_url):
-    logger.info("mitvspain.servers.vidspot test_video_exists(page_url='%s')" % page_url)
+    logger.info("pelisalacarta.servers.vidspot test_video_exists(page_url='%s')" % page_url)
 
     # No existe / borrado: http://vidspot.net/8jcgbrzhujri
     data = scrapertools.cache_page("http://anonymouse.org/cgi-bin/anon-www.cgi/" + page_url)
@@ -24,7 +24,7 @@ def test_video_exists(page_url):
 
 
 def get_video_url(page_url, premium=False, user="", password="", video_password=""):
-    logger.info("mitvspain.servers.vidspot url=%s" % page_url)
+    logger.info("pelisalacarta.servers.vidspot url=%s" % page_url)
 
     # Normaliza la URL
     videoid = scrapertools.get_match(page_url, "http://vidspot.net/([a-z0-9A-Z]+)")
@@ -106,7 +106,7 @@ def find_videos(data):
     # http://vidspot.net/embed-3sw6tewl21sn-728x400.html
     # http://www.cinetux.org/video/vidspot.php?id=3sw6tewl21sn
     patronvideos = 'vidspot.(?:net/|php\?id=)(?:embed-|)([a-z0-9]+)'
-    logger.info("mitvspain.servers.vidspot find_videos #" + patronvideos + "#")
+    logger.info("pelisalacarta.servers.vidspot find_videos #" + patronvideos + "#")
     matches = re.compile(patronvideos, re.DOTALL).findall(data)
     if len(matches) > 0:
         for match in matches:

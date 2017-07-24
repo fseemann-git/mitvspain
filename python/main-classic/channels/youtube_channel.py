@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# MiTvSpain - XBMC Plugin
+# tvalacarta - XBMC Plugin
 # Funciones para hacer canales a partir de un canal de YouTube
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/tvalacarta/
 #------------------------------------------------------------
 import urllib
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para peliculasdk
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import string
 import os
@@ -92,7 +92,7 @@ api_fankey ="dffe90fba4d02c199ae7a9e71330c987"
 
 
 def mainlist(item):
-    logger.info("mitvspain.pasateatorrent mainlist")
+    logger.info("pelisalacarta.pasateatorrent mainlist")
     check_bg = item.action
     if str(check_bg) == "":
         check_bg="bglobal"
@@ -112,7 +112,7 @@ def mainlist(item):
 
 
 def search(item,texto):
-    logger.info("mitvspain.peliculasdk search")
+    logger.info("pelisalacarta.peliculasdk search")
     texto = texto.replace(" ","+")
     check_bg = item.action
     if item.extra:
@@ -150,7 +150,7 @@ def search(item,texto):
 
 
 def peliculas(item):
-    logger.info("mitvspain.descargaportorrent peliculas")
+    logger.info("pelisalacarta.descargaportorrent peliculas")
     itemlist = []
     global krypton
     check_url=""
@@ -167,7 +167,7 @@ def peliculas(item):
          if str(bloque_enlaces)=="</div>":
             if item.extra.split("|")[3]=="peliculas":
              dialog = xbmcgui.Dialog()
-             if dialog.yesno('[COLOR crimson][B]Sin resultados en[/B][/COLOR]'+'[COLOR gold][B] Pasate[/B][/COLOR]'+'[COLOR floralwhite][B]A[/B][/COLOR]'+'[COLOR yellow][B]Torrent[/B][/COLOR]', '[COLOR cadetblue]¿Quieres hacer una busqueda en mitvspain?[/COLOR]','', "",'[COLOR crimson][B]No,gracias[/B][/COLOR]','[COLOR yellow][B]Si[/B][/COLOR]'):
+             if dialog.yesno('[COLOR crimson][B]Sin resultados en[/B][/COLOR]'+'[COLOR gold][B] Pasate[/B][/COLOR]'+'[COLOR floralwhite][B]A[/B][/COLOR]'+'[COLOR yellow][B]Torrent[/B][/COLOR]', '[COLOR cadetblue]¿Quieres hacer una busqueda en Pelisalacarta?[/COLOR]','', "",'[COLOR crimson][B]No,gracias[/B][/COLOR]','[COLOR yellow][B]Si[/B][/COLOR]'):
                  item.extra = "movie"+"|"+item.extra.split("|")[2]
                  return busqueda(item)
              else:
@@ -175,7 +175,7 @@ def peliculas(item):
                 xbmc.sleep(500)
             else:
              dialog = xbmcgui.Dialog()
-             if dialog.yesno('[COLOR crimson][B]Sin resultados en[/B][/COLOR]'+'[COLOR slateblue][B] Pasate[/B][/COLOR]'+'[COLOR floralwhite][B]A[/B][/COLOR]'+'[COLOR slateblue][B]Torrent[/B][/COLOR]', '[COLOR cadetblue]¿Quieres hacer una busqueda en mitvspain?[/COLOR]','', "",'[COLOR crimson][B]No,gracias[/B][/COLOR]','[COLOR yellow][B]Si[/B][/COLOR]'):
+             if dialog.yesno('[COLOR crimson][B]Sin resultados en[/B][/COLOR]'+'[COLOR slateblue][B] Pasate[/B][/COLOR]'+'[COLOR floralwhite][B]A[/B][/COLOR]'+'[COLOR slateblue][B]Torrent[/B][/COLOR]', '[COLOR cadetblue]¿Quieres hacer una busqueda en Pelisalacarta?[/COLOR]','', "",'[COLOR crimson][B]No,gracias[/B][/COLOR]','[COLOR yellow][B]Si[/B][/COLOR]'):
                 item.extra = "serie"+"|"+item.extra.split("|")[2]
                 return busqueda(item)
              else:
@@ -327,7 +327,7 @@ def peliculas(item):
 
 
 def fanart(item):
-    logger.info("mitvspain.pasateatorrent fanart")
+    logger.info("pelisalacarta.pasateatorrent fanart")
     itemlist = []
     url = item.url
     data = get_page(url)
@@ -883,7 +883,7 @@ def fanart(item):
 
     return itemlist
 def ver_capitulo(item):
-    logger.info("mitvspain.pasateatorrent ver_capitulo")
+    logger.info("pelisalacarta.pasateatorrent ver_capitulo")
     itemlist = []
     data = get_page(item.url)
     data = re.sub(r"&#.*?;","x",data)
@@ -1015,7 +1015,7 @@ def ver_capitulo(item):
 
 
 def findvideos(item):
-    logger.info("mitvspain.pasateatorrent findvideos")
+    logger.info("pelisalacarta.pasateatorrent findvideos")
     check_iepi2=" "
     itemlist = []
     data = get_page(item.url)
@@ -1262,7 +1262,7 @@ def findvideos(item):
     return itemlist
 
 def capitulos(item):
-    logger.info("mitvspain.pasateatorrent capitulos")
+    logger.info("pelisalacarta.pasateatorrent capitulos")
     itemlist = []
     url=item.url
     capis =  item.extra.split("|")[3]
@@ -1274,7 +1274,7 @@ def capitulos(item):
     return itemlist
 
 def info(item):
-    logger.info("mitvspain.pasateatorrent info")
+    logger.info("pelisalacarta.pasateatorrent info")
     itemlist = []
     url=item.url
     id = item.extra
@@ -1441,7 +1441,7 @@ def info(item):
     infoplus.start(item_info, peliculas)
 
 def info_capitulos(item):
-    logger.info("mitvspain.pasateatorrent info_capitulos")
+    logger.info("pelisalacarta.pasateatorrent info_capitulos")
     url= "https://api.themoviedb.org/3/tv/"+item.show.split("|")[5]+"/season/"+item.extra.split("|")[2]+"/episode/"+item.extra.split("|")[3]+"?api_key="+api_key+"&language=es"
 
     if "/0" in url:
@@ -1698,7 +1698,7 @@ def convert_size(size):
 
 
 def busqueda(item):
-    logger.info("mitvspain.channels.pasateatorrent search")
+    logger.info("pelisalacarta.channels.pasateatorrent search")
     cat = [item.extra.split("|")[0].replace("tv", "serie"), 'torrent']
     new_item = Item()
     new_item.extra = item.extra.split("|")[1].replace("+", " ")

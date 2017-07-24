@@ -1,8 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para seriespepito
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import urllib
@@ -18,7 +18,7 @@ DEBUG = config.get_setting("debug")
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.zpeliculas mainlist")
+    logger.info("pelisalacarta.channels.zpeliculas mainlist")
 
     itemlist = []
     #itemlist.append( Item(channel=item.channel, action="destacadas" , title="Destacadas", url="http://www.zpeliculas.com", fanart="http://www.zpeliculas.com/templates/mytopV2/images/background.png"))
@@ -31,7 +31,7 @@ def mainlist(item):
     return itemlist
 
 def alfabetico(item):
-    logger.info("mitvspain.channels.zpeliculas alfabetico")
+    logger.info("pelisalacarta.channels.zpeliculas alfabetico")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="A", url="http://www.zpeliculas.com/cat/a", viewmode="movie"))
@@ -75,7 +75,7 @@ def alfabetico(item):
     
 	
 def generos(item):
-    logger.info("mitvspain.channels.zpeliculas generos")
+    logger.info("pelisalacarta.channels.zpeliculas generos")
 
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="peliculas" , title="Acción", url="http://www.zpeliculas.com/peliculas/p-accion/", viewmode="movie"))
@@ -158,7 +158,7 @@ def newest(categoria):
     return itemlist
 
 def peliculas(item):
-    logger.info("mitvspain.channels.zpeliculas peliculas")
+    logger.info("pelisalacarta.channels.zpeliculas peliculas")
 
     # Descarga la página
     body = scrapertools.cachePage(item.url)
@@ -221,7 +221,7 @@ def peliculas(item):
 
 
 def destacadas(item):
-    logger.info("mitvspain.channels.zpeliculas destacadas")
+    logger.info("pelisalacarta.channels.zpeliculas destacadas")
 
     # Descarga la página
     data = scrapertools.cachePage(item.url)
@@ -257,7 +257,7 @@ def destacadas(item):
     return itemlist
 
 def sugeridas(item):
-    logger.info("mitvspain.channels.zpeliculas sugeridas")
+    logger.info("pelisalacarta.channels.zpeliculas sugeridas")
 
     # Descarga la página
     data = scrapertools.cachePage(item.url)
@@ -289,12 +289,12 @@ def sugeridas(item):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.zpeliculas findvideos item="+item.tostring())
+    logger.info("pelisalacarta.channels.zpeliculas findvideos item="+item.tostring())
 
     # Descarga la página para obtener el argumento
     data = scrapertools.cachePage(item.url)
     item.plot = scrapertools.find_single_match(data,'<div class="contenttext">([^<]+)<').strip()
     item.contentPlot = item.plot
-    logger.info("mitvspain.channels.zpeliculas findvideos plot="+item.plot)
+    logger.info("pelisalacarta.channels.zpeliculas findvideos plot="+item.plot)
 
     return servertools.find_video_items(item=item,data=data)

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 #------------------------------------------------------------
-# mitvspain - XBMC Plugin
+# pelisalacarta - XBMC Plugin
 # Canal para animeid
-# 
+# http://blog.tvalacarta.info/plugin-xbmc/pelisalacarta/
 #------------------------------------------------------------
 import re
 import sys
@@ -18,7 +18,7 @@ CHANNEL_HOST = "http://animeid.tv/"
 
 
 def mainlist(item):
-    logger.info("mitvspain.channels.animeid mainlist")
+    logger.info("pelisalacarta.channels.animeid mainlist")
     
     itemlist = []
     itemlist.append( Item(channel=item.channel, action="novedades_series"    , title="Últimas series"     , url="http://www.animeid.tv/" ))
@@ -45,7 +45,7 @@ def newest(categoria):
     return itemlist
 
 def search(item,texto):
-    logger.info("mitvspain.channels.animeid search")
+    logger.info("pelisalacarta.channels.animeid search")
     itemlist = []
 
     if item.url=="":
@@ -83,7 +83,7 @@ def search(item,texto):
         return []
 
 def novedades_series(item):
-    logger.info("mitvspain.channels.animeid novedades_series")
+    logger.info("pelisalacarta.channels.animeid novedades_series")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -104,7 +104,7 @@ def novedades_series(item):
     return itemlist
 
 def novedades_episodios(item):
-    logger.info("mitvspain.channels.animeid novedades_episodios")
+    logger.info("pelisalacarta.channels.animeid novedades_episodios")
 
     # Descarga la pagina
     #<article> <a href="/ver/uchuu-kyoudai-35"> <header>Uchuu Kyoudai #35</header> <figure><img src="http://static.animeid.com/art/uchuu-kyoudai/normal/b4934a1d.jpg" class="cover" alt="Uchuu Kyoudai" width="250" height="140" /></figure><div class="mask"></div> <aside><span class="p"><strong>Reproducciones: </strong>306</span> <span class="f"><strong>Favoritos: </strong>0</span></aside> </a> <p>Una noche en el año 2006, cuando eran jovenes, los dos hermanos Mutta (el mayor) y Hibito (el menor) vieron un OVNI que hiba en dirección hacia la luna. Esa misma noche decidieron que ellos se convertirian en astronautas y irian al espacio exterior. En el año 2050, Hibito se ha convertido en astronauta y que ademas está incluido en una misión que irá a la luna. En cambio Mutta siguió una carrera mas tradicional, y terminó trabajando en una compañia de fabricación de automoviles. Sin embargo, Mutta termina arruinando su carrera por ciertos problemas que tiene con su jefe. Ahora bien, no sólo perdió su trabajo si no que fue incluido en la lista negra de la industria laboral. Pueda ser que esta sea su unica oportunidad que tenga Mutta de volver a perseguir su sueño de la infancia y convertirse en astronauta, al igual que su perqueño hermano Hibito.</p> </article>
@@ -134,7 +134,7 @@ def novedades_episodios(item):
     return itemlist
 
 def generos(item):
-    logger.info("mitvspain.channels.animeid generos")
+    logger.info("pelisalacarta.channels.animeid generos")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -155,7 +155,7 @@ def generos(item):
     return itemlist
 
 def letras(item):
-    logger.info("mitvspain.channels.animeid letras")
+    logger.info("pelisalacarta.channels.animeid letras")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -176,7 +176,7 @@ def letras(item):
     return itemlist
 
 def series(item):
-    logger.info("mitvspain.channels.animeid series")
+    logger.info("pelisalacarta.channels.animeid series")
 
     # Descarga la pagina
     data = scrapertools.cache_page(item.url)
@@ -210,7 +210,7 @@ def series(item):
     return itemlist
 
 def episodios(item,final=True):
-    logger.info("mitvspain.channels.animeid episodios")
+    logger.info("pelisalacarta.channels.animeid episodios")
 
     # Descarga la pagina
     body = scrapertools.cache_page(item.url)
@@ -266,7 +266,7 @@ def episodios(item,final=True):
     return itemlist
 
 def findvideos(item):
-    logger.info("mitvspain.channels.animeid findvideos")
+    logger.info("pelisalacarta.channels.animeid findvideos")
 
     data = scrapertools.cache_page(item.url)
     itemlist=[]
@@ -278,7 +278,7 @@ def findvideos(item):
     data = data.replace("\\/","/")
     data = data.replace("%3A",":")
     data = data.replace("%2F","/")
-    logger.info("mitvspain.channels.animeid data="+data)
+    logger.info("pelisalacarta.channels.animeid data="+data)
 
     #http%3A%2F%2Fwww.animeid.moe%2Fstream%2F41TLmCj7_3q4BQLnfsban7%2F1440956023.mp4
     #http://www.animeid.moe/stream/41TLmCj7_3q4BQLnfsban7/1440956023.mp4

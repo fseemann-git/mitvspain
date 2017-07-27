@@ -38,17 +38,17 @@ def mainlist(item):
     itemlist = []
     
     itemlist.append(item.clone(action="seccion_peliculas", title="Películas", fanart="http://i.imgur.com/PjJaW8o.png",
-                               url="http://www.cinefox.tv/catalogue?type=peliculas"))
+                               url= host + "/catalogue?type=peliculas"))
     # Seccion series
     itemlist.append(item.clone(action="seccion_series", title="Series",
-                               url="http://www.cinefox.tv/ultimos-capitulos", fanart="http://i.imgur.com/9loVksV.png"))
+                               url= host + "/ultimos-capitulos", fanart="http://i.imgur.com/9loVksV.png"))
 
     itemlist.append(item.clone(action="peliculas", title="Documentales", fanart="http://i.imgur.com/Q7fsFI6.png",
-                               url="http://www.cinefox.tv/catalogue?type=peliculas&genre=documental"))
+                               url= host + "/catalogue?type=peliculas&genre=documental"))
 
     if config.get_setting("adult_mode") != 0:
         itemlist.append(item.clone(action="peliculas", title="Sección Adultos +18",
-                                   url="http://www.cinefox.tv/catalogue?type=adultos",
+                                   url= host + "/catalogue?type=adultos",
                                    fanart="http://i.imgur.com/kIvE1Zh.png"))
 
     itemlist.append(item.clone(title="Buscar...", action="local_search"))
@@ -67,7 +67,7 @@ def configuracion(item):
 def search(item, texto):
     logger.info()
     texto = texto.replace(" ", "+")
-    item.url = "http://www.cinefox.tv/search?q=%s" % texto
+    item.url = host + "/search?q=%s" % texto
     try:
         return busqueda(item)
     # Se captura la excepción, para no interrumpir al buscador global si un canal falla
@@ -249,7 +249,7 @@ def filtrado(item, values):
 
     item.valores = "Filtro: " + ", ".join(sorted(strings))
     item.strings = ""
-    item.url = "http://www.cinefox.tv/catalogue?type=%s&genre=%s&release=%s&quality=%s&language=%s&order=%s" % \
+    item.url = host + "/catalogue?type=%s&genre=%s&release=%s&quality=%s&language=%s&order=%s" % \
                (item.extra, genero, year, calidad, idioma, order)
 
     return globals()[item.extra](item)
@@ -260,11 +260,11 @@ def seccion_peliculas(item):
     itemlist = []
     # Seccion peliculas
     itemlist.append(item.clone(action="peliculas", title="Novedades", fanart="http://i.imgur.com/PjJaW8o.png",
-                               url="http://www.cinefox.tv/catalogue?type=peliculas"))
+                               url= host + "/catalogue?type=peliculas"))
     itemlist.append(item.clone(action="peliculas", title="Estrenos",
-                               url="http://www.cinefox.tv/estrenos-de-cine", fanart="http://i.imgur.com/PjJaW8o.png"))
+                               url= host + "/estrenos-de-cine", fanart="http://i.imgur.com/PjJaW8o.png"))
     itemlist.append(item.clone(action="filtro", title="Filtrar películas", extra="peliculas",
-                               url="http://www.cinefox.tv/catalogue?type=peliculas",
+                               url= host + "/catalogue?type=peliculas",
                                fanart="http://i.imgur.com/PjJaW8o.png"))
     # Filtros personalizados para peliculas
     for i in range(1, 4):
@@ -274,9 +274,9 @@ def seccion_peliculas(item):
             new_item = item.clone()
             new_item.values = filtros
             itemlist.append(new_item.clone(action="filtro", title=title, fanart="http://i.imgur.com/PjJaW8o.png",
-                                           url="http://www.cinefox.tv/catalogue?type=peliculas", extra="peliculas"))
+                                           url= host + "/catalogue?type=peliculas", extra="peliculas"))
     itemlist.append(item.clone(action="mapa", title="Mapa de películas", extra="peliculas",
-                               url="http://www.cinefox.tv/mapa-de-peliculas",
+                               url= host + "/mapa-de-peliculas",
                                fanart="http://i.imgur.com/PjJaW8o.png"))
     
     return itemlist
@@ -286,12 +286,12 @@ def seccion_series(item):
     itemlist = []
     # Seccion series
     itemlist.append(item.clone(action="ultimos", title="Últimos capítulos",
-                               url="http://www.cinefox.tv/ultimos-capitulos", fanart="http://i.imgur.com/9loVksV.png"))
+                               url= host + "/ultimos-capitulos", fanart="http://i.imgur.com/9loVksV.png"))
     itemlist.append(item.clone(action="series", title="Series recientes",
-                               url="http://www.cinefox.tv/catalogue?type=series",
+                               url= host + "/catalogue?type=series",
                                fanart="http://i.imgur.com/9loVksV.png"))
     itemlist.append(item.clone(action="filtro", title="Filtrar series", extra="series",
-                               url="http://www.cinefox.tv/catalogue?type=series",
+                               url=host + "/catalogue?type=series",
                                fanart="http://i.imgur.com/9loVksV.png"))
     # Filtros personalizados para series
     for i in range(1, 4):
@@ -301,9 +301,9 @@ def seccion_series(item):
             new_item = item.clone()
             new_item.values = filtros
             itemlist.append(new_item.clone(action="filtro", title=title, fanart="http://i.imgur.com/9loVksV.png",
-                                           url="http://www.cinefox.tv/catalogue?type=series", extra="series"))
+                                           url= host + "/catalogue?type=series", extra="series"))
     itemlist.append(item.clone(action="mapa", title="Mapa de series", extra="series",
-                               url="http://www.cinefox.tv/mapa-de-series",
+                               url= host + "/mapa-de-series",
                                fanart="http://i.imgur.com/9loVksV.png"))
 
     return itemlist
@@ -326,7 +326,6 @@ def mapa(item):
 
 def peliculas(item):
     logger.info()
-
     itemlist = []
     if "valores" in item and item.valores:
         itemlist.append(item.clone(action="", title=item.valores, text_color=color4))
@@ -482,7 +481,7 @@ def menu_info(item):
         item.infoLabels["plot"] = scrapertools.htmlclean(sinopsis)
 
     id = scrapertools.find_single_match(item.url, '/(\d+)/')
-    data_trailer = httptools.downloadpage("http://www.cinefox.tv/media/trailer?idm=%s&mediaType=1" % id).data
+    data_trailer = httptools.downloadpage( host + "/media/trailer?idm=%s&mediaType=1" % id).data
     trailer_url = jsontools.load_json(data_trailer)["video"]["url"]
     if trailer_url != "":
         item.infoLabels["trailer"] = trailer_url
@@ -545,7 +544,7 @@ def episodios(item):
     itemlist.reverse()
     if "episodios" not in item.extra and not item.path:
         id = scrapertools.find_single_match(item.url, '/(\d+)/')
-        data_trailer = httptools.downloadpage("http://www.cinefox.tv/media/trailer?idm=%s&mediaType=1" % id).data
+        data_trailer = httptools.downloadpage( host + "/media/trailer?idm=%s&mediaType=1" % id).data
         item.infoLabels["trailer"] = jsontools.load_json(data_trailer)["video"]["url"]
         itemlist.append(item.clone(channel="trailertools", action="buscartrailer", title="Buscar Tráiler",
                                        text_color="magenta"))
@@ -633,13 +632,13 @@ def findvideos(item):
         extra = item.extra
         if "|" in item.extra:
             extra = item.extra[:-1]
-        url = "http://www.cinefox.tv/sources/list?id=%s&type=%s&order=%s" % (id, extra, "streaming")
+        url = host + "/sources/list?id=%s&type=%s&order=%s" % (id, extra, "streaming")
         itemlist.extend(get_enlaces(item, url, "Online"))
-        url = "http://www.cinefox.tv/sources/list?id=%s&type=%s&order=%s" % (id, extra, "download")
+        url = host + "/sources/list?id=%s&type=%s&order=%s" % (id, extra, "download")
         itemlist.extend(get_enlaces(item, url, "de Descarga"))
 
         if extra == "media":
-            data_trailer = httptools.downloadpage("http://www.cinefox.tv/media/trailer?idm=%s&mediaType=1" % id).data
+            data_trailer = httptools.downloadpage( host + "/media/trailer?idm=%s&mediaType=1" % id).data
             trailer_url = jsontools.load_json(data_trailer)["video"]["url"]
             if trailer_url != "":
                 item.infoLabels["trailer"] = trailer_url
@@ -654,7 +653,7 @@ def findvideos(item):
                                      fanart=item.fanart, fulltitle=item.fulltitle,
                                      extra="media|"))
     else:
-        url = "http://www.cinefox.tv/sources/list?id=%s&type=%s&order=%s" % (id, item.extra, item.type)
+        url = host + "/sources/list?id=%s&type=%s&order=%s" % (id, item.extra, item.type)
         type = item.type.replace("streaming", "Online").replace("download", "de Descarga")
         itemlist.extend(get_enlaces(item, url, type))
 
@@ -664,8 +663,22 @@ def findvideos(item):
 def get_enlaces(item, url, type):
     itemlist = []
     itemlist.append(item.clone(action="", title="Enlaces %s" % type, text_color=color1))
-
     data = httptools.downloadpage(url, add_referer=True).data
+    if type == "Online":
+        gg = httptools.downloadpage(item.url, add_referer=True).data
+        bloque = scrapertools.find_single_match(gg, 'class="tab".*?button show')
+        patron  = 'a href="#([^"]+)'
+        patron += '.*?language-ES-medium ([^"]+)'
+        patron += '.*?</i>([^<]+)'
+        matches = scrapertools.find_multiple_matches(bloque, patron)
+        for scrapedopcion, scrapedlanguage, scrapedcalidad in matches:
+            google_url = scrapertools.find_single_match(bloque, 'id="%s.*?src="([^"]+)' %scrapedopcion)
+            if "medium-es" in scrapedlanguage: language = "Castellano"
+            if "medium-en" in scrapedlanguage: language = "Ingles"
+            if "medium-vs" in scrapedlanguage: language = "VOSE"
+            if "medium-la" in scrapedlanguage: language = "Latino"
+            titulo = " [%s/%s]" %(language, scrapedcalidad.strip())
+            itemlist.append(item.clone(action="play", url=google_url, title="    Ver en Gvideo"+titulo, text_color=color2, extra="", server = "gvideo"))
     patron = '<div class="available-source".*?data-url="([^"]+)".*?class="language.*?title="([^"]+)"' \
              '.*?class="source-name.*?>\s*([^<]+)<.*?<span class="quality-text">([^<]+)<'
     matches = scrapertools.find_multiple_matches(data, patron)
@@ -682,18 +695,15 @@ def get_enlaces(item, url, type):
 
     if len(itemlist) == 1:
         itemlist.append(item.clone(title="   No hay enlaces disponibles", action="", text_color=color2))
-
     return itemlist
 
 
 def play(item):
     logger.info()
     itemlist = []
-
-    if item.extra != "":
+    if item.extra != "" and "google" not in item.url:
         post = "id=%s" % item.extra
-        data = httptools.downloadpage("http://www.cinefox.tv/goto/", post=post, add_referer=True).data
-
+        data = httptools.downloadpage(host + "/goto/", post=post, add_referer=True).data
         item.url = scrapertools.find_single_match(data, 'document.location\s*=\s*"([^"]+)"')
 
     url = item.url.replace("http://miracine.tv/n/?etu=", "http://hqq.tv/player/embed_player.php?vid=")
@@ -703,7 +713,6 @@ def play(item):
     else:
         enlaces = servertools.findvideos(url)[0]
     itemlist.append(item.clone(url=enlaces[1], server=enlaces[2]))
-    
     return itemlist
 
 
@@ -713,7 +722,7 @@ def newest(categoria):
     item = Item()
     try:
         if categoria == "peliculas":
-            item.url = "http://www.cinefox.tv/catalogue?type=peliculas"
+            item.url = host + "/catalogue?type=peliculas"
             item.action = "peliculas"
             itemlist = peliculas(item)
 
@@ -721,7 +730,7 @@ def newest(categoria):
                 itemlist.pop()
 
         if categoria == "series":
-            item.url = "http://www.cinefox.tv/ultimos-capitulos"
+            item.url = host + "/ultimos-capitulos"
             item.action = "ultimos"
             itemlist = ultimos(item)
 
@@ -746,4 +755,3 @@ def select_page(item):
         item.url = re.sub(r'page=(\d+)', "page="+number, item.url)
 
     return peliculas(item)
-
